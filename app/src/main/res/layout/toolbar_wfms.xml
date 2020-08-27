@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/colorBlue"
+    android:padding="@dimen/_10sdp">
+
+
+    <ImageView
+        android:id="@+id/ivBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:padding="@dimen/_6sdp"
+        android:visibility="visible"
+        android:src="@drawable/icon_back_arrow"
+        tools:ignore="ContentDescription" />
+
+
+    <com.htistelecom.htisinhouse.font.Ubuntu
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/my_task"
+        android:textColor="@color/white"
+        android:textSize="22sp" />
+
+
+    <ImageView
+        android:id="@+id/ivDrawer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/icon_plus"
+        tools:ignore="ContentDescription" />
+
+</RelativeLayout>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.htistelecom.htisinhouse.font.UbuntuBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorBlue"
+            android:gravity="center"
+            android:padding="@dimen/_15sdp"
+            android:text="@string/txtUploadDocument"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_16sdp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/_18sdp">
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/strTodayDate"
+                android:textColor="@color/grey_text2"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:baselineAligned="false"
+                android:weightSum="1">
+
+                <RelativeLayout
+                    android:id="@+id/rlSelectDateUploadDoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_edittext"
+                    android:padding="10dp">
+
+                    <com.htistelecom.htisinhouse.font.Ubuntu
+                        android:id="@+id/tvSelectDateUploadDoc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/select_the_date"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/icon_calendar" />
+
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtDocumentTypeUplaodDoc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/txtDocumentType"
+                android:textColor="@color/grey_text2"
+                android:textSize="14sp" />
+
+            <RelativeLayout
+                android:id="@+id/rlDocumentTypeSpinnerUploadDoc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_edittext"
+                android:padding="15dp">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvDocumentTypeUploadDoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Select Document Type"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_down" />
+            </RelativeLayout>
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtSendToUploadDoc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/txtSendTo"
+                android:textColor="@color/grey_text2"
+                android:textSize="14sp" />
+
+            <RelativeLayout
+                android:id="@+id/rlSendToSpinnerUploadDoc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_edittext"
+                android:padding="15dp">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvSendToUploadDoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Select"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_down" />
+            </RelativeLayout>
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtReasonUploadDoc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/txtRemarks"
+                android:textColor="@color/grey_text2"
+                android:textSize="14sp" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuEditText
+                android:id="@+id/etRemarksUploadDoc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/bg_edittext"
+                android:maxLines="3"
+                android:padding="@dimen/_20sdp"
+                android:textSize="14sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/ivUploadImgUploadDoc"
+                    android:layout_width="120dp"
+                    android:layout_height="90dp"
+                    android:contentDescription="@null"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_camera_image" />
+                <ImageView
+                    android:id="@+id/ivUploadImg1UploadDoc"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="120dp"
+                    android:layout_height="90dp"
+                    android:layout_alignParentEnd="true"
+                    android:contentDescription="@null"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_camera_image" />
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+
+                <Button
+                    android:id="@+id/btnSubmitUploadDoc"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:background="@drawable/login_button"
+                    android:gravity="center"
+                    android:text="@string/txtUpload"
+                    android:textColor="@color/white" />
+
+
+                <Button
+                    android:id="@+id/btnCancelUploadDoc"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight=".5"
+                    android:background="@drawable/cancel_button"
+                    android:gravity="center"
+                    android:text="@string/cancel"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

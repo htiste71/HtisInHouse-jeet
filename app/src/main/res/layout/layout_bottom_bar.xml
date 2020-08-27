@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/llBottom"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@color/colorDarkBlue"
+    android:orientation="horizontal"
+    android:padding="@dimen/_5sdp"
+    android:weightSum="4">
+
+    <ImageView
+        android:id="@+id/iv_home"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/icon_home_selected"
+        tools:ignore="ContentDescription" />
+
+
+    <ImageView
+        android:id="@+id/iv_profile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/icon_profile"
+        tools:ignore="ContentDescription" />
+
+
+    <ImageView
+        android:id="@+id/ivChat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/icon_chat"
+        tools:ignore="ContentDescription" />
+
+
+    <ImageView
+        android:id="@+id/ivSetting"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/icon_setting"
+        tools:ignore="ContentDescription" />
+
+</LinearLayout>
+
+

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="@color/colorSkyBlue">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/ivProfileFragmentWFMS"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_man" />
+
+            <ImageView
+                android:id="@+id/ivCameraIconProfileFragmentWFMS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignBottom="@+id/ivProfileFragmentWFMS"
+                android:layout_toRightOf="@+id/ivProfileFragmentWFMS"
+                android:layout_marginLeft="-50dp"
+                android:src="@drawable/icon_camera_profile" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llFirstNameProfileFragmentWFMS"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/txtFirstNameProfileFragmentWFMS"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="40"
+                    android:gravity="center_vertical"
+                    android:text="@string/strName"
+                    android:textColor="@color/colorDarkBlue"
+                    android:textSize="16sp" />
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvFirstNameProfileFragmentWFMS"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="40"
+                    android:hint="@string/strFirstName"
+                    android:textColor="@color/colorLightBlack"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/colorLightBlack" />
+
+
+
+
+
+            <LinearLayout
+                android:id="@+id/llDesignationProfileFragmentWFMS"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/txtDesignationProfileFragmentWFMS"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="40"
+                    android:gravity="center_vertical"
+                    android:text="@string/strDesignation"
+                    android:textColor="@color/colorDarkBlue"
+                    android:textSize="16sp" />
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvDesignationProfileFragmentWFMS"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="40"
+                    android:hint="@string/strDesignation"
+                    android:textColor="@color/colorLightBlack"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/colorLightBlack" />
+
+
+            <LinearLayout
+                android:id="@+id/llDeptProfileFragmentWFMS"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/txtDeptProfileFragmentWFMS"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="40"
+                    android:gravity="center_vertical"
+                    android:text="@string/strDept"
+                    android:textColor="@color/colorDarkBlue"
+                    android:textSize="16sp" />
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvDeptProfileFragmentWFMS"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="60"
+                    android:hint="@string/strDept"
+                    android:textColor="@color/colorLightBlack"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/colorLightBlack" />
+
+
+            <LinearLayout
+                android:id="@+id/llEmailProfileFragmentWFMS"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/txtEmailProfileFragmentWFMS"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="40"
+                    android:gravity="center_vertical"
+                    android:text="@string/strEmail"
+                    android:textColor="@color/colorDarkBlue"
+                    android:textSize="16sp" />
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvEmailProfileFragmentWFMS"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="60"
+                    android:hint="Email"
+                    android:textColor="@color/colorLightBlack"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/colorLightBlack" />
+
+
+            <LinearLayout
+                android:id="@+id/llContactProfileFragmentWFMS"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/txtContactProfileFragmentWFMS"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="40"
+                    android:gravity="center_vertical"
+                    android:text="@string/strContact"
+                    android:textColor="@color/colorDarkBlue"
+                    android:textSize="16sp" />
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvContactProfileFragmentWFMS"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="40"
+                    android:hint="@string/strContact"
+                    android:textColor="@color/colorLightBlack"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/colorLightBlack" />
+
+
+        </LinearLayout>
+
+        <com.htistelecom.htisinhouse.font.UbuntuButton
+            android:id="@+id/btnLogoutProfileFragmentWFMS"
+            android:text="@string/strLogout"
+            android:textColor="@color/colorWhite"
+            android:layout_marginTop="30dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center"
+            android:background="@drawable/rect_background_border_orange_radius_13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</ScrollView>

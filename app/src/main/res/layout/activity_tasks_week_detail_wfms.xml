@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/rlTopTasksWeekDetailActivityWFMS"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/colorSkyBlue">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/ivProfileImageTasksWeekDetailActivityWFMS"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="40dp"
+                    android:src="@drawable/icon_man" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvProfileNameTasksWeekDetailActivityWFMS"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="50dp"
+                    android:layout_toRightOf="@+id/ivProfileImageTasksWeekDetailActivityWFMS"
+                    android:text="Rajinder Kumar"
+                    android:textColor="@color/colorDarkBlue"
+                    android:textSize="18sp" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvDesignationTasksWeekDetailActivityWFMS"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvProfileNameTasksWeekDetailActivityWFMS"
+                    android:layout_alignLeft="@+id/tvProfileNameTasksWeekDetailActivityWFMS"
+                    android:layout_marginTop="3dp"
+                    android:layout_toRightOf="@+id/ivProfileImageTasksWeekDetailActivityWFMS"
+                    android:text="Sales Head"
+                    android:textColor="@color/colorDarkBlue"
+                    android:textSize="14sp" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvReportsToTasksWeekDetailActivityWFMS"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvDesignationTasksWeekDetailActivityWFMS"
+                    android:layout_alignLeft="@+id/tvProfileNameTasksWeekDetailActivityWFMS"
+                    android:layout_marginTop="3dp"
+                    android:layout_toRightOf="@+id/ivProfileImageTasksWeekDetailActivityWFMS"
+                    android:text="Reports To-Ajay Verma"
+                    android:textColor="@color/colorDarkBlue"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvReportsToTasksWeekDetailActivityWFMS"
+                    android:layout_alignLeft="@+id/tvProfileNameTasksWeekDetailActivityWFMS"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/llCallTasksWeekDetailActivityWFMS"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:background="@drawable/rect_fill_orange_less_border"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="5dp"
+                            android:src="@drawable/ic_icon_call" />
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/txtCallTasksWeekDetailActivityWFMS"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="5dp"
+                            android:text="@string/strCall"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llMessageTasksWeekDetailActivityWFMS"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:background="@drawable/rect_blue_back"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="5dp"
+                            android:src="@drawable/icon_message" />
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/txtMessageTasksWeekDetailActivityWFMS"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="5dp"
+                            android:text="@string/strMessage"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/llLocationTasksWeekDetailActivityWFMS"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rlTopTasksWeekDetailActivityWFMS"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <com.htistelecom.htisinhouse.font.UbuntuBold
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="40"
+                        android:gravity="center_vertical"
+                        android:text="@string/strLocation"
+                        android:textColor="@color/colorDarkBlue"
+                        android:textSize="16sp" />
+
+                    <com.htistelecom.htisinhouse.font.Ubuntu
+                        android:id="@+id/tvLocationTasksWeekDetailActivityWFMS"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="60"
+                        android:textColor="@color/colorLightBlackNew"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.50dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/colorLightBlackNew" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llPunchStatusTasksWeekDetailActivityWFMS"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/llLocationTasksWeekDetailActivityWFMS"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <com.htistelecom.htisinhouse.font.UbuntuBold
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="40"
+                        android:gravity="center_vertical"
+                        android:text="@string/strPunchStatus"
+                        android:textColor="@color/colorDarkBlue"
+                        android:textSize="16sp" />
+
+                    <com.htistelecom.htisinhouse.font.Ubuntu
+                        android:id="@+id/tvPunchStatusTasksWeekDetailActivityWFMS"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="60"
+                        android:textColor="@color/colorLightBlackNew"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.50dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/colorLightBlackNew" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llTasksWeekDetailActivityWFMS"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/llPunchStatusTasksWeekDetailActivityWFMS"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <com.htistelecom.htisinhouse.font.UbuntuBold
+                        android:id="@+id/txtTask"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="40"
+                        android:gravity="center_vertical"
+                        android:text="@string/strTask"
+                        android:textColor="@color/colorDarkBlue"
+                        android:textSize="16sp" />
+
+                    <com.htistelecom.htisinhouse.font.Ubuntu
+                        android:id="@+id/tvTasksWeekDetailActivityWFMS"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="40"
+                        android:textColor="@color/colorLightBlackNew"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/ivAddTasksWeekDetailActivityWFMS"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="20"
+                        android:src="@drawable/icon_add_task" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.50dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/colorLightBlackNew" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/llClaimsTasksWeekDetailActivityWFMS"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/llTasksWeekDetailActivityWFMS"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <com.htistelecom.htisinhouse.font.UbuntuBold
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="40"
+                        android:gravity="center_vertical"
+                        android:text="@string/strClaims"
+                        android:textColor="@color/colorDarkBlue"
+                        android:textSize="16sp" />
+
+                    <com.htistelecom.htisinhouse.font.Ubuntu
+                        android:id="@+id/tvClaimsTasksWeekDetailActivityWFMS"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="60"
+                        android:textColor="@color/colorLightBlackNew"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.50dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/colorLightBlackNew" />
+            </LinearLayout>
+
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/colorDarkBlue"
+                android:layout_marginTop="15dp"
+                android:layout_below="@+id/llClaimsTasksWeekDetailActivityWFMS"
+                android:layout_centerHorizontal="true"
+                android:text="@string/strTasksThisWeek"/>
+        </RelativeLayout>
+
+
+    </ScrollView>
+</LinearLayout>

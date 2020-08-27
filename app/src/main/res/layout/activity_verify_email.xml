@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_10sdp"
+        android:fillViewport="true"
+        android:gravity="center"
+        tools:context=".activity.LoginActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/_20sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/profile_image"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:contentDescription="@null"
+                android:gravity="start"
+                android:src="@drawable/logo" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:text="Enter your valid Email Address"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+
+            <LinearLayout
+                android:id="@+id/llEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <com.htistelecom.htisinhouse.font.UbuntuEditText
+                    android:id="@+id/etEmailVerifyEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:background="@null"
+                    android:hint="@string/email_address"
+                    android:inputType="textEmailAddress"
+                    android:paddingTop="@dimen/_8sdp"
+                    android:paddingBottom="@dimen/_8sdp"
+                    android:textColor="@color/grey_text2" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:background="@color/grey_text2" />
+
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <com.htistelecom.htisinhouse.font.UbuntuButton
+                        android:id="@+id/btnSubmitVerifyEmail"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/rect_background_border_orange_radius_13"
+                        android:gravity="center"
+                        android:padding="@dimen/_8sdp"
+                        android:text="@string/submit"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_16sdp" />
+
+                    <com.htistelecom.htisinhouse.font.UbuntuButton
+                        android:id="@+id/btnBackVerifyEmail"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/rect_no_background_border_orange"
+                        android:gravity="center"
+                        android:padding="@dimen/_8sdp"
+                        android:text="@string/strBack"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorOrange"
+                        android:textSize="@dimen/_16sdp"
+                        android:visibility="visible" />
+
+
+                </LinearLayout>
+
+
+                <com.htistelecom.htisinhouse.font.UbuntuButton
+                    android:id="@+id/btnCustomDomain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/login_button"
+                    android:gravity="center"
+                    android:padding="@dimen/_8sdp"
+                    android:text="@string/strCustomDomain"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_16sdp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+        <com.htistelecom.htisinhouse.font.Ubuntu
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/strCopyRight"
+            android:textColor="#90000000"
+            android:gravity="center"
+            android:layout_marginBottom="10dp"
+            android:textSize="14sp" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff"
+    android:orientation="vertical"
+    android:padding="0dp">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:id="@+id/tableHeadId"
+            android:background="#e1e1e1"
+            android:paddingStart="4dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="4dp"
+            android:paddingBottom="6dp">
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/from"
+                android:textSize="14sp" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/to"
+                android:textSize="14sp" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/transport_txt"
+                android:textSize="14sp"
+                android:visibility="invisible" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/distance"
+                android:textSize="14sp" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/amount_txt"
+                android:textSize="14sp" />
+        </TableRow>
+
+        <TableRow
+            android:paddingStart="4dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="4dp"
+            android:paddingBottom="6dp">
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvFromLoc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textSize="14sp" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvToLoc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textSize="14sp" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvTransportMode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text=""
+                android:textSize="14sp"
+                android:visibility="invisible" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvKm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text=""
+                android:textSize="14sp" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvAmount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text=""
+                android:textSize="14sp" />
+        </TableRow>
+
+        <TableRow android:layout_width="match_parent">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="-16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="-16dp"
+                android:layout_marginBottom="8dp"
+                android:layout_span="5"
+                android:background="#f1f1f1" />
+        </TableRow>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="100"
+            android:weightSum="100">
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvRemarks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:text=""
+                android:textSize="14sp" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvPmRemarks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text=""
+                android:textAlignment="viewEnd"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <TableRow android:layout_width="match_parent">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="-16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="-16dp"
+                android:layout_marginBottom="8dp"
+                android:layout_span="5"
+                android:background="#f1f1f1" />
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_weight="60"
+            android:paddingStart="4dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="4dp"
+            android:paddingBottom="8dp"
+            android:weightSum="100">
+
+            <ImageView
+                android:id="@+id/imgView1"
+                android:layout_width="50sp"
+                android:layout_height="50sp"
+                android:layout_marginEnd="5dp"
+                android:adjustViewBounds="true"
+                android:maxWidth="50dp"
+                android:src="@drawable/icon_camera_image"
+                android:visibility="gone"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/imgView2"
+                android:layout_width="50sp"
+                android:layout_height="50sp"
+                android:layout_marginEnd="5dp"
+                android:adjustViewBounds="true"
+                android:maxWidth="50dp"
+                android:src="@drawable/icon_camera_image"
+                android:visibility="gone"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/imgView3"
+                android:layout_width="50sp"
+                android:layout_height="50sp"
+                android:layout_marginEnd="5dp"
+                android:adjustViewBounds="true"
+                android:maxWidth="50dp"
+                android:src="@drawable/icon_camera_image"
+                android:visibility="gone"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/imgView4"
+                android:layout_width="50sp"
+                android:layout_height="50sp"
+                android:layout_marginEnd="5dp"
+                android:adjustViewBounds="true"
+                android:maxWidth="50dp"
+                android:src="@drawable/icon_camera_image"
+                android:visibility="gone"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_weight="40"
+            android:gravity="end"
+            android:orientation="vertical"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp"
+            android:weightSum="100">
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvApprovedAmt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textAlignment="viewEnd"
+                android:textStyle="italic" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvRejectedAmt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textAlignment="viewEnd"
+                android:textStyle="italic" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

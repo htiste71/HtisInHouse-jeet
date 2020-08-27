@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorDarkBlue"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/rlSyncDrawer"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+
+                android:id="@+id/llHomeDrawer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/llInnerHomeDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:id="@+id/ivHomeDrawer"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_profile_drawer" />
+
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvHomeDrawer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/strHome"
+
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorLightBlack" />
+
+        </LinearLayout>
+            <LinearLayout
+
+                android:id="@+id/llProfileDrawer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+
+
+            <LinearLayout
+                android:id="@+id/llInnerProfileDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:id="@+id/ivProfileDrawer"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_profile_drawer" />
+
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvProfileDrawer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/strMyProfile"
+
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+
+                    />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorLightBlack" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/llTeamDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llInnerTeamDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:id="@+id/ivTeamDrawer"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_team_drawer" />
+
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvTeamDrawer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/strMyTeam"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+
+                    />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorLightBlack" />
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:id="@+id/llTaskDrawer"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llInnerTaskDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/ivTaskDrawer"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_task_drawer" />
+
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvTaskDrawer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/strMyTask"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+                <RelativeLayout
+                    android:id="@+id/rlTaskCountDrawer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:visibility="visible">
+
+                    <com.htistelecom.htisinhouse.font.Ubuntu
+                        android:id="@+id/tvTaskCountDrawer"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/circle_green"
+                        android:gravity="center"
+                        android:text="123"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_13sdp"
+                        android:visibility="visible" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorLightBlack" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/llLeaveODDrawer"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llInnerLeaveODDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:id="@+id/ivLeaveODDrawer"
+
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_leave_od_drawer" />
+
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvLeaveODDrawer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/strLeaveOD"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorLightBlack" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llAttendanceDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llInnerAttendanceDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:id="@+id/ivAttendanceDrawer"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_attendance_drawer" />
+
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvAttendanceDrawer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/strMyAttendance"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/viewAttendanceDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorLightBlack" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llDocumentDirectoryDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llInnerDocumentDirectoryDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:id="@+id/ivDocumentDirectoryDrawer"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_docs_drawer" />
+
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvDocumentDirectoryDrawer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/strDocumentDirectory"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/viewDocumentDirectoryDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorLightBlack" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llSalaryDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llInnerSalaryDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:id="@+id/ivSalaryDrawer"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_salary_drawer" />
+
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvSalaryDrawer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/strMySalary"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/viewSalaryDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorLightBlack" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llClaimDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llInnerClaimDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:id="@+id/ivClaimDrawer"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_claims_drawer" />
+
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvClaimDrawer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/strMyClaims"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/viewClaimDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorLightBlack" />
+
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:id="@+id/llChatDrawer"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llInnerChatDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp">
+
+                <ImageView
+                    android:id="@+id/ivChatDrawer"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_chat_drawer" />
+
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvChatDrawer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/strChat"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+                <RelativeLayout
+                    android:id="@+id/rlChatCountDrawer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:visibility="visible">
+
+                    <com.htistelecom.htisinhouse.font.Ubuntu
+                        android:id="@+id/tvChatCountDrawer"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/circle_green"
+                        android:gravity="center"
+                        android:text="123"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_13sdp"
+                        android:visibility="visible" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorLightBlack" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/llFormDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llInnerFormDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:id="@+id/ivFormDrawer"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_form_drawer" />
+
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvFormDrawer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/strForms"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/viewFormDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorLightBlack" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llHelpDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llInnerHelpDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:id="@+id/ivHelpDrawer"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_help_drawer" />
+
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvHelpDrawer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/strHelp"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/viewHelpDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorLightBlack" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llFeedbackDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llInnerFeedbackDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:id="@+id/ivFeedbackDrawer"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_feedback_drawer" />
+
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvFeedbackDrawer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/strFeedback"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/viewFeedbackDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorLightBlack" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llSettingDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llInnerSettingDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:id="@+id/ivSettingDrawer"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_setting_drawer" />
+
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvSettingDrawer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/strSetting"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/viewSettingDrawer"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorLightBlack" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</ScrollView>
+
+<RelativeLayout
+android:background="@color/colorSkyBlue"
+android:id="@+id/rlSyncDrawer"
+android:layout_alignParentBottom="true"
+android:layout_height="wrap_content"
+android:layout_width="match_parent"
+android:padding="8dp">
+
+<ImageView
+    android:id="@+id/ivsyncDrawer"
+    android:layout_height="15dp"
+    android:layout_width="15dp"
+    android:src="@drawable/icon_sync_drawer" />
+
+<com.htistelecom.htisinhouse.font.Ubuntu
+    android:id="@+id/tvSyncTimeDrawer"
+    android:layout_centerVertical="true"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_toRightOf="@id/ivsyncDrawer"
+    android:layout_width="wrap_content"
+    android:text="Last Sync:10:00 AM, 05 May 2020"
+    android:textColor="@color/colorDarkBlue"
+    android:textSize="12sp" />
+
+<com.htistelecom.htisinhouse.font.Ubuntu
+    android:id="@+id/tvAppVersionDrawer"
+    android:layout_alignParentRight="true"
+    android:layout_centerVertical="true"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:text="V 8.0.1"
+
+    android:textColor="@color/colorDarkBlue"
+    android:textSize="12sp" />
+</RelativeLayout></RelativeLayout>

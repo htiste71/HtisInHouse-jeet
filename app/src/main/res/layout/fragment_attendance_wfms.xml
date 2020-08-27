@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".activity.MyAttendanceActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rlTop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_5sdp">
+
+                <LinearLayout
+                    android:id="@+id/calendar1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <LinearLayout
+                    android:id="@+id/linear1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/calendar1"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/linear_lyt1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".5"
+                        android:background="@drawable/bg_calender"
+                        android:orientation="horizontal"
+                        android:padding="5dp">
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/green_text"
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_15sdp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/_2sdp"
+                            android:background="@drawable/circle_green"
+                            android:padding="2dp"
+                            android:textSize="12sp" />
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/regularised_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".65"
+                            android:padding="4dp"
+                            android:text="@string/regularised"
+                            android:textSize="12sp" />
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/tvPresentAttendanceCountWFMS"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".25"
+                            android:gravity="center"
+                            android:padding="4dp"
+                            android:text="@string/_0" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linear_lyt2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_weight=".5"
+                        android:background="@drawable/bg_calender"
+                        android:orientation="horizontal"
+                        android:padding="5dp">
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/red_text"
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_15sdp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/_2sdp"
+                            android:background="@drawable/circle_red"
+                            android:padding="2dp"
+                            android:textSize="12sp" />
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/absent_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".65"
+                            android:padding="4dp"
+                            android:text="@string/absent"
+                            android:textSize="12sp" />
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/tvAbsentAttendanceCountWFMS"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".25"
+                            android:gravity="center"
+                            android:padding="4dp"
+                            android:text="@string/_0" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/linear2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linear1"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/linear_lyt3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".5"
+                        android:background="@drawable/bg_calender"
+                        android:orientation="horizontal"
+                        android:padding="5dp">
+
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/blue_text"
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_15sdp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/_2sdp"
+                            android:background="@drawable/circle_sky"
+                            android:padding="2dp"
+                            android:textSize="12sp" />
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/holidays_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".65"
+                            android:padding="4dp"
+                            android:text="@string/leave"
+                            android:textSize="12sp" />
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/tvLeaveAttendanceCountWFMS"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".25"
+                            android:gravity="center"
+                            android:padding="4dp"
+                            android:text="@string/_0" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linear_lyt4"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_weight=".5"
+                        android:background="@drawable/bg_calender"
+                        android:orientation="horizontal"
+                        android:padding="5dp">
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/yellow_text"
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_15sdp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/_2sdp"
+                            android:background="@drawable/circle_yellow"
+                            android:padding="2dp"
+                            android:textSize="12sp" />
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/pending_approval_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".65"
+                            android:padding="4dp"
+                            android:singleLine="true"
+                            android:text="@string/pending_approval"
+                            android:textSize="12sp" />
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/tvPendingAttendanceCountWFMS"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".25"
+                            android:gravity="center"
+                            android:padding="4dp"
+                            android:text="@string/_0" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/linear2"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/rejection_lt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".5"
+                        android:background="@drawable/bg_calender"
+                        android:orientation="horizontal"
+                        android:padding="5dp">
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/brown_text"
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_15sdp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/circle_brown"
+                            android:padding="2dp"
+                            android:textSize="12sp" />
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/rejection_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".65"
+                            android:padding="4dp"
+                            android:text="@string/rejection"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tvRejectionAttendanceCountWFMS"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".25"
+                            android:gravity="center"
+                            android:padding="4dp"
+                            android:text="@string/_0" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/holiday_lt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_weight=".5"
+                        android:background="@drawable/bg_calender"
+                        android:orientation="horizontal"
+                        android:padding="5dp">
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/grey_text"
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_15sdp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/_2sdp"
+                            android:background="@drawable/circle_grey"
+                            android:padding="2dp"
+                            android:textSize="12sp" />
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/holiday_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".65"
+                            android:padding="4dp"
+                            android:text="@string/holiday"
+                            android:textSize="12sp" />
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/tvHolidayAttendanceCountWFMS"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".25"
+                            android:gravity="center"
+                            android:padding="4dp"
+                            android:text="@string/_0" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rlTop"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:visibility="visible">
+
+                <com.htistelecom.htisinhouse.font.UbuntuButton
+                    android:id="@+id/btnLeaveDetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rect_fill_orange_less_border"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="8dp"
+
+                    android:text="@string/leave_details"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

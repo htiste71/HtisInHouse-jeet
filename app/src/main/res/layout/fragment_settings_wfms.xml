@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.htistelecom.htisinhouse.font.UbuntuBold
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorSkyBlue"
+        android:padding="10dp"
+        android:text="@string/strProfile"
+        android:textColor="@color/colorDarkBlue"
+        android:textSize="18sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivProfileSettingsWFMS"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/icon_man" />
+
+        <com.htistelecom.htisinhouse.font.Ubuntu
+            android:id="@+id/tvProfileNameSettingsWFMS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorDarkBlue"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:textSize="20sp"
+            android:layout_toRightOf="@+id/ivProfileSettingsWFMS"/>
+        <com.htistelecom.htisinhouse.font.Ubuntu
+            android:id="@+id/tvDeptSettingsWFMS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorLightBlack"
+            android:layout_marginLeft="15dp"
+            android:textSize="16sp"
+            android:layout_below="@+id/tvProfileNameSettingsWFMS"
+            android:layout_toRightOf="@+id/ivProfileSettingsWFMS"/>
+    </RelativeLayout>
+
+    <com.htistelecom.htisinhouse.font.UbuntuBold
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@color/colorSkyBlue"
+        android:padding="10dp"
+        android:text="@string/strAbout"
+        android:textColor="@color/colorDarkBlue"
+        android:textSize="18sp" />
+    <LinearLayout
+        android:id="@+id/llChangePasswordWFMS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical">
+
+        <com.htistelecom.htisinhouse.font.Ubuntu
+            android:id="@+id/txtChangePasswordpSettingsWFMS"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/strChangePassword"
+            android:textColor="@color/colorLightBlack"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/colorLightBlack" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/llHelpSettingsWFMS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical">
+
+        <com.htistelecom.htisinhouse.font.Ubuntu
+            android:id="@+id/txtHelpSettingsWFMS"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/strHelp"
+            android:textColor="@color/colorLightBlack"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/colorLightBlack" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llTermsOfUseSettingsWFMS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical">
+
+        <com.htistelecom.htisinhouse.font.Ubuntu
+            android:id="@+id/txtTermsOfUseSettingsWFMS"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/strTermsOfUse"
+            android:textColor="@color/colorLightBlack"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/colorLightBlack" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llLegalPrivacySettingsWFMS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical">
+
+        <com.htistelecom.htisinhouse.font.Ubuntu
+            android:id="@+id/txtLegalPrivacySettingsWFMS"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/strLegal_Privacy"
+            android:textColor="@color/colorLightBlack"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
+
+
+    <com.htistelecom.htisinhouse.font.UbuntuBold
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorSkyBlue"
+        android:padding="10dp"
+        android:text="@string/strLogs"
+        android:textColor="@color/colorDarkBlue"
+        android:textSize="18sp" />
+
+    <com.htistelecom.htisinhouse.font.UbuntuButton
+        android:id="@+id/btnSendLogReportSettingsWFMS"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:background="@drawable/rect_background_border_orange_radius_13"
+        android:text="@string/strSendLogReport"
+        android:textColor="@color/colorWhite"
+        android:textSize="16sp" />
+</LinearLayout>

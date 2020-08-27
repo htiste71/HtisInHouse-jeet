@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/_20sdp"
+        android:paddingRight="@dimen/_20sdp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.htistelecom.htisinhouse.font.UbuntuBold
+            android:id="@+id/txtDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:gravity="center"
+            android:text="OTP Verification"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp" />
+
+        <com.htistelecom.htisinhouse.font.Ubuntu
+            android:id="@+id/txtdemo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:gravity="center"
+            android:text="Enter four digits OTP sent on your registered mobile number"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12sdp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:orientation="horizontal"
+            android:weightSum="4">
+
+
+            <com.htistelecom.htisinhouse.font.UbuntuEditText
+                android:id="@+id/edtOne"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_otp"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1" />
+
+
+            <com.htistelecom.htisinhouse.font.UbuntuEditText
+                android:id="@+id/edtTwo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_otp"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1" />
+
+
+            <com.htistelecom.htisinhouse.font.UbuntuEditText
+                android:id="@+id/edtThree"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_otp"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1" />
+
+
+            <com.htistelecom.htisinhouse.font.UbuntuEditText
+                android:id="@+id/edtFour"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_otp"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1" />
+
+        </LinearLayout>
+
+
+        <com.htistelecom.htisinhouse.font.UbuntuButton
+            android:id="@+id/btnVerifyOtp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/login_button"
+            android:text="Verify"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14sdp" />
+
+        <TextView
+            android:id="@+id/tvResendOTP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:text="Resend OTP"
+            android:padding="@dimen/_10sdp"
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp" />
+
+
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/llOuterRowTeamAdapterWFMS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:weightSum="100">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="60">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/ivProfileRowTeamAdapterWFMS"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/icon_man" />
+
+            <LinearLayout
+                android:id="@+id/llDetailRowTeamAdapterWFMS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@+id/ivProfileRowTeamAdapterWFMS"
+                android:orientation="vertical">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvPersonNameRowTeamAdapterWFMS"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Rajinder Singh"
+                    android:textColor="@color/colorDarkBlue"
+                    android:textSize="16sp" />
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvCheckInRowTeamAdapterWFMS"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Punch In On 08:03 AM"
+                    android:textColor="@color/colorLightBlack"
+                    android:textSize="12sp" />
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvCheckOutRowTeamAdapterWFMS"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Punch Out  08:03 AM"
+                    android:textColor="@color/colorLightBlack"
+                    android:textSize="12sp" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    android:layout_marginTop="5dp">
+
+                    <ImageView
+                        android:id="@+id/iconLocationRowTeamAdapterWFMS"
+                        android:layout_width="10dp"
+                        android:layout_height="12dp"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/icon_location_filter" />
+
+                    <com.htistelecom.htisinhouse.font.Ubuntu
+                        android:id="@+id/tvLocationRowTeamAdapterWFMS"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@+id/iconLocationRowTeamAdapterWFMS"
+                        android:text="Mohali"
+                        android:textColor="@color/colorLightBlack"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="20"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/ivInfoRowTeamAdapterWFMS"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/icon_info_team" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="20"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/task"
+                android:textColor="@color/colorLightBlack"
+                android:textSize="16sp" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvTaskRowTeamAdapterWFMS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0/0"
+                android:textColor="@color/colorDarkBlue"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/llOuterRowTeamAdapterWFMS"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorLightBlack" />
+</RelativeLayout>

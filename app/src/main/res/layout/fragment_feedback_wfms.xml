@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <com.htistelecom.htisinhouse.font.Ubuntu
+        android:layout_width="match_parent"
+        android:textSize="16sp"
+        android:layout_marginTop="40dp"
+        android:padding="20dp"
+        android:gravity="center"
+        android:text="@string/strFeedbackText"
+        android:layout_height="wrap_content" />
+
+    <com.htistelecom.htisinhouse.font.UbuntuEditText
+        android:id="@+id/etFeedbackFragmentFeedbackWFMS"
+        android:textSize="18sp"
+        android:layout_margin="20dp"
+        android:gravity="top|left"
+        android:hint="Feedback here..."
+        android:padding="10dp"
+        android:background="@drawable/bg_edittext"
+        android:minLines="5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btnFeedbackFeedbackFragmentWFMS"
+        android:text="Send Feedback"
+        android:textColor="@color/white"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_gravity="center"
+        android:paddingTop="10dp"
+        android:layout_marginTop="15dp"
+        android:paddingBottom="10dp"
+        android:background="@drawable/rect_background_border_orange_radius_13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

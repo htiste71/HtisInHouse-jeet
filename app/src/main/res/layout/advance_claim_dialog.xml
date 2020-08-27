@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/_10sdp">
+
+    <com.htistelecom.htisinhouse.font.UbuntuBold
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:text="@string/remarks"
+        android:textColor="@color/grey_text2"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <com.htistelecom.htisinhouse.font.UbuntuEditText
+        android:id="@+id/etAdvRemarks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_5sdp"
+        android:background="@drawable/bg_edittext"
+        android:maxLines="3"
+        android:padding="@dimen/_20sdp"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal">
+
+
+        <com.htistelecom.htisinhouse.font.UbuntuButton
+            android:id="@+id/submit_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".4"
+            android:background="@drawable/login_button"
+            android:gravity="center"
+            android:text="@string/submit"
+            android:textColor="@color/white" />
+
+        <com.htistelecom.htisinhouse.font.UbuntuButton
+            android:id="@+id/cancel_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight=".4"
+            android:background="@drawable/cancel_button"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/black" />
+
+        <com.htistelecom.htisinhouse.font.UbuntuButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight=".2"
+            android:background="@drawable/cancel_button"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/black"
+            android:visibility="invisible" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

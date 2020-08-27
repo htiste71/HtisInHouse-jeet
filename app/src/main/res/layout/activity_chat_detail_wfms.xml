@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_chat_detail" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvChatDetailActivityWFMS"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:paddingLeft="10dp"
+        android:layout_above="@+id/rlBottomChatDetailActivityWFMS"
+        android:paddingRight="10dp" />
+
+    <RelativeLayout
+        android:id="@+id/rlBottomChatDetailActivityWFMS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/colorLightBlackNew" />
+
+        <com.htistelecom.htisinhouse.font.Ubuntu
+            android:id="@+id/tvTextChatDetailActivityWFMS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view"
+            android:hint="Enter text here"
+            android:padding="15dp"
+            android:textColor="@color/colorLightBlackNew"
+            android:textColorHint="@color/colorLightBlackNew"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/ivSendChatDetailActivityWFMS"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/icon_arrow_green" />
+    </RelativeLayout>
+</RelativeLayout>

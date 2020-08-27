@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dp"
+
+    android:layout_height="wrap_content">
+
+    <com.htistelecom.htisinhouse.font.Ubuntu
+        android:id="@+id/tvMessageChatDetailAdapterWFMS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:lineSpacingExtra="5dp"
+
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rect_left_corner"
+        android:padding="3dp"
+        android:text="Helllllooodcjhdfjdjfjdfhdfhdhjdfdfdhfh"
+        android:textColor="@color/colorWhite"
+        android:textSize="16sp" />
+</RelativeLayout>

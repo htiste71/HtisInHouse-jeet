@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.htistelecom.htisinhouse.font.UbuntuBold
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlue"
+        android:gravity="center"
+        android:padding="@dimen/_15sdp"
+        android:text="@string/apply_leave"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_16sdp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/_18sdp">
+
+        <com.htistelecom.htisinhouse.font.UbuntuBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/from_date"
+            android:textColor="@color/grey_text2"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:baselineAligned="false"
+            android:weightSum="2">
+
+            <RelativeLayout
+                android:id="@+id/rlFromDate"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edittext"
+                android:gravity="center"
+                android:padding="@dimen/_5sdp">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvFromDate"
+                    android:layout_width="127dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_toStartOf="@+id/ivCalendar"
+                    android:gravity="center"
+                    android:hint="@string/select_the_date"
+                    android:maxLength="12"
+                    android:padding="5dp"
+                    android:text=""
+                    android:textSize="@dimen/_10sdp" />
+
+
+                <ImageView
+                    android:id="@+id/ivCalendar"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentEnd="true"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/icon_calendar" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/liner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_edittext"
+                android:padding="@dimen/_5sdp">
+
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/leaveTypeFromDateSpnr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:gravity="start"
+                    android:spinnerMode="dropdown" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="3dp"
+                    android:src="@drawable/icon_down"
+                    tools:ignore="ContentDescription" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <com.htistelecom.htisinhouse.font.UbuntuBold
+            android:id="@+id/txtToDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:text="@string/to_date"
+            android:textColor="@color/grey_text2"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:id="@+id/llToDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:baselineAligned="false"
+            android:weightSum="2">
+
+            <RelativeLayout
+                android:id="@+id/rlToDate"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edittext"
+                android:gravity="center"
+                android:padding="@dimen/_5sdp">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvToDate"
+                    android:layout_width="127dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_toStartOf="@+id/ivCalendar2"
+                    android:gravity="center"
+                    android:hint="@string/select_the_date"
+                    android:maxLength="12"
+                    android:padding="5dp"
+                    android:text=""
+                    android:textSize="@dimen/_10sdp" />
+
+
+                <ImageView
+                    android:id="@+id/ivCalendar2"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentEnd="true"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/icon_calendar" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_edittext"
+                android:padding="@dimen/_5sdp">
+
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/leaveTypeToDateSpnr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:gravity="start"
+                    android:spinnerMode="dropdown" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="3dp"
+                    android:src="@drawable/icon_down"
+                    tools:ignore="ContentDescription" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <com.htistelecom.htisinhouse.font.UbuntuBold
+            android:id="@+id/txtLeaveType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:text="@string/leave_type"
+            android:textColor="@color/grey_text2"
+            android:textSize="15sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@drawable/rounded_edittext"
+            android:padding="@dimen/_5sdp">
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/leaveType_spnr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:gravity="start"
+                android:spinnerMode="dropdown" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="3dp"
+                android:src="@drawable/icon_down"
+                tools:ignore="ContentDescription" />
+        </RelativeLayout>
+
+        <com.htistelecom.htisinhouse.font.UbuntuBold
+            android:id="@+id/txtReason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:text="@string/reason"
+            android:textColor="@color/grey_text2"
+            android:textSize="15sp" />
+
+        <com.htistelecom.htisinhouse.font.UbuntuEditText
+            android:id="@+id/etMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/bg_edittext"
+            android:maxLines="3"
+            android:padding="@dimen/_20sdp"
+            android:textSize="14sp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/submit_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:background="@drawable/login_button"
+                android:gravity="center"
+                android:text="@string/submit"
+                android:textColor="@color/white" />
+
+
+            <Button
+                android:id="@+id/cancel_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight=".5"
+                android:background="@drawable/cancel_button"
+                android:gravity="center"
+                android:text="@string/cancel"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

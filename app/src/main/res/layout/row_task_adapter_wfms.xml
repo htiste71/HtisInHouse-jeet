@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:id="@+id/llRowTaskAdapterWFMS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.htistelecom.htisinhouse.font.Ubuntu
+            android:id="@+id/tvSiteNameRowTaskAdapterWFMS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1. Airtel"
+            android:textColor="@color/colorDarkBlue"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:text="@string/txtSite"
+                android:textSize="16sp"
+                android:textColor="@color/colorDarkBlue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:hint=":DAV College"
+                android:textSize="16sp"
+                android:id="@+id/tvSiteAddressRowTaskAdapterWFMS"
+                android:layout_marginLeft="15dp"
+                android:textColor="@color/colorLightBlack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:text="@string/txtTask"
+                android:textSize="16sp"
+                android:textColor="@color/colorDarkBlue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <com.htistelecom.htisinhouse.font.Ubuntu
+
+                android:hint=":Power Supply"
+                android:textSize="16sp"
+                android:id="@+id/tvTaskNameRowTaskAdapterWFMS"
+                android:layout_marginLeft="15dp"
+                android:textColor="@color/colorLightBlack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:text="@string/txtDate"
+                android:textSize="16sp"
+                android:textColor="@color/colorDarkBlue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:hint=": 01 May, 2020"
+                android:textSize="16sp"
+                android:id="@+id/tvDateRowTaskAdapterWFMS"
+                android:layout_marginLeft="15dp"
+                android:textColor="@color/colorLightBlack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/ivArrowRowTaskAdapterWFMS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/icon_arrow_green"/>
+</RelativeLayout>

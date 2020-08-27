@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_1sdp"
+    android:layout_marginBottom="@dimen/_1sdp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtDateAdvanceAdvanceClaim"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="40"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="@string/date"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/tvDateAdvanceClaim"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="60"
+                android:text="2 April,2020"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtAmountAdvanceAdvanceClaim"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="40"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="@string/strAmount"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/tvAmountAdvanceAdvanceClaim"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="60"
+                android:text="500"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtRemarksAdvanceAdvanceClaim"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="40"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="@string/remarks"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/tvRemarksAdvanceAdvanceClaim"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="60"
+                android:text="Vijender Singh-HOD"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtStatusAdvanceAdvanceClaim"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="40"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="@string/status"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/tvAcceptAdvanceAdvanceClaim"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="60"
+                android:drawableLeft="@drawable/icon_accept"
+                android:drawablePadding="10dp"
+                android:text="Accept"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/tvRejectAdvanceAdvanceClaim"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="60"
+                android:drawableLeft="@drawable/icon_reject"
+                android:drawablePadding="10dp"
+                android:text="Reject"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <com.htistelecom.htisinhouse.font.UbuntuBold
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlue"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="@string/txtSaveCurrentLocation"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rlSelectTypeDialogSaveCurrentLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:background="@drawable/rect_light_color_black_border"
+                android:padding="15dp">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvSelectTypeDialogSaveCurrentLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/txtSelectType"
+                    android:textColor="@color/colorLightBlackNew"
+                    android:textColorHint="@color/colorLightBlackNew"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_down" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="15dp"
+                android:orientation="vertical">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvAddressDialogSaveCurrentLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rect_light_color_black_border"
+                    android:gravity="left"
+                    android:hint="@string/txtAddress"
+                    android:minLines="5"
+                    android:padding="15dp"
+                    android:textSize="15sp" />
+
+                <RelativeLayout
+                    android:id="@+id/rlSelectDistrictDialogSaveCurrentLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/rect_light_color_black_border"
+                    android:padding="15dp">
+
+                    <com.htistelecom.htisinhouse.font.Ubuntu
+                        android:id="@+id/tvSelectDistrictDialogSaveCurrentLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/txtState"
+
+                        android:textColor="@color/colorLightBlackNew"
+                        android:textColorHint="@color/colorLightBlackNew"
+                        android:textSize="15sp" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlSelectIndustryDialogSaveCurrentLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/rect_light_color_black_border"
+                    android:padding="15dp">
+
+                    <com.htistelecom.htisinhouse.font.Ubuntu
+                        android:id="@+id/tvSelectIndustryDialogSaveCurrentLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/txtSelectIndustry"
+                        android:textColor="@color/colorLightBlackNew"
+                        android:textColorHint="@color/colorLightBlackNew"
+                        android:textSize="15sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/icon_down" />
+                </RelativeLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal">
+
+
+                    <Button
+                        android:id="@+id/btnSubmitDialogSaveCurrentLocation"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".5"
+                        android:background="@drawable/rect_background_border_orange_radius_13"
+                        android:gravity="center"
+                        android:text="@string/txtSubmit"
+                        android:textColor="@color/white" />
+
+
+                    <Button
+                        android:id="@+id/btnCancelDialogSaveCurrentLocation"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight=".5"
+                        android:background="@drawable/rect_no_background_border_orange"
+                        android:gravity="center"
+                        android:text="@string/cancel"
+                        android:textColor="@color/colorDarkBlue" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/_14sdp">
+
+            <com.htistelecom.htisinhouse.font.UbuntuEditText
+                android:id="@+id/etCompanyName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/bg_edittext"
+                android:hint="@string/company_name"
+                android:maxLines="3"
+                android:padding="@dimen/_15sdp"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:baselineAligned="false"
+                android:weightSum="100">
+
+
+                <com.htistelecom.htisinhouse.font.UbuntuEditText
+                    android:id="@+id/etpersonName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:background="@drawable/rounded_edittext"
+                    android:hint="@string/person_name"
+                    android:padding="@dimen/_10sdp"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    tools:ignore="Autofill" />
+
+                <RelativeLayout
+                    android:id="@+id/rlPosition"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:background="@drawable/rounded_edittext"
+                    android:minHeight="@dimen/_33sdp"
+                    android:paddingStart="4dp"
+                    android:paddingTop="1dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="8dp">
+
+                    <com.htistelecom.htisinhouse.font.Ubuntu
+                        android:id="@+id/tvPosition"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/_1sdp"
+                        android:background="@android:color/transparent"
+                        android:gravity="center_vertical"
+                        android:hint="Position"
+                        android:padding="@dimen/_5sdp"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/ivPosition"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:padding="@dimen/_8sdp"
+                        android:src="@drawable/icon_down"
+                        tools:ignore="ContentDescription" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <com.htistelecom.htisinhouse.font.UbuntuEditText
+                android:id="@+id/etWebstite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/bg_edittext"
+                android:hint="@string/website_link"
+                android:maxLines="3"
+                android:padding="@dimen/_15sdp"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:baselineAligned="false"
+                android:weightSum="100">
+
+                <RelativeLayout
+                    android:id="@+id/rlStartTime"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:background="@drawable/rounded_edittext"
+                    android:paddingStart="4dp"
+                    android:paddingTop="1dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="8dp">
+
+                    <com.htistelecom.htisinhouse.font.Ubuntu
+                        android:id="@+id/tvReachTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/_1sdp"
+                        android:gravity="center_vertical"
+                        android:hint="Cust Reach Time"
+                        android:padding="@dimen/_5sdp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:padding="@dimen/_8sdp"
+                        android:src="@drawable/icon_down"
+                        tools:ignore="ContentDescription" />
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/rlEndTime"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:background="@drawable/rounded_edittext"
+                    android:paddingStart="4dp"
+                    android:paddingTop="1dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="8dp">
+
+                    <com.htistelecom.htisinhouse.font.Ubuntu
+                        android:id="@+id/tvOutTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/_1sdp"
+                        android:gravity="center_vertical"
+                        android:hint="Cust Out Time"
+
+                        android:padding="@dimen/_5sdp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:padding="@dimen/_8sdp"
+                        android:src="@drawable/icon_down"
+                        tools:ignore="ContentDescription" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:baselineAligned="false"
+                android:weightSum="100">
+
+                <RelativeLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:background="@drawable/rounded_edittext"
+                    android:minHeight="@dimen/_33sdp"
+                    android:paddingStart="4dp"
+                    android:paddingTop="1dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="8dp">
+
+                    <com.htistelecom.htisinhouse.font.Ubuntu
+                        android:id="@+id/tvEntity"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/_1sdp"
+                        android:background="@android:color/transparent"
+                        android:gravity="center_vertical"
+
+                        android:hint="Entity Type"
+                        android:padding="@dimen/_5sdp" />
+
+                    <ImageView
+                        android:id="@+id/ivEntityType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:padding="@dimen/_8sdp"
+                        android:src="@drawable/icon_down"
+                        tools:ignore="ContentDescription" />
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:background="@drawable/rounded_edittext"
+                    android:minHeight="@dimen/_33sdp"
+                    android:paddingStart="4dp"
+                    android:paddingTop="1dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="8dp">
+
+                    <com.htistelecom.htisinhouse.font.Ubuntu
+                        android:id="@+id/tvNatureBusiness"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/_1sdp"
+                        android:layout_toLeftOf="@+id/ivNatureBusiness"
+                        android:background="@android:color/transparent"
+                        android:gravity="center_vertical"
+                        android:hint="Nature of Business"
+                        android:padding="@dimen/_5sdp" />
+
+                    <ImageView
+                        android:id="@+id/ivNatureBusiness"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:padding="@dimen/_8sdp"
+                        android:src="@drawable/icon_down"
+                        tools:ignore="ContentDescription" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <com.htistelecom.htisinhouse.font.UbuntuEditText
+                android:id="@+id/etCompanyOwnerName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/bg_edittext"
+                android:hint="@string/company_owner_name"
+                android:maxLines="3"
+                android:padding="@dimen/_15sdp"
+                android:textSize="16sp" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuEditText
+                android:id="@+id/etCompanyOwnerDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/bg_edittext"
+                android:hint="@string/company_owner_details"
+                android:maxLines="3"
+                android:inputType="number"
+                android:padding="@dimen/_15sdp"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:id="@+id/rlTurnover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/rounded_edittext"
+                android:paddingStart="5dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="10dp">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvTurnover"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:gravity="center_vertical"
+                    android:hint="Select annual turnover"
+                    android:padding="@dimen/_10sdp"
+
+                    />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="3dp"
+                    android:contentDescription="@null"
+                    android:padding="@dimen/_10sdp"
+                    android:src="@drawable/icon_down" />
+            </RelativeLayout>
+
+            <com.htistelecom.htisinhouse.font.UbuntuEditText
+                android:id="@+id/etRemarks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/bg_edittext"
+                android:hint="@string/remarks"
+                android:maxLines="3"
+                android:padding="@dimen/_15sdp"
+                android:textSize="16sp" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/tvLead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:text="@string/lead_generated"
+                android:textSize="@dimen/_14sdp" />
+
+            <RadioGroup
+                android:id="@+id/rgLead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioYes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:checked="true"
+                    android:padding="@dimen/_10sdp"
+                    android:text="Yes"
+                    android:textSize="20dp" />
+
+                <RadioButton
+                    android:id="@+id/radioNo"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_18sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:padding="@dimen/_10sdp"
+                    android:text="No"
+                    android:textSize="20dp" />
+            </RadioGroup>
+
+
+            <com.htistelecom.htisinhouse.font.UbuntuEditText
+                android:id="@+id/etEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/bg_edittext"
+                android:hint="@string/email_address"
+                android:maxLines="3"
+                android:padding="@dimen/_15sdp"
+                android:textSize="16sp" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuEditText
+                android:id="@+id/etPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/bg_edittext"
+                android:hint="@string/phone"
+                android:inputType="number"
+                android:maxLength="10"
+                android:maxLines="3"
+                android:padding="@dimen/_15sdp"
+                android:textSize="16sp" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuEditText
+                android:id="@+id/etAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/bg_edittext"
+                android:hint="@string/Address"
+                android:maxLines="3"
+                android:padding="@dimen/_15sdp"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:baselineAligned="false"
+                android:weightSum="100">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:background="@drawable/rounded_edittext"
+                    android:minHeight="@dimen/_33sdp"
+                    android:paddingStart="4dp"
+                    android:paddingTop="1dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="8dp">
+
+                    <com.htistelecom.htisinhouse.font.Ubuntu
+                        android:id="@+id/tvState"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/_1sdp"
+                        android:background="@android:color/transparent"
+                        android:gravity="center_vertical"
+                        android:padding="@dimen/_5sdp"
+                        android:text="State" />
+
+                    <ImageView
+                        android:id="@+id/ivState"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:padding="@dimen/_8sdp"
+                        android:src="@drawable/icon_down"
+                        tools:ignore="ContentDescription" />
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:background="@drawable/rounded_edittext"
+                    android:minHeight="@dimen/_33sdp"
+                    android:paddingStart="4dp"
+                    android:paddingTop="1dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="8dp">
+
+                    <com.htistelecom.htisinhouse.font.Ubuntu
+                        android:id="@+id/tvCity"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/_1sdp"
+                        android:background="@android:color/transparent"
+                        android:gravity="center_vertical"
+
+                        android:hint="City"
+                        android:padding="@dimen/_5sdp" />
+
+                    <ImageView
+                        android:id="@+id/ivCity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:padding="@dimen/_8sdp"
+                        android:src="@drawable/icon_down"
+                        tools:ignore="ContentDescription" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:baselineAligned="false"
+                android:weightSum="100">
+
+
+                <com.htistelecom.htisinhouse.font.UbuntuEditText
+                    android:id="@+id/etZip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:background="@drawable/rounded_edittext"
+                    android:hint="@string/zip"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:padding="@dimen/_10sdp"
+                    android:textColor="@color/black"
+                    tools:ignore="Autofill" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuEditText
+                    android:id="@+id/etZip2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:background="@drawable/rounded_edittext"
+                    android:hint="@string/zip"
+                    android:inputType="numberDecimal"
+                    android:padding="@dimen/_10sdp"
+                    android:textColor="@color/black"
+                    android:visibility="invisible"
+                    tools:ignore="Autofill" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+
+                <com.htistelecom.htisinhouse.font.UbuntuButton
+                    android:id="@+id/submit_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:background="@drawable/login_button"
+                    android:gravity="center"
+                    android:text="@string/submit"
+                    android:textColor="@color/white" />
+
+
+                <com.htistelecom.htisinhouse.font.UbuntuButton
+                    android:id="@+id/cancel_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight=".5"
+                    android:background="@drawable/cancel_button"
+                    android:gravity="center"
+                    android:text="@string/cancel"
+                    android:textColor="@color/black" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

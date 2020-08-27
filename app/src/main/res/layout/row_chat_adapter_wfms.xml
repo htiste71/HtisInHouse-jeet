@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/ivProfileImageRowChatAdapterWFMS"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/icon_man" />
+
+    <com.htistelecom.htisinhouse.font.UbuntuBold
+
+
+        android:id="@+id/tvProfileNameRowChatAdapterWFMS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/ivProfileImageRowChatAdapterWFMS"
+        android:text="Rajinder Singh"
+        android:textColor="@color/colorDarkBlue"
+        android:textSize="18sp" />
+
+    <com.htistelecom.htisinhouse.font.Ubuntu
+
+
+        android:id="@+id/tvNewMessageRowChatAdapterWFMS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvProfileNameRowChatAdapterWFMS"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/ivProfileImageRowChatAdapterWFMS"
+        android:text="Rajinder Singh"
+        android:textColor="@color/colorLightBlackNew"
+        android:textSize="14sp" />
+
+
+    <com.htistelecom.htisinhouse.font.Ubuntu
+
+
+        android:id="@+id/tvMessageDateRowChatAdapterWFMS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="13 May 2020"
+        android:layout_centerVertical="true"
+        android:textColor="@color/colorDarkBlue"
+        android:textSize="14sp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.50dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/ivProfileImageRowChatAdapterWFMS"
+        android:background="@color/colorLightBlackNew"/>
+</RelativeLayout>

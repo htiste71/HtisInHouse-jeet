@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <com.htistelecom.htisinhouse.font.UbuntuBold
+            android:id="@+id/tvPendingAdvanceClaimWFMS"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+
+            android:padding="10dp"
+            android:text="Pending"
+            android:textColor="@color/colorOrange"
+            android:textSize="16sp" />
+
+        <com.htistelecom.htisinhouse.font.UbuntuBold
+            android:id="@+id/tvApprovedAdvanceClaimWFMS"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="10dp"
+
+            android:text="Approved"
+            android:textColor="@color/colorOrange"
+            android:textSize="16sp" />
+
+        <com.htistelecom.htisinhouse.font.UbuntuBold
+            android:id="@+id/tvRejectedAdvanceClaimWFMS"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="10dp"
+
+            android:text="Rejected"
+            android:textColor="@color/colorOrange"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewWFMS"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:background="@color/colorSkyBlue" />
+    <com.htistelecom.htisinhouse.font.UbuntuBold
+        android:id="@+id/tvNoRecordAdvanceStatusActivityWFMS"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/strNoRecord"
+        android:textSize="16sp" />
+</LinearLayout>

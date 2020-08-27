@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <LinearLayout
+        android:id="@+id/llStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/_10sdp"
+        android:paddingTop="@dimen/_3sdp"
+        android:paddingRight="@dimen/_10sdp"
+        android:paddingBottom="@dimen/_15sdp">
+
+        <RelativeLayout
+            android:id="@+id/linerFix"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rounded_edittext"
+            android:paddingStart="@dimen/_5sdp"
+            android:paddingEnd="@dimen/_5sdp">
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/spnrStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/_33sdp"
+                android:spinnerMode="dropdown" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:src="@drawable/icon_down"
+                tools:ignore="ContentDescription" />
+        </RelativeLayout>
+
+        <com.htistelecom.htisinhouse.font.UbuntuEditText
+            android:id="@+id/etMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/bg_edittext"
+            android:hint="@string/activity_message"
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxLength="2000"
+            android:maxLines="4"
+            android:paddingStart="@dimen/_10sdp"
+            android:paddingTop="@dimen/_10sdp"
+            android:paddingEnd="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_13sdp"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+
+            <com.htistelecom.htisinhouse.font.UbuntuButton
+                android:id="@+id/btnSubmit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:background="@drawable/rect_fill_orange_less_border"
+                android:gravity="center"
+                android:text="@string/submit"
+                android:textColor="@color/white" />
+
+
+            <com.htistelecom.htisinhouse.font.UbuntuButton
+                android:id="@+id/cancel_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight=".5"
+                android:background="@drawable/rect_no_background_border_orange"
+                android:gravity="center"
+                android:text="@string/cancel"
+                android:textColor="@color/grey_text" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/white"
+    tools:context=".activity.HomeActivity">
+
+    <LinearLayout
+        android:id="@+id/llHeader"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_125sdp"
+        android:background="@color/colorSkyBlue"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/_15sdp"
+        android:paddingTop="@dimen/_20sdp"
+        android:paddingEnd="@dimen/_5sdp"
+        android:paddingBottom="@dimen/_20sdp"
+        android:weightSum="100">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="35"
+            android:gravity="center">
+
+            <ProgressBar
+                android:id="@+id/pbProfile"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_gravity="center"
+                android:minWidth="40dp"
+                android:minHeight="40dp"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="102dp"
+                android:layout_height="102dp"
+                android:layout_gravity="center"
+                android:background="@drawable/circle_img_bg" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/tvProfileImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center" />
+
+            <ImageView
+                android:id="@+id/ivCamera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:contentDescription="@null"
+                android:paddingStart="@dimen/_10sdp"
+                android:paddingEnd="@dimen/_10sdp"
+                android:paddingBottom="@dimen/_6sdp"
+                android:src="@drawable/icon_camera" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="65"
+            android:orientation="vertical">
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvEmpName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:singleLine="true"
+                android:text="@string/rajveer_singh"
+                android:textColor="@color/colorBlack"
+                android:textSize="20sp" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvEmpCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:singleLine="true"
+                android:text="@string/emp_code_2884"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvdesignation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/softwere_developer"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvDateOfJoin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/doj_01_dec_2017"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llNotification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llHeader"
+        android:background="@color/colorBlue"
+        android:orientation="horizontal"
+        android:padding="@dimen/_10sdp"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_news"
+            tools:ignore="ContentDescription" />
+
+        <com.htistelecom.htisinhouse.font.Ubuntu
+            android:id="@+id/txtAnniversary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeStepGranularity="2sp"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="@string/aniversary_of_htis"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            tools:targetApi="o" />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvHome"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom"
+        android:layout_below="@+id/llNotification"
+        android:background="#f8f9fd" />
+
+    <include
+        android:id="@+id/bottom"
+        layout="@layout/layout_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

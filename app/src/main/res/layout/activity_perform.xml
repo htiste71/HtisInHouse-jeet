@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f8f9fd"
+    android:orientation="vertical"
+    tools:context=".activity.PerformActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                android:orientation="vertical">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtProjectName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/project_name"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvProjectName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/grey_text"
+                    android:textSize="16sp"
+                    android:textStyle="normal" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/viewcolor" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:orientation="vertical">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtSiteId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/site_id"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvSiteId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/textview"
+                    android:textColor="@color/grey_text"
+                    android:textSize="16sp"
+                    android:textStyle="normal" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/viewcolor" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:orientation="vertical">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtSiteName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/site_name"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvSiteName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/textview"
+                    android:textColor="@color/grey_text"
+                    android:textSize="16sp"
+                    android:textStyle="normal" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/viewcolor" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:orientation="horizontal">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtLatitude"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/latitude_txt"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvLatitude"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtLatitude"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/latitude_txt"
+                    android:textColor="@color/grey_text"
+                    android:textSize="14sp"
+                    android:textStyle="normal" />
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtLongitude"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_30sdp"
+                    android:layout_toEndOf="@+id/txtLatitude"
+                    android:text="@string/longitude"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvLongitude"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtLongitude"
+                    android:layout_marginStart="@dimen/_30sdp"
+                    android:layout_marginTop="5dp"
+                    android:layout_toEndOf="@+id/txtLatitude"
+                    android:text="@string/longitude"
+                    android:textColor="@color/grey_text"
+                    android:textSize="14sp"
+                    android:textStyle="normal" />
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvViewMap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:background="@drawable/map_btnbackground"
+                    android:gravity="center"
+                    android:padding="@dimen/_5sdp"
+                    android:text="@string/view_map"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    tools:ignore="RelativeOverlap" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:background="@color/viewcolor"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:orientation="vertical">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Address"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/grey_text"
+                    android:textSize="16sp"
+                    android:textStyle="normal" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/viewcolor"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:orientation="vertical">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtActivity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvActivity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone"
+                    android:textColor="@color/grey_text"
+                    android:textSize="16sp"
+                    android:textStyle="normal" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvActivity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/viewcolor"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:orientation="vertical">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtMesssage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/remarks"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvRemarks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/grey_text"
+                    android:textSize="16sp"
+                    android:textStyle="normal" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/viewcolor"
+                    android:paddingBottom="5dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:orientation="vertical">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtWrokDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wrokdate"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvWorkDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/grey_text"
+                    android:textSize="16sp"
+                    android:textStyle="normal" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/viewcolor"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:orientation="vertical">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/status"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/grey_text"
+                    android:textSize="16sp"
+                    android:textStyle="normal" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/viewcolor"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_20sdp"
+                android:orientation="horizontal">
+
+
+                <com.htistelecom.htisinhouse.font.UbuntuButton
+                    android:id="@+id/btnStatus"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:background="@drawable/login_button"
+                    android:gravity="center"
+                    android:text="@string/status"
+                    android:textColor="@color/white"
+                    android:visibility="visible" />
+
+
+                <com.htistelecom.htisinhouse.font.UbuntuButton
+                    android:id="@+id/btnStart"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:background="@drawable/login_button"
+                    android:gravity="center"
+                    android:text="@string/start"
+                    android:textColor="@color/white" />
+
+
+                <com.htistelecom.htisinhouse.font.UbuntuButton
+                    android:id="@+id/btnCancel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight=".5"
+                    android:background="@drawable/cancel_button"
+                    android:gravity="center"
+                    android:text="@string/cancel"
+                    android:textColor="@color/grey_text" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LayoutMsg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="20dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_5sdp"
+                    android:text="@string/other_activity_in_progress"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/_15sdp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "399686448862",
+    "firebase_url": "https://htis-b901d.firebaseio.com",
+    "project_id": "htis-b901d",
+    "storage_bucket": "htis-b901d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399686448862:android:5c0f83d15e5cce66",
+        "android_client_info": {
+          "package_name": "com.htis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "399686448862-gbgq02r0g60atlrudaesn26a9c6k2vo6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzeigeMmQ3yiZgb813di4VUe7c_fATyVw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "399686448862-erdchrkpd59g8iu8d0nnrotnh6d8inod.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399686448862:android:79db2b5fbc1ec7fac4f44f",
+        "android_client_info": {
+          "package_name": "com.htistelecom.htisinhouse"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "399686448862-gbgq02r0g60atlrudaesn26a9c6k2vo6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzeigeMmQ3yiZgb813di4VUe7c_fATyVw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "399686448862-erdchrkpd59g8iu8d0nnrotnh6d8inod.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

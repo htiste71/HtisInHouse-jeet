@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardUseCompatPadding="true">
+
+
+    <LinearLayout
+        android:id="@+id/orderlist_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="5dp">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="85"
+            android:padding="@dimen/_5sdp">
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtProjectName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginTop="5dp"
+                android:text="@string/project"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtCol1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/txtProjectName"
+                android:layout_alignBottom="@+id/txtProjectName"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_toEndOf="@+id/txtProjectName"
+                android:text="@string/colon"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvProjectName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginTop="5dp"
+                android:layout_toEndOf="@+id/txtCol1"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@color/grey_text"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtSiteId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtProjectName"
+                android:layout_alignStart="@+id/txtProjectName"
+                android:layout_alignEnd="@+id/txtProjectName"
+                android:layout_marginTop="5dp"
+                android:text="@string/siteid"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtCol2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/txtSiteId"
+                android:layout_alignBottom="@+id/txtSiteId"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_toEndOf="@+id/txtSiteId"
+                android:text="@string/colon"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvSiteId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvProjectName"
+                android:layout_alignStart="@+id/tvProjectName"
+                android:layout_marginTop="5dp"
+                android:layout_toEndOf="@+id/txtCol2"
+                android:text=""
+                android:textColor="@color/grey_text"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtSiteName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtSiteId"
+                android:layout_alignStart="@+id/txtProjectName"
+                android:layout_alignEnd="@+id/txtProjectName"
+                android:layout_marginTop="5dp"
+                android:text="@string/site"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtCol3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/txtSiteName"
+                android:layout_alignBottom="@+id/txtSiteName"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_toEndOf="@+id/txtSiteName"
+                android:text="@string/colon"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvSiteName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvSiteId"
+                android:layout_alignStart="@id/tvSiteId"
+                android:layout_marginTop="5dp"
+                android:layout_toEndOf="@+id/txtCol3"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@color/grey_text"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtSiteName"
+                android:layout_alignStart="@+id/txtProjectName"
+                android:layout_alignEnd="@id/txtProjectName"
+                android:layout_marginTop="5dp"
+                android:text="@string/task"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtCol4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/txtTask"
+                android:layout_alignBottom="@+id/txtTask"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_toEndOf="@+id/txtTask"
+                android:text="@string/colon"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvTaskName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvSiteName"
+                android:layout_alignStart="@+id/tvSiteName"
+                android:layout_marginTop="5dp"
+                android:layout_toEndOf="@+id/txtCol4"
+                android:maxLines="2"
+                android:text=""
+                android:textColor="@color/grey_text"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtTask"
+                android:layout_alignStart="@+id/txtProjectName"
+                android:layout_alignTop="@+id/tvDate"
+                android:layout_alignEnd="@id/txtProjectName"
+                android:layout_marginBottom="10dp"
+                android:text="@string/date"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtCol5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/txtDate"
+                android:layout_alignBottom="@+id/txtDate"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_toEndOf="@+id/txtDate"
+                android:text="@string/colon"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvTaskName"
+                android:layout_alignStart="@+id/tvSiteName"
+                android:layout_marginTop="5dp"
+                android:layout_toEndOf="@+id/txtCol5"
+                android:text=""
+                android:textColor="@color/grey_text"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtDate"
+                android:layout_alignStart="@+id/txtProjectName"
+                android:layout_alignTop="@+id/tvStatus"
+                android:layout_alignEnd="@id/txtProjectName"
+                android:layout_marginBottom="10dp"
+                android:text="@string/status"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtCol6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/txtStatus"
+                android:layout_alignBottom="@+id/txtStatus"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_toEndOf="@+id/txtStatus"
+                android:text="@string/colon"
+                android:textColor="@color/grey_text2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvDate"
+                android:layout_alignStart="@+id/tvSiteName"
+                android:layout_marginTop="5dp"
+                android:layout_toEndOf="@+id/txtCol6"
+                android:text=""
+                android:textColor="@color/grey_text"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlNextPage"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="15"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/btnStart"
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:layout_alignParentEnd="true"
+                app:srcCompat="@drawable/icon_arrow_green"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/btnPending"
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:layout_alignParentEnd="true"
+                android:visibility="gone"
+                app:srcCompat="@drawable/icon_arrow_red"
+                tools:ignore="ContentDescription" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

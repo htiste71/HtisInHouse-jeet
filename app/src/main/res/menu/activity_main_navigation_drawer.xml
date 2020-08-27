@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_gallery"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/strMyProfile" />
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="@string/strMyTeam" />
+        <item
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/strMyTask" />
+        <item
+            android:id="@+id/nav_tools"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/strLeaveOD" />
+        <item
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/strMyAttendance" />
+        <item
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/strDocumentDirectory" />
+        <item
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/strMySalary" />
+        <item
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/strMyClaims" />
+        <item
+        android:icon="@drawable/ic_menu_manage"
+        android:title="@string/strLeaveOD" />
+        <item
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/strChat" />
+        <item
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/strForms" />
+        <item
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/strHelp" />
+        <item
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/strFeedback" />
+        <item
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/strSetting" />
+    </group>
+
+
+</menu>

@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.htistelecom.htisinhouse.font.UbuntuBold
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlue"
+        android:gravity="center"
+        android:padding="@dimen/_15sdp"
+        android:text="@string/txtApplyOutDoorDuty"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_16sdp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioGroup
+                android:id="@+id/rgDay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbFullDay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Full Day"
+                    android:textSize="14sp" />
+
+                <RadioButton
+                    android:id="@+id/rbHalfDay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginLeft="20dp"
+                    android:text="Short Time"
+
+                    android:textSize="14sp" />
+            </RadioGroup>
+
+<!--            <CheckBox-->
+<!--                android:id="@+id/cbNightShift"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:text="Night Shift"-->
+
+<!--                android:textSize="14sp" />-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/_18sdp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+
+                    android:weightSum="2">
+
+                    <com.htistelecom.htisinhouse.font.UbuntuBold
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/from_date"
+                        android:textColor="@color/grey_text2"
+                        android:textSize="14sp" />
+
+                    <com.htistelecom.htisinhouse.font.UbuntuBold
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:text="@string/txtToDate"
+                        android:textColor="@color/grey_text2"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:baselineAligned="false"
+                    android:weightSum="2">
+
+                    <RelativeLayout
+                        android:id="@+id/rlFromDateOD"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_edittext"
+                        android:padding="@dimen/_5sdp">
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/tvFromDateOD"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:hint="@string/select_the_date"
+                            android:maxLength="12"
+                            android:text=""
+                            android:textSize="14sp" />
+
+
+                        <ImageView
+                            android:id="@+id/ivCalendar"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentEnd="true"
+                            android:src="@drawable/icon_calendar" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rlToDateOD"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+
+                        android:background="@drawable/bg_edittext"
+                        android:padding="@dimen/_5sdp">
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/tvToDateOD"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:hint="@string/select_the_date"
+                            android:maxLength="12"
+                            android:text=""
+                            android:textSize="14sp" />
+
+
+                        <ImageView
+                            android:id="@+id/ivCalendarToDateOD"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentEnd="true"
+
+                            android:src="@drawable/icon_calendar" />
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvTotalDaysOD"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="#FFE8B7"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="Total Days : 0"
+                    android:textColor="@color/black" />
+
+                <LinearLayout
+                    android:id="@+id/llTimeHeaderOD"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <com.htistelecom.htisinhouse.font.UbuntuBold
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/txtInTime"
+                        android:textColor="@color/grey_text2"
+                        android:textSize="14sp" />
+
+                    <com.htistelecom.htisinhouse.font.UbuntuBold
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:text="@string/txtOutTime"
+                        android:textColor="@color/grey_text2"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llTimeOD"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:baselineAligned="false"
+                    android:weightSum="2">
+
+                    <RelativeLayout
+                        android:id="@+id/rlInTimeOD"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_edittext"
+                        android:padding="@dimen/_5sdp">
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/tvInTimeOD"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:hint="@string/txtSelectInTime"
+                            android:maxLength="12"
+                            android:text=""
+                            android:textSize="14sp" />
+
+
+                        <ImageView
+                            android:id="@+id/ivCalendarInTime"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentEnd="true"
+
+                            android:src="@drawable/icon_calendar" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rlOutTimeOD"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+
+                        android:background="@drawable/bg_edittext"
+                        android:padding="@dimen/_5sdp">
+
+                        <com.htistelecom.htisinhouse.font.Ubuntu
+                            android:id="@+id/tvOutTimeOD"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:hint="@string/txtOutTimeOD"
+                            android:maxLength="12"
+                            android:text=""
+                            android:textSize="14sp" />
+
+
+                        <ImageView
+                            android:id="@+id/ivCalendarOutTime"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentEnd="true"
+
+                            android:src="@drawable/icon_calendar" />
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvTotalHoursOD"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="#FFE8B7"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="Total Time : 0"
+                    android:textColor="@color/black" />
+
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/txtReasonApplyLeave"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/reason"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuEditText
+                    android:id="@+id/etReasonOD"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14sp"
+                    android:background="@drawable/bg_edittext"
+                    android:maxLines="3"
+                    android:padding="@dimen/_20sdp"
+                    android:textSize="14sp" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal">
+
+
+                    <Button
+                        android:id="@+id/btnApplyOD"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".5"
+                        android:background="@drawable/rect_background_border_orange_radius_13"
+                        android:gravity="center"
+                        android:text="@string/txtApply"
+                        android:textColor="@color/white" />
+
+
+                    <Button
+                        android:id="@+id/btnCancelOD"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight=".5"
+                        android:background="@drawable/rect_no_background_border_orange"
+                        android:gravity="center"
+                        android:text="@string/cancel"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

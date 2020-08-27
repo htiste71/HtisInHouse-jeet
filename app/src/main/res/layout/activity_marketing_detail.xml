@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_weight="100">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtCompanyName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:text="Company Name"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvCompanyName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_weight="100">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtPersonName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:text="Person Name"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvPersonName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_weight="100">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtPosition"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:text="Position"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvPosition"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_weight="100">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtWebsiteLink"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:text="Website Link"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvWebsiteLink"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_weight="100">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtReachTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:text="Reach Time"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvReachTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_weight="100">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtOutTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:text="Out Time"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvOutTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_weight="100">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtEntityType"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:text="Entity Type"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvEntityType"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_weight="100">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtNatureBusiness"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:text="Nature Of Business"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvNatureOfBusiness"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_weight="100">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtCompanyOwnerName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:text="Company Owner Name"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvCompanyOwnerName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_weight="100">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtOwnerContactDetails"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:text="Owner Contact Detail"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvCompanyOwnerContact"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_weight="100">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtTurnover"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:text="Annual Turnover"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvTurnover"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_weight="100">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtLeadGenerated"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:text="Lead Generated"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvLeadGenerated"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+
+                android:layout_weight="100">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtEmail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:text="Email"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvEmail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+
+                android:layout_weight="100">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtMobile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:text="Mobile Number"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvMobileNumber"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+
+                android:layout_weight="100">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtAddress"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:text="Address"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvAddress"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_weight="100">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtState"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:text="State"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvState"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+
+                android:layout_weight="100">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtCity"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:text="City"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvCity"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+
+                android:layout_weight="100">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/txtZip"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="50"
+                    android:text="Zip Code"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.htistelecom.htisinhouse.font.UbuntuBold
+                    android:id="@+id/tvZipCode"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:textColor="@color/grey_text2"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

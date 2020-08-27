@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <com.htistelecom.htisinhouse.font.Ubuntu
+            android:id="@+id/tvLocationSingleTaskClaimDetailAdapterWFMS"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="52"
+            android:text="Chandigarh to Shimla via baddi"
+            android:textColor="@color/colorDarkBlue"
+            android:textSize="14sp" />
+
+        <com.htistelecom.htisinhouse.font.Ubuntu
+            android:id="@+id/tvDistanceSingleTaskClaimDetailAdapterWFMS"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="12"
+            android:gravity="center"
+            android:text="200km"
+            android:textColor="@color/colorDarkBlue"
+            android:textSize="14sp" />
+
+        <com.htistelecom.htisinhouse.font.Ubuntu
+            android:id="@+id/tvTransportModeSingleTaskClaimDetailAdapterWFMS"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+            android:gravity="center"
+            android:text="Bike"
+            android:textColor="@color/colorDarkBlue"
+            android:textSize="14sp" />
+
+        <com.htistelecom.htisinhouse.font.Ubuntu
+            android:id="@+id/tvAmountSingleTaskClaimDetailAdapterWFMS"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="16"
+            android:gravity="center"
+            android:text="10000"
+            android:textColor="@color/colorDarkBlue"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <com.htistelecom.htisinhouse.font.Ubuntu
+        android:id="@+id/tvRemarksSingleTaskClaimDetailAdapterWFMS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Remarks: This is a test "
+        android:textColor="@color/colorDarkBlue"
+        android:textSize="14sp" />
+    <LinearLayout
+        android:id="@+id/rlImagesSingleTaskClaimDetailAdapterWFMS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="1dp"
+        android:weightSum="100">
+
+
+        <ImageView
+            android:id="@+id/iv1RowSingleTaskClaimDetailAdapter"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_60sdp"
+            android:layout_weight="25"
+            android:scaleType="fitXY"
+            android:contentDescription="@null" />
+
+        <ImageView
+            android:id="@+id/iv2RowSingleTaskClaimDetailAdapter"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_60sdp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="25"
+            android:scaleType="fitXY"
+            />
+
+
+        <ImageView
+            android:id="@+id/iv3RowSingleTaskClaimDetailAdapter"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_60sdp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="25"
+            android:scaleType="fitXY"
+           />
+
+        <ImageView
+            android:id="@+id/iv4RowSingleTaskClaimDetailAdapter"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_60sdp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="25"
+            android:scaleType="fitXY"
+             />
+
+    </LinearLayout>
+<View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_marginTop="10dp"
+    android:background="@color/colorLightBlackNew"/>
+</LinearLayout>

@@ -95,6 +95,7 @@ public interface ApiInterface {
 
 
 
+
     @Headers("Content-Type: application/json")
     @POST(ConstantsWFMS.WFMS_ACTIVITY_LIST_API)
     Call<String> methodActivityListWFMS(@Body String params);
@@ -121,6 +122,14 @@ public interface ApiInterface {
     @Headers("Content-Type: application/json")
     @POST(ConstantsWFMS.WFMS_USER_FEEDBACK_API)
     Call<String> methodUserFeedbackWFMS(@Body String params);
+
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_COMP_OFF_LIST_API)
+    Call<String> methodCompOffListWFMS(@Body String params);
+
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_APPLY_COMP_OFF_API)
+    Call<String> methodApplyCompOffListWFMS(@Body String params);
 
     @Multipart
     @POST(ConstantsWFMS.WFMS_TASK_STATUS_API)
@@ -222,7 +231,9 @@ public interface ApiInterface {
     @POST(ConstantsWFMS.WFMS_MEETING_STATUS_API)
     Call<String> methodMeetingStatusWFMS(@Body String params);
 
-
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_COMP_OFF_LEAVE_TYPE_API)
+    Call<String> methodCompOffLeaveTypeWFMS(@Body String params);
 
 
 

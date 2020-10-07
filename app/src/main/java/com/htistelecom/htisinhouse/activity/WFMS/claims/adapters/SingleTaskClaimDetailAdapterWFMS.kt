@@ -34,7 +34,7 @@ class SingleTaskClaimDetailAdapterWFMS(private val mContext: Context, val taskLi
             itemView.tvTransportModeSingleTaskClaimDetailAdapterWFMS.text = model.transportMode
             itemView.tvAmountSingleTaskClaimDetailAdapterWFMS.text = model.claimedAmount
             itemView.tvRemarksSingleTaskClaimDetailAdapterWFMS.text = "Remarks - "+model.remarks
-
+            itemView.tvClaimDateSingleTaskClaimDetailAdapterWFMS.text="Claim Date - "+model.createdDate
             if (model.images.equals("")) {
                 itemView.rlImagesSingleTaskClaimDetailAdapterWFMS.visibility = View.GONE
 

@@ -46,6 +46,15 @@ public class DocumentListModelWFMS {
     @SerializedName("ReqStatus")
     @Expose
     private String reqStatus;
+    @SerializedName("DocName")
+    @Expose
+    private String docName;
+    @SerializedName("DocURL")
+    @Expose
+    private String docURL;
+    @SerializedName("DocUploadedOn")
+    @Expose
+    private String docUploadedOn;
 
     public String getDocRequestId() {
         return docRequestId;
@@ -157,5 +166,29 @@ public class DocumentListModelWFMS {
 
     public void setReqStatus(String reqStatus) {
         this.reqStatus = reqStatus;
+    }
+
+    public String getDocName() {
+        return docName;
+    }
+
+    public void setDocName(String docName) {
+        this.docName = docName;
+    }
+
+    public String getDocURL() {
+        return docURL;
+    }
+
+    public void setDocURL(String docURL) {
+        this.docURL = docURL;
+    }
+
+    public String getDocUploadedOn() {
+        return docUploadedOn;
+    }
+
+    public void setDocUploadedOn(String docUploadedOn) {
+        this.docUploadedOn = docUploadedOn;
     }
 }

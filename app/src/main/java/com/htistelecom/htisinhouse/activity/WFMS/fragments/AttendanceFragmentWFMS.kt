@@ -124,8 +124,7 @@ class AttendanceFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener
             }
 
         }
-        //set values for text
-        // .setText("" + present);
+
         tvPresentAttendanceCountWFMS.setText("" + present)
         tvAbsentAttendanceCountWFMS.setText("" + absent)
         tvLeaveAttendanceCountWFMS.setText("" + leave)
@@ -204,7 +203,7 @@ class AttendanceFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener
                     calc[year, month - 1] = 1
                     endDate = calc.getActualMaximum(Calendar.DAY_OF_MONTH).toString() + "-" + Utilities.getMonthFormat(month) + "-" + year
                     startDate = "01-" + Utilities.getMonthFormat(month) + "-" + year
-                    //call the Api
+                    clearData()
                     calledMethod()
                 }
                 isFirst = true
@@ -246,10 +245,8 @@ class AttendanceFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener
             caldroidFragment!!.arguments = args
         }
 
-        //calender view
-        //weekend(month, year);
+
         setAdapterCalendarList()
-        // call the attendance presenter
         calledMethod()
     }
 
@@ -273,6 +270,12 @@ class AttendanceFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener
                     attendanceList(attendanceListData)
                 } else {
                     Utilities.showToast(activity, "No Details found.")
+                    tvPresentAttendanceCountWFMS.setText("" + present)
+                    tvAbsentAttendanceCountWFMS.setText("" + absent)
+                    tvLeaveAttendanceCountWFMS.setText("" + leave)
+                    tvPendingAttendanceCountWFMS.setText("" + pendingApproval)
+                    tvRejectionAttendanceCountWFMS.setText("" + rejection)
+                    tvHolidayAttendanceCountWFMS.setText("" + holiday)
                 }
             } catch (e: java.lang.Exception) {
                 Log.e("Error", e.message)
@@ -290,5 +293,15 @@ class AttendanceFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener
 
 
         }
+
+    }
+
+    fun clearData() {
+        present = 0
+        absent = 0
+        leave = 0
+        holiday = 0
+        pendingApproval = 0
+        rejection = 0
     }
 }

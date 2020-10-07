@@ -20,7 +20,6 @@ import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.CLAIM_SUMMA
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.UtilitiesWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.advance_claims.activity.AdvanceStatusActivityWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.claims.models.ClaimSummaryModel
-import com.htistelecom.htisinhouse.activity.WFMS.fragments.BaseFragmentCamera
 import com.htistelecom.htisinhouse.activity.WFMS.models.MyAttendanceModel
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.fragment.BaseFragment
@@ -218,7 +217,7 @@ class ClaimFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
                 val curDate = attendanceList[i].attendanceDate
                 claimDates.add(data, curDate)
                 data += 1
-                caldroidFragment!!.setBackgroundDrawableForDate(ColorDrawable(resources.getColor(R.color.colorPrimary)), getDateFormatted(curDate))
+                caldroidFragment!!.setBackgroundDrawableForDate(ColorDrawable(resources.getColor(R.color.green)), getDateFormatted(curDate))
                 caldroidFragment!!.setTextColorForDate(R.color.white, getDateFormatted(curDate))
             }
         }
@@ -268,6 +267,7 @@ class ClaimFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
     }
 
     override fun sendResponse(response: Any, TYPE: Int) {
+        if(TYPE!= ATTENDANCE_LIST_WFMS)
         Utilities.dismissDialog()
         if (TYPE == ATTENDANCE_LIST_WFMS) {
             try {

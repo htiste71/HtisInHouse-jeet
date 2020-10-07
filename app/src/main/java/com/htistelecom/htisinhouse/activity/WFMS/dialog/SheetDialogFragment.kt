@@ -21,6 +21,7 @@ class SheetDialogFragment : BottomSheetDialogFragment() {
     private var mContext: Context? =null
     var v: View? = null
     private var taskAL = ArrayList<TaskListModel>()
+    private var taskALFilter = ArrayList<TaskListModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.layout_bottom_sheet, container, false)

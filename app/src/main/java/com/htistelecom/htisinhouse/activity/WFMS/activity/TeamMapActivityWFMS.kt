@@ -1,5 +1,6 @@
 package com.htistelecom.htisinhouse.activity.WFMS.activity
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -21,7 +22,7 @@ import kotlinx.android.synthetic.main.toolbar.*
 
 
 class TeamMapActivityWFMS : BaseActivity(), OnMapReadyCallback {
-    lateinit var  bitmap: Bitmap
+    lateinit var bitmap: Bitmap
     lateinit var mapFragment: SupportMapFragment
     private var myTeamList = ArrayList<MyTeamModel>()
 
@@ -36,7 +37,7 @@ class TeamMapActivityWFMS : BaseActivity(), OnMapReadyCallback {
         ivDrawer.visibility = View.GONE
 
         tv_title.text = "Team"
-        ivBack.setOnClickListener { view -> finish() }
+        ivBack.setOnClickListener { view -> backToHome() }
         myTeamList = intent.getSerializableExtra("Data") as ArrayList<MyTeamModel>
         mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment!!.getMapAsync(this)
@@ -70,7 +71,7 @@ class TeamMapActivityWFMS : BaseActivity(), OnMapReadyCallback {
                 mCheckOut = "Check Out:" + model.checkOutLocation
             }
             if (latitude != 0.0 || longitude != 0.0) {
-                val marker = MarkerOptions().position(LatLng(latitude, longitude)).title(model.empName+"\n"+mCheckIn+"\n"+mCheckOut)
+                val marker = MarkerOptions().position(LatLng(latitude, longitude)).title(model.empName + "\n" + mCheckIn + "\n" + mCheckOut)
                 maps.addMarker(marker)
 
                 maps.moveCamera(CameraUpdateFactory.newLatLng(LatLng(latitude, longitude)))
@@ -99,6 +100,7 @@ class TeamMapActivityWFMS : BaseActivity(), OnMapReadyCallback {
 
         }
     }
+
     fun getBitMap(): Bitmap {
         try {
 
@@ -116,7 +118,11 @@ class TeamMapActivityWFMS : BaseActivity(), OnMapReadyCallback {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
+      backToHome()
+    }
+
+    fun backToHome() {
+        startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Team"))
         finish()
     }
 }

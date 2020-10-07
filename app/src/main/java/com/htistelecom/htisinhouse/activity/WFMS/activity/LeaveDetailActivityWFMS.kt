@@ -10,6 +10,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.ApiData
+import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantKotlin
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.models.LeaveTypeModel
 import com.htistelecom.htisinhouse.config.TinyDB
@@ -45,9 +46,8 @@ class LeaveDetailActivityWFMS : BaseActivity(), MyInterface, View.OnClickListene
         ivDrawer.visibility = View.GONE
 
 
-
         val jsonObj = JSONObject()
-        jsonObj.put("EmpId",tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
+        jsonObj.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
         hitAPI(ConstantsWFMS.LEAVE_TYPE_WFMS, jsonObj.toString())
     }
 
@@ -100,21 +100,24 @@ class LeaveDetailActivityWFMS : BaseActivity(), MyInterface, View.OnClickListene
     override fun onClick(v: View) {
         when (v.id) {
             R.id.ivBack -> {
-                finish()
+                backToHome()
             }
-            R.id.btnApplyLeaveDetail->
-            {
-                startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(FLAG_ACTIVITY_NEW_TASK).putExtra("fragment","OD"))
+            R.id.btnApplyLeaveDetail -> {
+                startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "OD"))
                 finish()
-
 
 
             }
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
+    private fun backToHome() {
+        startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Settings"))
         finish()
+
+    }
+
+    override fun onBackPressed() {
+        backToHome()
     }
 }

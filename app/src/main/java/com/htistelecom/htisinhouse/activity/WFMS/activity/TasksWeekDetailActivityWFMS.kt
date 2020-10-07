@@ -2,8 +2,12 @@ package com.htistelecom.htisinhouse.activity.WFMS.activity
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.Window
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -64,7 +68,13 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
     private fun initViews() {
         tinyDB = TinyDB(this)
 
-        tv_title.text = "Member Detail"
+        if (intent.getBooleanExtra("UserProfile", false))
+
+            tv_title.text = "Profile Detail"
+        else
+            tv_title.text = "Member Detail"
+
+
         ivDrawer.visibility = View.GONE
         model = intent.getSerializableExtra("data") as MyTeamModel
 
@@ -79,28 +89,37 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
         tvDesignationTasksWeekDetailActivityWFMS.text = model.empDesignation
         tvReportsToTasksWeekDetailActivityWFMS.text = "Reports To- " + model.empReportingManager
 
-        if(model.checkInLocation.equals(""))
-            tvLocationTasksWeekDetailActivityWFMS.text ="NA"
-
+        if (model.checkInLocation.equals(""))
+            tvLocationTasksWeekDetailActivityWFMS.text = "NA"
         else
-        tvLocationTasksWeekDetailActivityWFMS.text = model.checkInLocation
+            tvLocationTasksWeekDetailActivityWFMS.text = model.checkInLocation
 
-       if(model.tasks.equals(""))
-        tvTasksWeekDetailActivityWFMS.text = "No Tasks"
+        if (model.tasks.equals(""))
+            tvTasksWeekDetailActivityWFMS.text = "No Tasks"
         else
-           tvTasksWeekDetailActivityWFMS.text = model.tasks
+            tvTasksWeekDetailActivityWFMS.text = model.tasks
 
-        tvClaimsTasksWeekDetailActivityWFMS.text="Rs."+model.empClaims
+        tvClaimsTasksWeekDetailActivityWFMS.text = "Rs." + model.empClaims
         if (model.checkInLocation.equals(""))
             tvPunchStatusTasksWeekDetailActivityWFMS.text = "Not Punched In"
         else
             tvPunchStatusTasksWeekDetailActivityWFMS.text = "Punched In"
+
+        if (model.empId.equals(tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))) {
+            llCallTasksWeekDetailActivityWFMS.visibility = View.GONE
+            llMessageTasksWeekDetailActivityWFMS.visibility = GONE
+        } else {
+            llCallTasksWeekDetailActivityWFMS.visibility = View.VISIBLE
+            llMessageTasksWeekDetailActivityWFMS.visibility = VISIBLE
+        }
 
     }
 
     private fun listeners() {
         ivAddTasksWeekDetailActivityWFMS.setOnClickListener(this)
         ivBack.setOnClickListener(this)
+        llCallTasksWeekDetailActivityWFMS.setOnClickListener(this)
+        llMessageTasksWeekDetailActivityWFMS.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
@@ -111,12 +130,22 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
                 openDialogAddNewTask()
             }
         } else if (v.id == R.id.ivBack) {
-            finish()
+            backToHome()
+        } else if (v.id == R.id.llCallTasksWeekDetailActivityWFMS) {
+            val mPhoneNumber=model.empMobileNo
+            val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mPhoneNumber))
+            startActivity(intent)
+        } else if (v.id == R.id.llMessageTasksWeekDetailActivityWFMS) {
+            val mPhoneNumber=model.empMobileNo
+
+            val sms_uri = Uri.parse("smsto:"+mPhoneNumber)
+            val sms_intent = Intent(Intent.ACTION_SENDTO, sms_uri)
+            startActivity(sms_intent)
         }
     }
 
     private fun isPunchInMethod(): Boolean {
-      return  tinyDB.getBoolean(ConstantsWFMS.TINYDB_IS_PUNCH_IN)
+        return tinyDB.getBoolean(ConstantsWFMS.TINYDB_IS_PUNCH_IN)
     }
 
     fun hitAPI(type: Int, params: String) {
@@ -242,7 +271,7 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
             val year = calc.get(Calendar.YEAR)
             val month = calc.get(Calendar.MONTH)
             val day = calc.get(Calendar.DAY_OF_MONTH)
-           Utilities.getDate(this,year, month, day, calc.getTimeInMillis(), object : GetDateTime {
+            Utilities.getDate(this, year, month, day, calc.getTimeInMillis(), object : GetDateTime {
                 override fun getDateTime(strDate: String, strTime: String) {
 
                     tvFromDateDialogAddTask.text = strDate
@@ -277,7 +306,7 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
 
 
                 val jsonObject = JSONObject()
-                jsonObject.put("EmpId",model.empId)
+                jsonObject.put("EmpId", model.empId)
                 jsonObject.put("ProjectId", mProjectId)
                 //jsonObject.put("TaskId", "0")
                 jsonObject.put("TaskDate", mFromDateAddTask)
@@ -319,8 +348,6 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
         }
         listPopupWindow!!.show()
     }
-
-
 
 
     override fun sendResponse(response: Any?, TYPE: Int) {
@@ -387,6 +414,7 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
             if (jsonObj.getString("Status").equals("Success")) {
                 Utilities.showToast(this, jsonObj.getString("Message"))
                 dialog.dismiss()
+
                 finish()
 
             } else {
@@ -396,7 +424,11 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        backToHome()
+    }
+
+    fun backToHome() {
+        startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Team"))
         finish()
     }
 }

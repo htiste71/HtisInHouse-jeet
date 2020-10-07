@@ -115,8 +115,7 @@ class AddClaimActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickList
     override fun sendResponse(response: Any?, TYPE: Int) {
         Utilities.dismissDialog()
         when (TYPE) {
-            TRANSPORT_MODE_WFMS ->
-            {
+            TRANSPORT_MODE_WFMS -> {
                 val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
                 if (jsonObject.getString("Status").equals("Success")) {
                     val jsonArray = jsonObject.getJSONArray("Output")
@@ -157,17 +156,20 @@ class AddClaimActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickList
                     Utilities.showToast(this, "Please try again")
                 }
             }
-            CLAIM_SUBMIT_WFMS->
-            {
+            CLAIM_SUBMIT_WFMS -> {
                 val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
                 if (jsonObject.getString("Status").equals("Success")) {
-                    Utilities.showToast(this,jsonObject.getString("Message"))
-                    startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment","Claim"))
-                    finish()
+                    Utilities.showToast(this, jsonObject.getString("Message"))
+                    backToHome()
                 }
             }
 
         }
+    }
+
+    fun backToHome() {
+        startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Claim"))
+        finish()
     }
 
     override fun onClick(v: View) {
@@ -196,7 +198,10 @@ class AddClaimActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickList
 
             }
             R.id.ivBack -> {
-                finish()
+                backToHome()
+            }
+            R.id.btnCancelAddClaimActivityWFMS -> {
+                backToHome()
             }
             R.id.btnSubmitAddClaimActivityWFMS -> {
                 mFromLocation = etFromLocAddClaimActivityWFMS.text.toString()
@@ -277,7 +282,7 @@ class AddClaimActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickList
     }
 
     private fun callImageMethod() {
-        checkPermissions("com.htistelecom.htisinhouse.activity.NewKnjrkhana.claims.AddClaimActivityWFMS")
+        checkPermissions("com.htistelecom.htisinhouse.activity.WFMS.claims.AddClaimActivityWFMS")
     }
 
     fun imagePath(imgPath: File) {
@@ -305,3 +310,4 @@ class AddClaimActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickList
 
     }
 }
+

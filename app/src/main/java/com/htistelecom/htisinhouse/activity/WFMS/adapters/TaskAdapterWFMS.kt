@@ -59,6 +59,7 @@ class TaskAdapterWFMS (private val mContext: Context?, val taskAL: ArrayList<Tas
             itemView.setOnClickListener { view ->
                 val intent = Intent(mContext, PerformActivityWFMS::class.java)
                 intent.putExtra("data", model)
+                intent.putExtra("fromHome",false)
                 mContext.startActivity(intent)
 
 

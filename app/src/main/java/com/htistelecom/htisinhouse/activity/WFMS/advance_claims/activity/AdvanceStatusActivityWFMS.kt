@@ -2,6 +2,7 @@ package com.htistelecom.htisinhouse.activity.WFMS.advance_claims.activity
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -17,6 +18,7 @@ import com.htistelecom.htisinhouse.activity.ApiData
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.*
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.UtilitiesWFMS
+import com.htistelecom.htisinhouse.activity.WFMS.activity.MainActivityNavigation
 import com.htistelecom.htisinhouse.activity.WFMS.advance_claims.adapters.AdvanceStatusAdapterWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.advance_claims.models.AdvanceClaimListModel
 import com.htistelecom.htisinhouse.config.TinyDB
@@ -75,6 +77,7 @@ class AdvanceStatusActivityWFMS : Activity(), View.OnClickListener, MyInterface 
         tvPendingAdvanceClaimWFMS.setOnClickListener(this)
         tvApprovedAdvanceClaimWFMS.setOnClickListener(this)
         tvRejectedAdvanceClaimWFMS.setOnClickListener(this)
+        ivBack.setOnClickListener(this)
     }
 
 
@@ -106,29 +109,28 @@ class AdvanceStatusActivityWFMS : Activity(), View.OnClickListener, MyInterface 
 
 
             }
+            R.id.ivBack -> {
+                backToHome()
+            }
         }
     }
+
 
     fun changeTextColor() {
         val json = JSONObject()
         json.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
-        if(FOR_TYPE==FOR_PENDING)
-        {
+        if (FOR_TYPE == FOR_PENDING) {
             tvPendingAdvanceClaimWFMS.setTextColor(resources.getColor(R.color.colorOrange))
             tvApprovedAdvanceClaimWFMS.setTextColor(resources.getColor(R.color.colorDarkBlue))
             tvRejectedAdvanceClaimWFMS.setTextColor(resources.getColor(R.color.colorDarkBlue))
             json.put("RequestStatusId", 1)
-        }
-        else if(FOR_TYPE==FOR_APPROVED)
-        {
+        } else if (FOR_TYPE == FOR_APPROVED) {
             tvPendingAdvanceClaimWFMS.setTextColor(resources.getColor(R.color.colorDarkBlue))
             tvApprovedAdvanceClaimWFMS.setTextColor(resources.getColor(R.color.colorOrange))
             tvRejectedAdvanceClaimWFMS.setTextColor(resources.getColor(R.color.colorDarkBlue))
             json.put("RequestStatusId", 2)
 
-        }
-        else
-        {
+        } else {
             tvPendingAdvanceClaimWFMS.setTextColor(resources.getColor(R.color.colorDarkBlue))
             tvApprovedAdvanceClaimWFMS.setTextColor(resources.getColor(R.color.colorDarkBlue))
             tvRejectedAdvanceClaimWFMS.setTextColor(resources.getColor(R.color.colorOrange))
@@ -243,6 +245,9 @@ class AdvanceStatusActivityWFMS : Activity(), View.OnClickListener, MyInterface 
                 Utilities.showToast(this, jsonObject.getString("Message"))
                 dialog.dismiss()
                 changeTextColor()
+            } else {
+                Utilities.showToast(this, jsonObject.getString("Message"))
+
             }
 
         } else if (TYPE == SHOW_ADVANCE_DETAIL_WFMS) {
@@ -309,7 +314,11 @@ class AdvanceStatusActivityWFMS : Activity(), View.OnClickListener, MyInterface 
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        backToHome()
+    }
+
+    fun backToHome() {
+        startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Claim"))
         finish()
     }
 }

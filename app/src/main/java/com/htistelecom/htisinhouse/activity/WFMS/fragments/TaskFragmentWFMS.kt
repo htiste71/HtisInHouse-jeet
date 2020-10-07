@@ -62,6 +62,7 @@ class TaskFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
 
     private fun listeners() {
         ivAddTaskTaskFragmentWFMS!!.setOnClickListener(this)
+
     }
 
     private fun initViews() {
@@ -88,6 +89,7 @@ class TaskFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
         json.put("FromDate", mCurrentDate)
         json.put("ToDate", mCurrentDate)
         json.put("SiteUploadedId", "0")
+
 
 
         hitAPI(MY_TASK_LIST_WFMS, json.toString())
@@ -234,6 +236,7 @@ class TaskFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
                 jsonObject.put("ActivityId", mActivityId)
                 jsonObject.put("ActivityText", mReasonAddTask)
                 hitAPI(ADD_TASK_WFMS, jsonObject.toString())
+
             }
 
 
@@ -322,6 +325,9 @@ class TaskFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
             if (jsonObj.getString("Status").equals("Success")) {
                 Utilities.showToast(activity!!, jsonObj.getString("Message"))
                 dialog.dismiss()
+                mProjectId=""
+                mSiteId=""
+                mActivityId=""
                 callTaskList()
 
             } else {

@@ -2,9 +2,18 @@ package com.htistelecom.htisinhouse.activity.WFMS.document_directory
 
 
 import android.app.Dialog
+import android.app.DownloadManager
+import android.app.ProgressDialog
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.AsyncTask
 import android.os.Bundle
+import android.os.Environment
+import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -15,11 +24,11 @@ import android.widget.*
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.ApiData
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.*
+import com.htistelecom.htisinhouse.activity.WFMS.Utils.ImageFileUtils.TAG
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.UtilitiesWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.document_directory.adapters.DocumentDirectoryCommonAdapterWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.document_directory.models.DocumentListModelWFMS
@@ -38,17 +47,19 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-
 import org.json.JSONObject
 import retrofit2.Response
 import java.io.File
-
-import kotlin.collections.ArrayList
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 
 class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener, MyInterface {
 
 
+    lateinit var manager: DownloadManager
     lateinit var dialog: Dialog
     private var imgReqBody: MultipartBody.Part? = null
     private var img1ReqBody: MultipartBody.Part? = null
@@ -81,6 +92,9 @@ class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener
     var DOWNLOAD_DOC = 3
     var imagesAl = java.util.ArrayList<MultipartBody.Part>()
 
+    lateinit var ctx: Context
+    lateinit var progressDialog: ProgressDialog
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_document_directory, null)
     }
@@ -94,6 +108,10 @@ class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener
     }
 
     private fun initViews() {
+        progressDialog = ProgressDialog(activity);
+
+        manager = activity!!.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+
         tinyDB = TinyDB(activity)
         tinyDB = TinyDB(activity)
         ivAddHeader = activity!!.findViewById(R.id.ivAddHeader) as ImageView
@@ -168,10 +186,10 @@ class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener
     }
 
 
-    fun dialogUploadDoc(docRequestId: String,docName:String) {
+    fun dialogUploadDoc(docRequestId: String, docName: String) {
 
 
-         dialog = Dialog(activity)
+        dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_upload_document_wfms)
         dialog.setCancelable(false)
@@ -181,10 +199,10 @@ class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener
         val rlSelectDateUploadDoc = dialog.findViewById(R.id.rlSelectDateUploadDoc) as RelativeLayout
         val tvSelectDateUploadDoc = dialog.findViewById(R.id.tvSelectDateUploadDoc) as Ubuntu
 
-     //   val rlDocumentTypeSpinnerUploadDoc = dialog.findViewById(R.id.rlDocumentTypeSpinnerUploadDoc) as RelativeLayout
+        //   val rlDocumentTypeSpinnerUploadDoc = dialog.findViewById(R.id.rlDocumentTypeSpinnerUploadDoc) as RelativeLayout
         val tvDocumentTypeUploadDoc = dialog.findViewById(R.id.tvDocumentTypeUploadDoc) as Ubuntu
 
-     //   val rlSendToSpinnerUploadDoc = dialog.findViewById(R.id.rlSendToSpinnerUploadDoc) as RelativeLayout
+        //   val rlSendToSpinnerUploadDoc = dialog.findViewById(R.id.rlSendToSpinnerUploadDoc) as RelativeLayout
         val tvSendToUploadDoc = dialog.findViewById(R.id.tvSendToUploadDoc) as Ubuntu
 
         val etRemarksUploadDoc = dialog.findViewById(R.id.etRemarksUploadDoc) as UbuntuEditText
@@ -194,7 +212,7 @@ class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener
         var mSendTo = ""
         var mDocumentType = ""
         tvSelectDateUploadDoc.text = mCurrentDate
-        tvDocumentTypeUploadDoc.text=docName
+        tvDocumentTypeUploadDoc.text = docName
 
 
         btnCancelUploadDoc.setOnClickListener { view -> dialog.dismiss() }
@@ -230,11 +248,9 @@ class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener
 //        }
         btnSubmitUploadDoc.setOnClickListener { view ->
             val mRemarks = etRemarksUploadDoc.text.toString()
-            if(imagesAl.size==0)
-            {
-                UtilitiesWFMS.showToast(activity!!,resources.getString(R.string.errImages))
-            }
-            else {
+            if (imagesAl.size == 0) {
+                UtilitiesWFMS.showToast(activity!!, resources.getString(R.string.errImages))
+            } else {
                 var parts: Array<MultipartBody.Part?>? = null
                 if (imagesAl.size > 0) {
                     parts = arrayOfNulls(imagesAl.size)
@@ -264,8 +280,7 @@ class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener
         dialogRequestDoc.setCancelable(false)
         dialogRequestDoc.show()
 
-            hitAPI(DOCUMENT_TYPE_WFMS, "")
-
+        hitAPI(DOCUMENT_TYPE_WFMS, "")
 
 
         val btnSubmitRequestedDoc = dialogRequestDoc.findViewById(R.id.btnSubmitRequestedDoc) as Button
@@ -335,7 +350,7 @@ class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener
 
             if (textView.id == R.id.tvDocumentTypeRequestedDoc || textView.id == R.id.tvSendToUploadDoc) {
                 spinnerData.getData(documentTypeList.get(position).id, documentTypeList.get(position).name)
-            } else if (textView.id == R.id.tvDocumentRequestToRequestedDoc || textView.id==R.id.tvDocumentTypeUploadDoc) {
+            } else if (textView.id == R.id.tvDocumentRequestToRequestedDoc || textView.id == R.id.tvDocumentTypeUploadDoc) {
                 spinnerData.getData(departmentList.get(position).id, departmentList.get(position).name)
                 // mEmpIdToSend = alSendTo.get(position).empID
 
@@ -410,8 +425,8 @@ class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener
 
     override fun sendResponse(response: Any?, TYPE: Int) {
 
-        if(TYPE!= DOCUMENT_TYPE_WFMS)
-        Utilities.dismissDialog()
+        if (TYPE != DOCUMENT_TYPE_WFMS)
+            Utilities.dismissDialog()
         when (TYPE) {
 
             DOCUMENTS_WFMS -> {
@@ -430,7 +445,7 @@ class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener
                         if (DOC_TYPE == REQUESTED_DOC) {
 
 
-                            adapter = DocumentDirectoryCommonAdapterWFMS(activity!!, documentList, 0,this@DocumentDirectoryFragmentWFMS)
+                            adapter = DocumentDirectoryCommonAdapterWFMS(activity!!, documentList, 0, this@DocumentDirectoryFragmentWFMS)
                             recyclerView.adapter = adapter
 
 
@@ -496,6 +511,8 @@ class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener
 
                     DOC_TYPE = REQUESTED_DOC
                     hitAPI(DOCUMENTS_WFMS, "")
+                } else {
+                    UtilitiesWFMS.showToast(activity!!, jsonObject.getString("Message"))
                 }
             }
             UPLOAD_DOCUMENT_WFMS -> {
@@ -526,10 +543,194 @@ class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener
         } else if (IMGVIEW == 1) {
             Glide.with(activity!!).load(file).into(ivUploadImg1UploadDoc!!);
             val mFile: RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), file!!)
-             img1ReqBody = MultipartBody.Part.createFormData("file", file.name, mFile)
+            img1ReqBody = MultipartBody.Part.createFormData("file", file.name, mFile)
             imagesAl.add(img1ReqBody!!)
         }
 
+    }
+
+    fun downloadPDF(docUrl: String, docName: String) {
+        val docArray = docName.split(",")
+      //  DownloadPDF("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", manager, progressDialog, activity).execute()
+
+        for (str in docArray) {
+            DownloadPDF(docUrl + str, manager, progressDialog, activity).execute()
+
+        }
+    }
+
+    fun downloadImage(docUrl: String, docName: String) {
+        val docArray = docName.split(",")
+        for (str in docArray) {
+            Downloading(docUrl + str, manager, progressDialog, activity).execute()
+
+        }
+    }
+
+    class Downloading(url: String, manager: DownloadManager, progressDialog: ProgressDialog, activity: FragmentActivity?) : AsyncTask<Void, Void, Void>() {
+        private var mImagePathString=""
+        lateinit var imgPath: File
+        var mUrl = url
+        var mManager: DownloadManager = manager
+        var progressDialog = progressDialog
+        var activity = activity
+
+
+        override fun onPreExecute() {
+            super.onPreExecute()
+            progressDialog.setMessage("Please wait");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+        }
+
+        override fun doInBackground(vararg p0: Void): Void? {
+            val mydir = File(Environment.getExternalStorageDirectory().toString() + "/MyDocuments")
+            if (!mydir.exists()) {
+                mydir.mkdirs()
+            }
+            val downloadUri: Uri = Uri.parse(mUrl)
+            val request: DownloadManager.Request = DownloadManager.Request(downloadUri)
+         //   val dateFormat = SimpleDateFormat("mmddyyyyhhmmss")
+            imgPath = File(Environment.getExternalStorageDirectory().toString() + "/" + "MyDocuments")
+            request.setAllowedNetworkTypes(
+                    DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+                    .setAllowedOverRoaming(false)
+                    .setTitle("Downloading")
+                    .setDestinationInExternalPublicDir("/MyDocuments", "$imgPath.jpg")
+            mImagePathString=imgPath.absolutePath
+
+            mManager.enqueue(request)
+            return null
+        }
+
+        override fun onPostExecute(result: Void?) {
+            super.onPostExecute(result)
+            UtilitiesWFMS.showToast(activity!!, "Download finish")
+           // val uri = Uri.fromFile(File(mImagePathString))
+
+
+            val intent = Intent(Intent.ACTION_VIEW)
+            if(mUrl.contains("png",true))
+            {
+                intent.setDataAndType(Uri.parse(mUrl), "image/png");
+
+            }
+            else if(mUrl.contains("jpeg",true))
+            {
+                intent.setDataAndType(Uri.parse(mUrl), "image/jpeg");
+
+            }
+            else if(mUrl.contains("jpg",true))
+            {
+                intent.setDataAndType(Uri.parse(mUrl), "image/jpg");
+
+            }
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity!!.startActivity(intent);
+
+            progressDialog.dismiss()
+        }
+
+
+    }
+
+    private class DownloadPDF(url: String, manager: DownloadManager, mDialog: ProgressDialog, activity: FragmentActivity?) : AsyncTask<Void?, Void?, Void?>() {
+        var mUrl = url
+        var mManager = manager
+        var progressDialog = mDialog
+        var mActivity = activity
+        var apkStorage: File? = null
+        var outputFile: File? = null
+        override fun onPreExecute() {
+            super.onPreExecute()
+            progressDialog = ProgressDialog(mActivity)
+            progressDialog.setMessage("Downloading...")
+            progressDialog.setCancelable(false)
+            progressDialog.show()
+        }
+
+        override fun onPostExecute(result: Void?) {
+            try {
+                if (outputFile != null) {
+                    progressDialog.dismiss()
+
+                    Toast.makeText(mActivity, "Document Downloaded Successfully", Toast.LENGTH_SHORT).show();
+                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(mUrl))
+                    mActivity!!.startActivity(browserIntent)
+//                    val path = Uri.fromFile(outputFile)
+//                    var pdfOpenintent = Intent(Intent.ACTION_VIEW)
+//                  //  pdfOpenintent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+//                    pdfOpenintent.setDataAndType(path, "application/pdf")
+//
+//                    try {
+//                        mActivity!!.startActivity(pdfOpenintent)
+//
+//                    } catch (e: ActivityNotFoundException) {
+//                        UtilitiesWFMS.showToast(mActivity!!,"No App found to open PDF")
+//                    }
+                } else {
+
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+
+
+            }
+            super.onPostExecute(result)
+        }
+
+
+        override fun doInBackground(vararg p0: Void?): Void? {
+            try {
+                val url = URL(mUrl) //Create Download URl
+                val c: HttpURLConnection = url.openConnection() as HttpURLConnection //Open Url Connection
+                c.setRequestMethod("GET") //Set Request Method to "GET" since we are grtting data
+                c.connect() //connect the URL Connection
+
+                //If Connection response is not OK then show Logs
+                if (c.getResponseCode() !== HttpURLConnection.HTTP_OK) {
+                    Log.e(TAG, "Server returned HTTP " + c.getResponseCode()
+                            .toString() + " " + c.getResponseMessage())
+                }
+
+
+                //Get File if SD card is present
+
+                apkStorage = File(Environment.getExternalStorageDirectory().toString() + "/" + "MyDocuments")
+                val mFile = mUrl.substring(mUrl.lastIndexOf('/'), mUrl.length);
+                //If File is not present create directory
+                if (!apkStorage!!.exists()) {
+                    apkStorage!!.mkdir()
+                    Log.e(TAG, "Directory Created.")
+                }
+                outputFile = File(apkStorage, mFile) //Create Output file in Main File
+
+                //Create New File if not present
+                if (!outputFile!!.exists()) {
+                    outputFile!!.createNewFile()
+                    Log.e(TAG, "File Created")
+                }
+                val fos = FileOutputStream(outputFile) //Get OutputStream for NewFile Location
+                val `is`: InputStream = c.getInputStream() //Get InputStream for connection
+                val buffer = ByteArray(1024) //Set buffer type
+                var len1 = 0 //init length
+                while (`is`.read(buffer).also({ len1 = it }) != -1) {
+                    fos.write(buffer, 0, len1) //Write new file
+                }
+
+                //Close all connection after doing task
+                fos.close()
+                `is`.close()
+            } catch (e: Exception) {
+
+                //Read exception if something went wrong
+                e.printStackTrace()
+                outputFile = null
+                Log.e(TAG, "Download Error Exception " + e.message)
+            }
+            return null
+        }
     }
 
 }

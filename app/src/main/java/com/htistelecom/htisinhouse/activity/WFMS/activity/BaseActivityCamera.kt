@@ -23,6 +23,7 @@ import java.io.File
 
 
 open class BaseActivityCamera : AppCompatActivity() {
+    private var imageFrom: Int=-1
     private var selectedImagePath: String = ""
     private lateinit var muri: Uri
     private lateinit var mVideoPath: String
@@ -62,13 +63,14 @@ open class BaseActivityCamera : AppCompatActivity() {
             when (which) {
                 0 -> {
 
-
+                    imageFrom=0
                     galleryImage()
 
 
                 }
                 1 -> {
 
+                    imageFrom=1
 
                     cameraPhoto()
                 }
@@ -82,6 +84,7 @@ open class BaseActivityCamera : AppCompatActivity() {
     private fun galleryImage() {
         val openGalleryIntent = Intent(Intent.ACTION_PICK)
         openGalleryIntent.type = "image/*"
+
         startActivityForResult(openGalleryIntent, FOR_MEDIA_FILE)
     }
 
@@ -137,7 +140,7 @@ open class BaseActivityCamera : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        // super.onActivityResult(requestCode, resultCode, data)
+         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == FOR_MEDIA_FILE) {
@@ -163,13 +166,18 @@ open class BaseActivityCamera : AppCompatActivity() {
     }
 
     private fun sendImage(file: File) {
-        if (mActivityType.equals("com.htistelecom.htisinhouse.activity.NewKnjrkhana.activity.PerformActivityWFMS")) {
+        if (mActivityType.equals("com.htistelecom.htisinhouse.activity.WFMS.activity.PerformActivityWFMS")) {
             val actName: PerformActivityWFMS = this as PerformActivityWFMS
             actName.imagePath(file)
 
-        } else if (mActivityType.equals("com.htistelecom.htisinhouse.activity.NewKnjrkhana.claims.AddClaimActivityWFMS")) {
+        } else if (mActivityType.equals("com.htistelecom.htisinhouse.activity.WFMS.claims.AddClaimActivityWFMS")) {
             val actName: AddClaimActivityWFMS = this as AddClaimActivityWFMS
             actName.imagePath(file)
         }
+//        else if(mActivityType.equals("com.htistelecom.htisinhouse.activity.NewKnjrkhana.activity.PerformActivityNew"))
+//        {
+//            val actName: PerformActivityNew = this as PerformActivityNew
+//            actName.imagePath(file.absolutePath,imageFrom)
+//        }
     }
 }

@@ -98,7 +98,7 @@ public class GPSTrackerWFMS extends Service implements LocationListener {
                                 if (lat > 0) {
                                     OreoLocationService.LATITUDE = lat + "";
                                     OreoLocationService.LONGITUDE = lng + "";
-                                    Utilities.showToast(GPSTrackerWFMS.this,OreoLocationService.LATITUDE+" Tracker");
+                                  //  Utilities.showToast(GPSTrackerWFMS.this,OreoLocationService.LATITUDE+" Tracker");
 
                                 }
 
@@ -228,7 +228,7 @@ public class GPSTrackerWFMS extends Service implements LocationListener {
     public void onLocationChanged(Location location) {
         OreoLocationService.LATITUDE = location.getLatitude() + "";
         OreoLocationService.LONGITUDE = location.getLongitude() + "";
-        Utilities.showToast(GPSTrackerWFMS.this,OreoLocationService.LATITUDE+" Tracker");
+       // Utilities.showToast(GPSTrackerWFMS.this,OreoLocationService.LATITUDE+" Tracker");
 
     }
 

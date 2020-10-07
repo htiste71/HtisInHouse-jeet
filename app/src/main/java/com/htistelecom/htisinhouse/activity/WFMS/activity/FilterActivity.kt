@@ -1,10 +1,12 @@
 package com.htistelecom.htisinhouse.activity.WFMS.activity
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.ApiData
+import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantKotlin
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.FILTER_TYPE_WFMS
 import com.htistelecom.htisinhouse.activity.WFMS.adapters.StatusFilterAdapter
@@ -51,7 +53,11 @@ class FilterActivity : Activity(), MyInterface {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        backToHome()
+    }
+
+    private fun backToHome() {
+        startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Team"))
         finish()
     }
 

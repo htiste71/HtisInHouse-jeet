@@ -19,6 +19,7 @@ import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.TASK_STATUS_LIST_WFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.TASK_STATUS_WFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.UtilitiesWFMS
+import com.htistelecom.htisinhouse.activity.WFMS.Utils.UtilitiesWFMS.Companion.showToast
 import com.htistelecom.htisinhouse.activity.WFMS.models.TaskListModel
 import com.htistelecom.htisinhouse.activity.WFMS.models.TwoParameterModel
 import com.htistelecom.htisinhouse.activity.WFMS.service.OreoLocationService
@@ -37,6 +38,7 @@ import retrofit2.Response
 import java.io.File
 
 class PerformActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickListener {
+    private var mStatus: String = ""
     var fileToUpload: MultipartBody.Part? = null
     lateinit var taskStatusListArray: Array<String?>
     private val listTaskStatus = ArrayList<TwoParameterModel>()
@@ -45,6 +47,7 @@ class PerformActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickListe
     var longitute: String? = null
     var message: String? = null
     var status_id = ""
+    var fromHomeFragment = false
     var _siteUploadedId = "0"
     var lat: String? = null
     var lang: String? = null
@@ -53,6 +56,7 @@ class PerformActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickListe
     var origin: String? = null
     var destination: String? = null
     var _data = ""
+    var mImagePath = ""
     var destLat = 0.0
     var destLong = 0.0
     var result = 0.0
@@ -65,8 +69,9 @@ class PerformActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickListe
     var status: String? = null
     var isStart = false
     var startTask = false
-   // var gpsTracker: GPSTracker? = null
-  //  var commonFunctions: CommonFunctions? = null
+
+    // var gpsTracker: GPSTracker? = null
+    //  var commonFunctions: CommonFunctions? = null
     var _address: List<Address>? = ArrayList()
     var isCompleted = false
     lateinit var siteListModel: TaskListModel
@@ -117,9 +122,16 @@ class PerformActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickListe
         tvActivity.text = siteListModel.activityName
         tvWorkDate.setText(siteListModel.getWorkDate())
         tvStatus.setText(siteListModel.getStatus())
-        tvRemarks.setText(siteListModel.getAddress())
+        tvRemarks.text = siteListModel.taskRemarks
+        mStatus = siteListModel.status
+
         if (!siteListModel.activityImage.equals("")) {
-            Glide.with(this).load(siteListModel.activityImagePath + siteListModel.activityImage).into(ivActivity);
+            if (!mStatus.equals("Pending")) {
+                mImagePath = siteListModel.activityImagePath + siteListModel.activityImage
+                Glide.with(this).load(mImagePath).into(ivActivity);
+            }
+
+
         }
         if (!siteListModel.activityDemoImage.equals("")) {
             Glide.with(this).load(siteListModel.activityDemoImagePath + siteListModel.activityDemoImage).into(ivActivityDemo);
@@ -170,6 +182,7 @@ class PerformActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickListe
         tv_title.setText("Site Details")
         ivDrawer.setVisibility(View.GONE)
         tinyDB = TinyDB(this@PerformActivityWFMS)
+        fromHomeFragment = intent.getBooleanExtra("fromHome", false)
 //        gpsTracker = GPSTracker(this)
 //        commonFunctions = CommonFunctions()
         val model = TwoParameterModel()
@@ -193,8 +206,8 @@ class PerformActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickListe
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.ivBack -> finish()
-            R.id.btnCancel -> finish()
+            R.id.ivBack -> backToHome()
+            R.id.btnCancel -> backToHome()
             R.id.btnStart -> {
 //                destLat = tinyDB!!.getString("DestLat").toDouble()
 //                destLong = tinyDB!!.getString("DestLong").toDouble()
@@ -215,8 +228,7 @@ class PerformActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickListe
                     Utilities.showToast(this, resources.getString(R.string.errPunchIn))
                 }
 
-                // startTask("0", "Started", "");
-                // }
+
             }
             R.id.btnStatus -> {
                 startTask = false
@@ -234,7 +246,7 @@ class PerformActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickListe
             R.id.ivActivity -> {
                 if (isPunchInMethod()) {
                     if (!isCompleted)
-                        checkPermissions("com.htistelecom.htisinhouse.activity.NewKnjrkhana.activity.PerformActivityWFMS")
+                        checkPermissions("com.htistelecom.htisinhouse.activity.WFMS.activity.PerformActivityWFMS")
                     else
                         Utilities.showToast(this, resources.getString(R.string.strTaskCompleted))
                 } else {
@@ -308,6 +320,8 @@ class PerformActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickListe
                 if (isPunchInMethod()) {
                     Utilities.hideKeyboard(this@PerformActivityWFMS, v)
                     message = etMessage!!.getText().toString()
+
+
                     if (status.equals("Select the status")) {
                         Utilities.showToast(this@PerformActivityWFMS, "Select the status")
                         return@OnClickListener
@@ -315,19 +329,45 @@ class PerformActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickListe
                         Utilities.showToast(this@PerformActivityWFMS, "Please enter activity message")
                     } else {
 
+                        if (status.equals("Pending")) {
 
-                        val jsonObject = JSONObject()
-                        try {
-                            jsonObject.put("TaskId", siteListModel.taskId)
-                            jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
-                            jsonObject.put("Status", status_id)
-                            jsonObject.put("ActivityId", siteListModel.activityId)
-                            _data = jsonObject.toString()
-                        } catch (e: JSONException) {
-                            e.printStackTrace()
+                            val jsonObject = JSONObject()
+                            try {
+                                jsonObject.put("TaskId", siteListModel.taskId)
+                                jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
+                                jsonObject.put("Status", status_id)
+                                jsonObject.put("ActivityId", siteListModel.activityId)
+                                _data = jsonObject.toString()
+                            } catch (e: JSONException) {
+                                e.printStackTrace()
+                            }
+
+                            hitAPI(_data, TASK_STATUS_WFMS)
+
+
+                        }
+                        else if (status.equals("Completed")) {
+                            if (fileToUpload == null) {
+                                UtilitiesWFMS.showToast(this, resources.getString(R.string.errChangePendingFile))
+
+                            }
+                            else {
+                                val jsonObject = JSONObject()
+                                try {
+                                    jsonObject.put("TaskId", siteListModel.taskId)
+                                    jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
+                                    jsonObject.put("Status", status_id)
+                                    jsonObject.put("ActivityId", siteListModel.activityId)
+                                    _data = jsonObject.toString()
+                                } catch (e: JSONException) {
+                                    e.printStackTrace()
+                                }
+
+
+                                hitAPI(_data, TASK_STATUS_WFMS)
+                            }
                         }
 
-                        hitAPI(_data, TASK_STATUS_WFMS)
 
                     }
                 } else {
@@ -353,7 +393,16 @@ class PerformActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickListe
 
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        backToHome()
+    }
+
+    private fun backToHome() {
+        if (fromHomeFragment)
+
+            startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Home"))
+        else
+            startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Task"))
+
         finish()
     }
 
@@ -425,7 +474,6 @@ class PerformActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickListe
 
     fun imagePath(imgPath: File) {
         imgFile = imgPath
-
         Glide.with(this).load(imgPath).into(ivActivity);
         val mFile = RequestBody.create("image/*".toMediaTypeOrNull(), imgFile)
         fileToUpload = MultipartBody.Part.createFormData("ActivityImage", imgFile.name, mFile)

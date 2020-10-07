@@ -330,6 +330,7 @@ public class CommonFunctions {
         }
     }
 
+
     private static Bitmap rotateImage(Bitmap img, int degree) {
         Matrix matrix = new Matrix();
         matrix.postRotate(degree);

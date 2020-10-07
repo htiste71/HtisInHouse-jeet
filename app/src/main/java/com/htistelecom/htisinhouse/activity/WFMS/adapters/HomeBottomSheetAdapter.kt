@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.row_home_bottom_sheet.view.*
 import java.util.*
 
 
-class HomeBottomSheetAdapter(private val mContext: Context?, val taskAL: ArrayList<TaskListModel>,val sheetDialogFragment: SheetDialogFragment) : RecyclerView.Adapter<HomeBottomSheetAdapter.MyHolderBottomSheet>() {
+class HomeBottomSheetAdapter(private val mContext: Context?, val taskAL: ArrayList<TaskListModel>, val sheetDialogFragment: SheetDialogFragment) : RecyclerView.Adapter<HomeBottomSheetAdapter.MyHolderBottomSheet>() {
     override fun onCreateViewHolder(viewGroup: ViewGroup, p1: Int): MyHolderBottomSheet {
         val view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_home_bottom_sheet, viewGroup, false)
         return HomeBottomSheetAdapter.MyHolderBottomSheet(view)
@@ -25,11 +25,11 @@ class HomeBottomSheetAdapter(private val mContext: Context?, val taskAL: ArrayLi
     }
 
     override fun onBindViewHolder(holder: MyHolderBottomSheet, position: Int) {
-        holder.bind(mContext!!, taskAL.get(position),sheetDialogFragment)
+        holder.bind(mContext!!, taskAL.get(position), sheetDialogFragment,taskAL)
     }
 
     class MyHolderBottomSheet(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(mContext: Context, model: TaskListModel, sheetDialogFragment: SheetDialogFragment) {
+        fun bind(mContext: Context, model: TaskListModel, sheetDialogFragment: SheetDialogFragment, taskAL: ArrayList<TaskListModel>) {
             itemView.tvSiteNameRowHomeBottomSheet!!.text = model.projectName
             itemView.tvSiteAddressRowHomeBottomSheet!!.text = model.siteName
             itemView.tvTaskNameRowHomeBottomSheet!!.text = model.activityName
@@ -61,6 +61,9 @@ class HomeBottomSheetAdapter(private val mContext: Context?, val taskAL: ArrayLi
             itemView.setOnClickListener { view ->
                 val intent = Intent(mContext, PerformActivityWFMS::class.java)
                 intent.putExtra("data", model)
+                intent.putExtra("list",taskAL)
+                intent.putExtra("fromHome", true)
+
                 mContext.startActivity(intent)
                 sheetDialogFragment.dismiss()
 

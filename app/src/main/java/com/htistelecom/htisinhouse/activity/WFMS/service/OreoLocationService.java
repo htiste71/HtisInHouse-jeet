@@ -120,7 +120,7 @@ public class OreoLocationService extends JobIntentService {
             mLastLocation = location;
             LATITUDE = location.getLatitude() + "";
             LONGITUDE = location.getLongitude() + "";
-            Utilities.showToast(OreoLocationService.this,LATITUDE+" Oreo");
+          //  Utilities.showToast(OreoLocationService.this,LATITUDE+" Oreo");
             mUserId = tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID);
 
             if(!mUserId.equalsIgnoreCase(""))
@@ -267,7 +267,7 @@ public class OreoLocationService extends JobIntentService {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(OreoLocationService.this, text, Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(OreoLocationService.this, text, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -323,17 +323,17 @@ public class OreoLocationService extends JobIntentService {
             notificationManager.createNotificationChannel(channel);
             builder = new Notification.Builder(getApplicationContext(), "channel_01")
                     .setAutoCancel(false)
-                    .setSmallIcon(R.drawable.ic_stat_name)
+                    .setSmallIcon(R.mipmap.ic_launcher)
                     .setVibrate(new long[]{1000, 1000})
                     .setSubText("Do not close this app!")
                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
-                    .setContentTitle("HTIS Employee Self Care");
+                    .setContentTitle("WFMS");
 
         } else {
             builder = new Notification.Builder(this)
-                    .setSmallIcon(R.drawable.ic_stat_name)
+                    .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentText("Do not close this app")
-                    .setContentTitle("HTIS Employee Self Care")
+                    .setContentTitle("WFMS")
                     .setAutoCancel(false);
             notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             notificationManager.notify(111, builder.build());

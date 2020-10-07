@@ -1,4 +1,4 @@
-package com.htistelecom.htisinhouse.activity.WFMS.adapters
+package com.htistelecom.htisinhouse.activity.WFMS.leave_managment.adapters
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView

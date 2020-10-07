@@ -1,12 +1,13 @@
 package com.htistelecom.htisinhouse.activity.WFMS.activity
 
 
-
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.ApiData
+import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantKotlin
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.TINYDB_EMAIL
 import com.htistelecom.htisinhouse.config.TinyDB
@@ -24,16 +25,16 @@ class ChangePasswordActivityWFMS : Activity(), View.OnClickListener, MyInterface
         var jsonObj = JSONObject((response as Response<*>).body()!!.toString())
         if (jsonObj.getString("Status").equals("Success")) {
             Utilities.showToast(this, jsonObj.getString("Message"))
-            tinyDB.putString(ConstantsWFMS.TINYDB_PASSWORD,mNewPassword)
-            finish()
+            tinyDB.putString(ConstantsWFMS.TINYDB_PASSWORD, mNewPassword)
+            backToHome()
         } else {
             Utilities.showToast(this, jsonObj.getString("Message"))
 
         }
     }
 
-    private var mNewPassword: String=""
-    lateinit var tinyDB:TinyDB
+    private var mNewPassword: String = ""
+    lateinit var tinyDB: TinyDB
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_change_password_wfms)
@@ -51,15 +52,25 @@ class ChangePasswordActivityWFMS : Activity(), View.OnClickListener, MyInterface
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.ivBack -> finish()
+            R.id.ivBack -> {
+                backToHome()
+            }
             R.id.btnChangePassword -> changePassword()
-            R.id.btnCancel -> finish()
+            R.id.btnCancel -> {
+                backToHome()
+            }
+
         }
+    }
+
+    private fun backToHome() {
+        startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Settings"))
+        finish()
     }
 
     private fun changePassword() {
         val mCurrentPassword = etCurrentPassword.getText().toString().trim({ it <= ' ' })
-         mNewPassword = etNewPassword.getText().toString().trim({ it <= ' ' })
+        mNewPassword = etNewPassword.getText().toString().trim({ it <= ' ' })
         val mConfirmNewPassword = etConfirmNewPassword.getText().toString().trim({ it <= ' ' })
 
 
@@ -102,7 +113,6 @@ class ChangePasswordActivityWFMS : Activity(), View.OnClickListener, MyInterface
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
+        backToHome()
     }
 }

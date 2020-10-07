@@ -74,7 +74,7 @@ public class PreOreoLocationService extends Service {
             mLastLocation = location;
             OreoLocationService.LATITUDE = location.getLatitude() + "";
             OreoLocationService.LONGITUDE = location.getLongitude() + "";
-            Utilities.showToast(PreOreoLocationService.this,OreoLocationService.LATITUDE+" Pre");
+           // Utilities.showToast(PreOreoLocationService.this,OreoLocationService.LATITUDE+" Pre");
             mUserId = tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID);
 
             if(!mUserId.equalsIgnoreCase(""))

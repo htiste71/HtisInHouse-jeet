@@ -1,5 +1,6 @@
 package com.htistelecom.htisinhouse.activity.WFMS.claims
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -10,6 +11,7 @@ import com.htistelecom.htisinhouse.activity.ApiData
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.CLAIM_DETAIL_TASK_WFMS
 import com.htistelecom.htisinhouse.activity.WFMS.activity.BaseActivity
+import com.htistelecom.htisinhouse.activity.WFMS.activity.MainActivityNavigation
 import com.htistelecom.htisinhouse.activity.WFMS.claims.adapters.SingleTaskClaimDetailAdapterWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.claims.models.ClaimSummaryModel
 import com.htistelecom.htisinhouse.activity.WFMS.claims.models.SingleTaskDetailModel
@@ -66,7 +68,7 @@ class SingleTaskClaimDetailActivityWFMS : BaseActivity(), View.OnClickListener, 
         mTaskId = intent.getStringExtra("TaskId")
         mDate = intent.getStringExtra("Date")
         summaryModel = intent.getSerializableExtra("data") as ClaimSummaryModel
-
+        tvTaskDateSingleTaskClaimDetailActivityWFMS.text = "Task Date - " + mDate
         try {
             tvTotalClaimFragmentWFMS.text = ":" + summaryModel.claimedAmount
             tvApprovedClaimFragmentWFMS.text = ": " + summaryModel.approvedAmount
@@ -89,14 +91,13 @@ class SingleTaskClaimDetailActivityWFMS : BaseActivity(), View.OnClickListener, 
     override fun onClick(v: View) {
         when (v.id) {
             R.id.ivBack ->
-                finish()
+                backToHome()
 
         }
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
+        backToHome()
     }
 
     override fun sendResponse(response: Any?, TYPE: Int) {
@@ -117,5 +118,10 @@ class SingleTaskClaimDetailActivityWFMS : BaseActivity(), View.OnClickListener, 
 
 
         }
+    }
+
+    fun backToHome() {
+        startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Claim"))
+        finish()
     }
 }

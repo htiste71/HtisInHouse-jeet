@@ -1,5 +1,6 @@
 package com.htistelecom.htisinhouse.activity.WFMS.claims
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager.VERTICAL
@@ -11,13 +12,14 @@ import com.htistelecom.htisinhouse.activity.ApiData
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.CLAIM_DETAIL_DATE_WFMS
 import com.htistelecom.htisinhouse.activity.WFMS.activity.BaseActivity
+import com.htistelecom.htisinhouse.activity.WFMS.activity.MainActivityNavigation
 import com.htistelecom.htisinhouse.activity.WFMS.claims.adapters.TaskCompletedAdapterWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.claims.models.ClaimSummaryModel
 import com.htistelecom.htisinhouse.activity.WFMS.models.CompletedTaskModel
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.retrofit.MyInterface
 import com.htistelecom.htisinhouse.utilities.Utilities
-import kotlinx.android.synthetic.main.activity_claim_detail_wfms.*
+import kotlinx.android.synthetic.main.activity_task_completed_activity_wfms.*
 import kotlinx.android.synthetic.main.layout_claim_detail.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.json.JSONObject
@@ -30,7 +32,7 @@ class TaskCompletedActivityWFMS : BaseActivity(), View.OnClickListener, MyInterf
     lateinit var model: ClaimSummaryModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_claim_detail_wfms)
+        setContentView(R.layout.activity_task_completed_activity_wfms)
 
     }
 
@@ -40,6 +42,7 @@ class TaskCompletedActivityWFMS : BaseActivity(), View.OnClickListener, MyInterf
         clickListeners()
         api()
     }
+
     private fun clickListeners() {
         ivBack.setOnClickListener(this)
     }
@@ -53,6 +56,7 @@ class TaskCompletedActivityWFMS : BaseActivity(), View.OnClickListener, MyInterf
         mDate = intent.getStringExtra("date")
         model = intent.getSerializableExtra("data") as ClaimSummaryModel
         try {
+            tvTaskDateTaskCompletedActivityWFMS.text = "Task Date:" + mDate
             tvTotalClaimFragmentWFMS.text = ":" + model.claimedAmount
             tvApprovedClaimFragmentWFMS.text = ": " + model.approvedAmount
             tvAdvanceClaimFragmentWFMS.text = ": " + model.advancePaid
@@ -88,7 +92,7 @@ class TaskCompletedActivityWFMS : BaseActivity(), View.OnClickListener, MyInterf
     override fun onClick(v: View) {
         when (v.id) {
             R.id.ivBack -> {
-                finish()
+                backToHome()
             }
             R.id.ivDrawer -> {
 
@@ -96,7 +100,10 @@ class TaskCompletedActivityWFMS : BaseActivity(), View.OnClickListener, MyInterf
         }
     }
 
-    
+    fun backToHome() {
+        startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Claim"))
+        finish()
+    }
 
     override fun sendResponse(response: Any?, TYPE: Int) {
         Utilities.dismissDialog()
@@ -107,7 +114,7 @@ class TaskCompletedActivityWFMS : BaseActivity(), View.OnClickListener, MyInterf
                 tvNoTaskClaimDetailActivityWFMS.visibility = View.GONE
 
                 completedTaskList = Gson().fromJson<java.util.ArrayList<CompletedTaskModel>>(jsonObj.getJSONArray("Output").toString(), object : TypeToken<ArrayList<CompletedTaskModel>>() {}.type)
-                rvDescriptionClaimDetailActivityWFMS.adapter = TaskCompletedAdapterWFMS(this, completedTaskList,model)
+                rvDescriptionClaimDetailActivityWFMS.adapter = TaskCompletedAdapterWFMS(this, completedTaskList, model)
 
 
             } else {
@@ -115,5 +122,9 @@ class TaskCompletedActivityWFMS : BaseActivity(), View.OnClickListener, MyInterf
                 tvNoTaskClaimDetailActivityWFMS.visibility = View.VISIBLE
             }
         }
+    }
+
+    override fun onBackPressed() {
+        backToHome()
     }
 }

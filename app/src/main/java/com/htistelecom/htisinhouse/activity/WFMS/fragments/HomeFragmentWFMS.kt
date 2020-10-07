@@ -98,8 +98,6 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
     lateinit var selectIndustryTapLocationAdapter: ArrayAdapter<String?>
 
 
-
-
     val FROM_DATE = 0
     val TO_DATE = 1
 
@@ -122,10 +120,12 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
 
         mCurrentDate = Utilities.getCurrentDateInMonth()
         bottomSheetFragment = SheetDialogFragment()
-        if (tinyDB.getBoolean(ConstantsWFMS.TINYDB_MEETING_STATUS)) {
+        if (!tinyDB.getBoolean(ConstantsWFMS.TINYDB_MEETING_STATUS)) {
             btnFreeHomeTop.text = "Meeting"
+            mIsAvailable=false
         } else {
             btnFreeHomeTop.text = "Free"
+            mIsAvailable=true
 
         }
 
@@ -141,8 +141,7 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
 
     override fun onMapReady(maps: GoogleMap) {
 
-        try
-        {
+        try {
             maps.clear()
 
             //   val latLng = LatLng(OreoLocationService.LATITUDE.toDouble(), OreoLocationService.LONGITUDE.toDouble())
@@ -164,7 +163,7 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
                 }
             }
 
-            UtilitiesWFMS.showToast(activity!!,OreoLocationService.LATITUDE+"");
+            //    UtilitiesWFMS.showToast(activity!!, OreoLocationService.LATITUDE + "");
 
             val lati: Double = OreoLocationService.LATITUDE.toDouble()
             val longLat: Double = OreoLocationService.LONGITUDE.toDouble()
@@ -177,9 +176,7 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
 
             maps.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lati, longLat)))
             maps.animateCamera(CameraUpdateFactory.zoomTo(17f))
-        }
-        catch (e:java.lang.Exception)
-        {
+        } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
 
@@ -239,7 +236,15 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
                 val json = JSONObject()
                 json.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
                 json.put("MeetingDate", mCurrentDate)
-                json.put("IsAvailable", mIsAvailable)
+                if (mIsAvailable) {
+                    json.put("IsAvailable", "N")
+
+                } else {
+                    json.put("IsAvailable", "Y")
+
+                }
+
+
                 hitAPI(MEETING_STATUS_WFMS, json.toString())
             }
         }
@@ -304,7 +309,7 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
         }
         btnSubmitDialogSaveCurrentLocation.setOnClickListener { view ->
 
-            if (mSelectIndustryIdTapLocation.equals("")) {
+            if (mSelectListIdTapLocation.equals("")) {
                 UtilitiesWFMS.showToast(activity!!, resources.getString(R.string.errSelectType))
             } else if (mSelectIndustryIdTapLocation.equals("")) {
                 UtilitiesWFMS.showToast(activity!!, resources.getString(R.string.errIndustryType))
@@ -463,7 +468,7 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
             val year = calc.get(Calendar.YEAR)
             val month = calc.get(Calendar.MONTH)
             val day = calc.get(Calendar.DAY_OF_MONTH)
-            Utilities.getDate(activity!!,year, month, day, calc.getTimeInMillis(), object : GetDateTime {
+            Utilities.getDate(activity!!, year, month, day, calc.getTimeInMillis(), object : GetDateTime {
                 override fun getDateTime(strDate: String, strTime: String) {
 
                     tvFromDateDialogAddTask.text = strDate
@@ -653,8 +658,12 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
     }
 
     override fun sendResponse(response: Any?, TYPE: Int) {
-        Utilities.dismissDialog()
+        if (TYPE != SELECT_TYPE_TAP_LOCATION_WFMS)
+            Utilities.dismissDialog()
         if (TYPE == PROJECT_LIST_WFMS) {
+
+            projectList.clear()
+            projectArray= emptyArray()
             val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
 
             for (i in 0 until jsonArray.length()) {
@@ -676,7 +685,8 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
 
 
             val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
-
+                siteList.clear()
+            siteArray= emptyArray()
             for (i in 0 until jsonArray.length()) {
                 val item = jsonArray.getJSONObject(i)
 
@@ -694,6 +704,8 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
             siteListAdapter = ArrayAdapter<String?>(activity, R.layout.spinner_item, siteArray)
 
         } else if (TYPE == ACTIVITY_LIST_WFMS) {
+            activityArray= emptyArray()
+            activityList.clear()
             val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
 
             for (i in 0 until jsonArray.length()) {
@@ -716,6 +728,11 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
             if (jsonObj.getString("Status").equals("Success")) {
                 Utilities.showToast(activity!!, jsonObj.getString("Message"))
                 dialog.dismiss()
+
+
+                mProjectId = ""
+                mSiteId = ""
+                mActivityId = ""
                 var json = JSONObject()
                 json.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
                 json.put("FromDate", mCurrentDate)
@@ -731,7 +748,8 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
 //            {"Status":"Success","Message":"Record Saved Successfully !!","Output":""}
         } else if (TYPE == SELECT_TYPE_TAP_LOCATION_WFMS) {
 
-
+            selectListTapLocation.clear()
+            selectListTapLocationArray = emptyArray()
             val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
 
             for (i in 0 until jsonArray.length()) {
@@ -752,6 +770,9 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
             hitAPI(SELECT_INDUSTRY_TAP_LOCATION_WFMS, "")
 
         } else if (TYPE == SELECT_INDUSTRY_TAP_LOCATION_WFMS) {
+
+            selectIndustryTapLocation.clear()
+            selectIndustryTapLocationArray = emptyArray()
             val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
 
             for (i in 0 until jsonArray.length()) {
@@ -773,6 +794,8 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
             if (jsonObj.getString("Status").equals("Success")) {
                 Utilities.showToast(activity!!, jsonObj.getString("Message"))
                 dialogSaveLocation.dismiss()
+                mSelectListIdTapLocation = ""
+                mSelectIndustryIdTapLocation = ""
 
             } else {
                 Utilities.showToast(activity!!, jsonObj.getString("Message"))
@@ -800,9 +823,9 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
             if (jsonObj.getString("Status").equals("Success")) {
                 taskAL.clear()
                 // val jsonArray=JSONArray(jsonObj.getString("Output"))
-                taskAL = Gson().fromJson<java.util.ArrayList<TaskListModel>>(jsonObj.getJSONArray("Output").toString(), object : TypeToken<ArrayList<TaskListModel>>() {
+                taskAL = Gson().fromJson<java.util.ArrayList<TaskListModel>>(jsonObj.getJSONArray("Output").toString(), object : TypeToken<ArrayList<TaskListModel>>() {}.type);
 
-                }.type);
+
 
                 tvTasksCountHome.text = taskAL.size.toString() + " Scheduled Tasks"
                 mTaskCount = taskAL.size.toString()
@@ -848,8 +871,6 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
         }
         listPopupWindow!!.show()
     }
-
-
 
 
 }

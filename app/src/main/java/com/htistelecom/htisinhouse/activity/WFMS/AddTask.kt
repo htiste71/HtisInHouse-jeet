@@ -18,6 +18,8 @@ class AddTask {
 
         fun commonMethod(response: Any?, TYPE: Int) {
             if (TYPE == PROJECT_LIST_WFMS) {
+                projectArray= emptyArray()
+                projectList.clear()
                 val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
 
 
@@ -36,6 +38,8 @@ class AddTask {
 
 
             } else if (TYPE == SITE_LIST_WFMS) {
+                siteArray= emptyArray()
+                siteList.clear()
                 val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
 
                 for (i in 0 until jsonArray.length()) {
@@ -53,6 +57,8 @@ class AddTask {
                 }
 
             } else if (TYPE == ACTIVITY_LIST_WFMS) {
+                activityArray= emptyArray()
+                activityList.clear()
                 val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
 
                 for (i in 0 until jsonArray.length()) {

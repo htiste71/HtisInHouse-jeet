@@ -11,11 +11,13 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
+import android.provider.Settings.SettingNotFoundException
 import android.support.annotation.RequiresApi
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.telephony.TelephonyManager
+import android.text.TextUtils
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.WFMS.MyApplication
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
@@ -27,6 +29,7 @@ import com.htistelecom.htisinhouse.utilities.Utilities
 
 class SplashActivityWFMS : AppCompatActivity() {
 
+    private var isGPSOn: Boolean=false
     var im: String = ""
     lateinit var locationManager: LocationManager
     lateinit var tinyDB: TinyDB
@@ -39,7 +42,6 @@ class SplashActivityWFMS : AppCompatActivity() {
 
     )
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -110,8 +112,12 @@ class SplashActivityWFMS : AppCompatActivity() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             if (!checkLocationPermissionGranted()) {
                 checkPermissions()
-            } else {
-                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            }
+            else
+
+            {
+
+                if (CheckGpsStatus()) {
                     startLocationClass()
 
 
@@ -151,6 +157,10 @@ class SplashActivityWFMS : AppCompatActivity() {
                         finish()
                     }, 1000)
                 }
+                else
+                {
+                    showGPSDisabledAlertToUser()
+                }
             }
         } else {
 
@@ -171,6 +181,9 @@ class SplashActivityWFMS : AppCompatActivity() {
                     }
                     finish()
                 }, 1000)
+            }
+            else{
+                showGPSDisabledAlertToUser()
             }
 
 
@@ -244,5 +257,27 @@ class SplashActivityWFMS : AppCompatActivity() {
                 .show()
     }
 
-
+    fun CheckGpsStatus():Boolean {
+        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            val providers = Settings.Secure.getString(getContentResolver(),
+                    Settings.Secure.LOCATION_PROVIDERS_ALLOWED)
+            if (TextUtils.isEmpty(providers)) {
+                false
+            } else providers.contains(LocationManager.GPS_PROVIDER)
+        } else {
+            val locationMode: Int
+            locationMode = try {
+                Settings.Secure.getInt(getContentResolver(),
+                        Settings.Secure.LOCATION_MODE)
+            } catch (e: SettingNotFoundException) {
+                e.printStackTrace()
+                return false
+            }
+            when (locationMode) {
+                Settings.Secure.LOCATION_MODE_HIGH_ACCURACY, Settings.Secure.LOCATION_MODE_SENSORS_ONLY -> true
+                Settings.Secure.LOCATION_MODE_BATTERY_SAVING, Settings.Secure.LOCATION_MODE_OFF -> false
+                else -> false
+            }
+        }
+    }
 }

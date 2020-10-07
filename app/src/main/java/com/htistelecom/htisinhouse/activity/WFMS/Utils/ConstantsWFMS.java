@@ -22,6 +22,8 @@ public class ConstantsWFMS {
     public static final String WFMS_INDUSTRY_TAP_LOCATION_API  ="Service/CompanyNatureList";
     public static final String WFMS_SUBMIT_TAP_LOCATION_API  ="Service/TapLocationSaveUpdate";
     public static final String WFMS_MY_TASK_LIST_API  ="Service/TaskAssignedList";
+    public static final String WFMS_MY_TASK_LIST_NEW_API  ="Service/TaskAssignedListNew";
+
     public static final String WFMS_START_TASK_API  ="Service/TaskStart";
     public static final String WFMS_TASK_STATUS_API="Service/TaskStatusUpdate";
     public static final String WFMS_TASK_STATUS_LIST_API="Service/SiteEndStatus";
@@ -52,6 +54,11 @@ public class ConstantsWFMS {
     public static final String WFMS_LOG_REPORT_API  ="Service/DailyLatLongReportUpload";
     public static final String WFMS_FILTER_TYPE_API ="Service/MyTeamStatusList";
     public static final String WFMS_USER_FEEDBACK_API ="Service/UserFeedback";
+
+    public static final String WFMS_COMP_OFF_LIST_API ="Service/AppliedCompOffList";
+    public static final String WFMS_APPLY_COMP_OFF_API ="Service/CompOffApply";
+    public static final String WFMS_COMP_OFF_LEAVE_TYPE_API ="Service/CompOffLeaveTypeList";
+    public static final String WFMS_NEW_TASK_STATUS_API ="Service/TaskStatusUpdateNew";
 
 
     public static int DOMAIN_VERIFICATION_WFMS = 1;
@@ -101,6 +108,11 @@ public class ConstantsWFMS {
     public static final int MEETING_STATUS_WFMS=42;
     public static final int FILTER_TYPE_WFMS=43;
     public static final int USER_FEEDBACK_WFMS=44;
+    public static final int APPLY_COMP_OFF_WFMS=45;
+    public static final int COMP_OFF_STATUS_LIST_WFMS=46;
+    public static final int COMP_OFF_LEAVE_TYPE_WFMS=47;
+    public static final int MY_TASK_LIST_NEW_WFMS=48;
+    public static final int NEW_TASK_STATUS_WFMS = 49;
 
 
     public static final String TINYDB_DOMAIN_ID = "DOMAIN_ID";

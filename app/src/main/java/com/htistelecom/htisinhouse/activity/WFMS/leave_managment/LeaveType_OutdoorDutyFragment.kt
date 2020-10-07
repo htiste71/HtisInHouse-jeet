@@ -17,18 +17,18 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
+import butterknife.internal.Utils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.ApiData
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.*
-import com.htistelecom.htisinhouse.activity.WFMS.adapters.LeaveListAdapter
-import com.htistelecom.htisinhouse.activity.WFMS.adapters.ODListAdapter
-import com.htistelecom.htisinhouse.activity.WFMS.models.LeaveListModel
-import com.htistelecom.htisinhouse.activity.WFMS.models.LeaveTypeDayModel
-import com.htistelecom.htisinhouse.activity.WFMS.models.LeaveTypeModel
-import com.htistelecom.htisinhouse.activity.WFMS.models.ODListModel
+import com.htistelecom.htisinhouse.activity.WFMS.leave_managment.adapters.CompOffAdapter
+import com.htistelecom.htisinhouse.activity.WFMS.leave_managment.adapters.LeaveListAdapter
+import com.htistelecom.htisinhouse.activity.WFMS.leave_managment.adapters.ODListAdapter
+import com.htistelecom.htisinhouse.activity.WFMS.leave_managment.models.CompOffListModel
+import com.htistelecom.htisinhouse.activity.WFMS.models.*
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.font.Ubuntu
 import com.htistelecom.htisinhouse.font.UbuntuEditText
@@ -38,6 +38,7 @@ import com.htistelecom.htisinhouse.retrofit.MyInterface
 import com.htistelecom.htisinhouse.utilities.DateUtils
 import com.htistelecom.htisinhouse.utilities.Utilities
 import kotlinx.android.synthetic.main.fragment_leave_type_outdoor_duty.*
+import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Response
 import java.text.ParseException
@@ -46,8 +47,11 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickListener {
+    private var mCompOffId: String = ""
     private lateinit var dialogOD: Dialog
     lateinit var dialog: Dialog
+    lateinit var dialogCompOff: Dialog
+
     private var ivAddLeave: ImageView? = null
     lateinit var tinyDB: TinyDB
     private var leaveTypeDayList = ArrayList<LeaveTypeDayModel>()
@@ -57,15 +61,26 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
 
     private var leaveFrom: Int = 0
 
+    private var compOffList = ArrayList<CompOffListModel>()
+
+    private var leaveTypeCompOffList = ArrayList<TwoParameterModel>()
+    lateinit var leaveTypeCompOffArray: Array<String?>
+
 
     val FROM_DATE = 0
     val TO_DATE = 1
+    val COMP_OFF_DATE = 2
+    val COMP_OFF_APPLY_DATE = 3
+
     private var mCurrentDate: String = ""
     var leaveList = ArrayList<LeaveListModel>()
     var ODList = ArrayList<ODListModel>()
 
     lateinit var leaveTypeAdapter: ArrayAdapter<String?>
     lateinit var leaveTypeDayAdapter: ArrayAdapter<String?>
+    lateinit var leaveTypeCompOffAdapter: ArrayAdapter<String?>
+
+
     var mMessage = "";
     var mLeaveTypeId = "1";
     var mFromLeaveType = "";
@@ -82,11 +97,23 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
     var leaveTypeToDateSpnrApplyLeave: AppCompatSpinner? = null
     var leaveTypeSpnrApplyLeave: AppCompatSpinner? = null
 
+    var mCompOffLeaveDayTypeId = ""
+    var mCompOffLeaveTypeId = ""
+    var mCompOffDate = ""
+    var mCompOffApplyDate = ""
+
+    var tvCompOffDateDialogCompOff: Ubuntu? = null
+    var tvApplyDateDialogCompOff: Ubuntu? = null
+    var leaveTypeDaySpnrDialogCompOff: AppCompatSpinner? = null
+    var leaveTypeSpnrDialogCompOff: AppCompatSpinner? = null
+
 
     var LEAVE = 1;
 
 
     var OD = 2;
+
+    val COMP_OFF = 3
     var LEAVE_TYPE: Int = LEAVE
 
 
@@ -111,6 +138,7 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
         tvSubmittedLeaveLeaveTypeOutdoorDutyFragment.setOnClickListener(this)
         tvRejectedLeaveLeaveTypeOutdoorDutyFragment.setOnClickListener(this)
         tvApprovedLeaveLeaveTypeOutdoorDutyFragment.setOnClickListener(this)
+
         ivAddLeave!!.setOnClickListener(this)
     }
 
@@ -125,34 +153,45 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
 
         LEAVE_TYPE = LEAVE
         FOR_TYPE = FOR_SUBMITTED
-        changeColor(ContextCompat.getColorStateList(activity!!, R.color.colorOrange), ContextCompat.getColorStateList(activity!!, R.color.colorDarkBlue))
+        changeColor(ContextCompat.getColorStateList(activity!!, R.color.colorOrange), ContextCompat.getColorStateList(activity!!, R.color.colorDarkBlue), ContextCompat.getColorStateList(activity!!, R.color.colorDarkBlue))
         calledMethodCommon()
         radioGroup.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { radioGroup, id ->
 
             if (id == R.id.radioLeaveStatusLeaveTypeOutdoorDutyFragment) {
 
+                ivAddLeave!!.visibility = View.VISIBLE
 
                 LEAVE_TYPE = LEAVE
                 FOR_TYPE = FOR_SUBMITTED
-                changeColor(ContextCompat.getColorStateList(activity!!, R.color.colorOrange), ContextCompat.getColorStateList(activity!!, R.color.colorDarkBlue))
+                changeColor(ContextCompat.getColorStateList(activity!!, R.color.colorOrange), ContextCompat.getColorStateList(activity!!, R.color.colorDarkBlue), ContextCompat.getColorStateList(activity!!, R.color.colorDarkBlue))
+                calledMethodCommon()
+
+
+            } else if (id == R.id.radioCompOffStatusLeaveTypeOutdoorDutyFragment) {
+                ivAddLeave!!.visibility = View.GONE
+
+                LEAVE_TYPE = COMP_OFF
+                FOR_TYPE = FOR_SUBMITTED
+                changeColor(ContextCompat.getColorStateList(activity!!, R.color.colorDarkBlue), ContextCompat.getColorStateList(activity!!, R.color.colorDarkBlue), ContextCompat.getColorStateList(activity!!, R.color.colorOrange))
                 calledMethodCommon()
 
 
             } else {
+                ivAddLeave!!.visibility = View.VISIBLE
 
                 LEAVE_TYPE = OD
                 FOR_TYPE = FOR_SUBMITTED
-                changeColor(ContextCompat.getColorStateList(activity!!, R.color.colorDarkBlue), ContextCompat.getColorStateList(activity!!, R.color.colorOrange))
+                changeColor(ContextCompat.getColorStateList(activity!!, R.color.colorDarkBlue), ContextCompat.getColorStateList(activity!!, R.color.colorOrange), ContextCompat.getColorStateList(activity!!, R.color.colorDarkBlue))
                 calledMethodCommon()
 
             }
         })
     }
 
-    private fun changeColor(color1: ColorStateList?, color2: ColorStateList?) {
+    private fun changeColor(color1: ColorStateList?, color2: ColorStateList?, color3: ColorStateList?) {
         radioLeaveStatusLeaveTypeOutdoorDutyFragment.setTextColor(color1);
         radioODStatusLeaveTypeOutdoorDutyFragment.setTextColor(color2);
-
+        radioCompOffStatusLeaveTypeOutdoorDutyFragment.setTextColor(color3)
         if (FOR_TYPE == FOR_SUBMITTED) {
             tvSubmittedLeaveLeaveTypeOutdoorDutyFragment.setTextColor(resources.getColor(R.color.colorOrange))
             tvApprovedLeaveLeaveTypeOutdoorDutyFragment.setTextColor(resources.getColor(R.color.colorDarkBlue))
@@ -181,13 +220,19 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
             json.put("LeaveStatus", FOR_TYPE.toString())
 
             calledMethod(LEAVE_LIST_WFMS, json.toString())
-        } else {
+        } else if (LEAVE_TYPE == OD) {
             val json = JSONObject()
             json.put("EmpId", tinyDB.getString(TINYDB_EMP_ID))
             json.put("ODRequestStatus", FOR_TYPE.toString())
 
             calledMethod(OUTDOOR_LIST_WFMS, json.toString())
 
+        } else {
+            val json = JSONObject()
+            json.put("EmpId", tinyDB.getString(TINYDB_EMP_ID))
+            // json.put("EmpId","24")
+
+            calledMethod(COMP_OFF_STATUS_LIST_WFMS, json.toString())
         }
 
 
@@ -292,6 +337,17 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
         } else if (TYPE == OUTDOOR_LIST_WFMS) {
             ApiData.getData(params, ConstantsWFMS.OUTDOOR_LIST_WFMS, this, activity)
 
+        } else if (TYPE == APPLY_COMP_OFF_WFMS) {
+            ApiData.getData(params, ConstantsWFMS.APPLY_COMP_OFF_WFMS, this, activity)
+
+        } else if (TYPE == COMP_OFF_STATUS_LIST_WFMS) {
+            ApiData.getData(params, ConstantsWFMS.COMP_OFF_STATUS_LIST_WFMS, this, activity)
+
+
+        } else if (TYPE == COMP_OFF_LEAVE_TYPE_WFMS) {
+            ApiData.getData(params, ConstantsWFMS.COMP_OFF_LEAVE_TYPE_WFMS, this, activity)
+
+
         }
     }
 
@@ -302,6 +358,8 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
             Utilities.dismissDialog()
         try {
             if (TYPE == LEAVE_TYPE_WFMS) {
+                leaveTypeList.clear()
+                leaveTypeArray = emptyArray()
                 val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
                 if (jsonObject.getString("Status").equals("Success")) {
                     leaveTypeList = Gson().fromJson<java.util.ArrayList<LeaveTypeModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<LeaveTypeModel>>() {
@@ -313,6 +371,7 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
                         if (leaveTypeList.get(i).canApply.equals("Y", true))
                             leaveTypeArray[i] = leaveTypeList.get(i).leaveTypeName
                     }
+                    mLeaveTypeId = leaveTypeList.get(0).leaveTypeId
                     leaveTypeAdapter = ArrayAdapter<String?>(activity, R.layout.spinner_item, leaveTypeArray)
                     leaveTypeSpnrApplyLeave!!.setAdapter(leaveTypeAdapter)
                 } else {
@@ -320,8 +379,10 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
                 }
 
 
-
             } else if (TYPE == LEAVE_TYPE_DAY_WFMS) {
+
+                leaveTypeDayList.clear()
+                leaveTypeDayArray = emptyArray()
                 val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
                 if (jsonObject.getString("Status").equals("Success")) {
                     leaveTypeDayList = Gson().fromJson<java.util.ArrayList<LeaveTypeDayModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<LeaveTypeDayModel>>() {
@@ -334,14 +395,27 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
                     }
                     leaveTypeDayAdapter = ArrayAdapter<String?>(activity, R.layout.spinner_item, leaveTypeDayArray)
 
-                    leaveTypeFromDateSpnrApplyLeave!!.setAdapter(leaveTypeDayAdapter)
-                    leaveTypeToDateSpnrApplyLeave!!.setAdapter(leaveTypeDayAdapter)
+
+                    mCompOffLeaveDayTypeId = leaveTypeDayList.get(0).dayTypeId
+
+                    if (LEAVE_TYPE == COMP_OFF) {
+                        leaveTypeDaySpnrDialogCompOff!!.setAdapter(leaveTypeDayAdapter)
+
+                    } else {
+                        leaveTypeFromDateSpnrApplyLeave!!.setAdapter(leaveTypeDayAdapter)
+                        leaveTypeToDateSpnrApplyLeave!!.setAdapter(leaveTypeDayAdapter)
+                    }
+
+
                 } else {
                     Utilities.showToast(activity, "No Details found.")
                 }
                 val jsonObj = JSONObject()
                 jsonObj.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
-                calledMethod(LEAVE_TYPE_WFMS, jsonObj.toString())
+                if (LEAVE_TYPE == COMP_OFF)
+                    calledMethod(COMP_OFF_LEAVE_TYPE_WFMS, jsonObj.toString())
+                else
+                    calledMethod(LEAVE_TYPE_WFMS, jsonObj.toString())
 
 
             } else if (TYPE == ConstantsWFMS.APPLY_LEAVE_WFMS) {
@@ -402,8 +476,90 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
                     recyclerView.visibility = GONE
                 }
 
-            }
+            } else if (TYPE == COMP_OFF_STATUS_LIST_WFMS) {
+                compOffList.clear()
+                tvNoRecord.visibility = View.GONE
+                recyclerView.visibility = VISIBLE
+                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObject.getString("Status").equals("Success")) {
+                    compOffList = Gson().fromJson<java.util.ArrayList<CompOffListModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<CompOffListModel>>() {
 
+                    }.type)
+
+                    var newList = ArrayList<CompOffListModel>()
+                    for (i in 0 until compOffList.size)
+                    {
+                        if (FOR_TYPE == FOR_SUBMITTED) {
+                            if (compOffList.get(i).statusId.equals("") || compOffList.get(i).statusId.equals("0") || compOffList.get(i).statusId.equals("1")) {
+                                newList.add(compOffList.get(i))
+                            }
+
+                        } else if (FOR_TYPE == FOR_APPROVED) {
+                            if (compOffList.get(i).statusId.equals("2")) {
+                                newList.add(compOffList.get(i))
+                            }
+                        } else {
+                            if (compOffList.get(i).statusId.equals("3")) {
+                                newList.add(compOffList.get(i))
+                            }
+                        }
+                    }
+                      if(newList.size>0)
+                      {
+                          tvNoRecord.visibility = View.GONE
+                          recyclerView.visibility = VISIBLE
+                          val adapter = CompOffAdapter(activity!!, compOffList, FOR_TYPE, this)
+                          recyclerView.adapter = adapter
+                      }
+                    else
+                      {
+                          tvNoRecord.visibility = View.VISIBLE
+                          recyclerView.visibility = GONE
+                      }
+
+
+
+                } else {
+                    tvNoRecord.visibility = View.VISIBLE
+                    recyclerView.visibility = GONE
+                }
+
+            } else if (TYPE == APPLY_COMP_OFF_WFMS) {
+                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObject.getString("Status").equals("Success")) {
+                    Utilities.showToast(activity, jsonObject.getString("Message"))
+                    dialogCompOff.dismiss()
+                    calledMethodCommon()
+
+                } else {
+                    Utilities.showToast(activity, jsonObject.getString("Message"))
+                }
+
+            } else if (TYPE == COMP_OFF_LEAVE_TYPE_WFMS) {
+                leaveTypeCompOffList.clear()
+                leaveTypeCompOffArray = emptyArray()
+                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObject.getString("Status").equals("Success")) {
+                    val jsonArray = jsonObject.getJSONArray("Output")
+                    for (i in 0 until jsonArray.length()) {
+                        val item = jsonArray.getJSONObject(i)
+
+                        val model = TwoParameterModel()
+                        model.id = item.getString("LeaveTypeId")
+                        model.name = item.getString("LeaveType")
+                        leaveTypeCompOffList.add(model)
+                    }
+
+                }
+
+                mCompOffLeaveTypeId = leaveTypeCompOffList.get(0).id
+                leaveTypeCompOffArray = arrayOfNulls<String>(leaveTypeCompOffList.size)
+                for (i in leaveTypeCompOffList.indices) {
+                    leaveTypeCompOffArray[i] = leaveTypeCompOffList.get(i).name
+                }
+                leaveTypeCompOffAdapter = ArrayAdapter<String?>(activity, R.layout.spinner_item, leaveTypeCompOffArray)
+                leaveTypeSpnrDialogCompOff!!.adapter = leaveTypeCompOffAdapter
+            }
         } catch (e: Exception) {
             Log.e("Error", e.message)
         }
@@ -454,7 +610,7 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
             R.id.ivAddHeader -> {
                 if (LEAVE_TYPE == LEAVE) {
                     dialogApplyLeave()
-                } else {
+                } else if (LEAVE_TYPE == OD) {
                     dialogODStatus()
 
                 }
@@ -464,13 +620,12 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
     }
 
 
-
     private fun setDateTimeField(year: Int, month: Int, day: Int, timeInMillis: Long) {
-        Utilities.getDate(activity!!,year, month, day,timeInMillis, object : GetDateTime {
+        Utilities.getDate(activity!!, year, month, day, timeInMillis, object : GetDateTime {
             override fun getDateTime(strDate: String, strTime: String) {
 
                 if (leaveFrom == FROM_DATE) {
-                    mFromDate =strDate
+                    mFromDate = strDate
                     tvFromDateApplyLeave!!.text = strDate
                     mFromLeaveDayId = "1"
                     leaveTypeFromDateSpnrApplyLeave!!.setSelection(0)
@@ -484,16 +639,19 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
                     mToLeaveType = ""
 
 
-                } else {
+                } else if (leaveFrom == TO_DATE) {
                     tvToDateApplyLeave!!.text = strDate
                     setDayType("to")
+                } else if (leaveFrom == COMP_OFF_DATE) {
+                    mCompOffDate = strDate
+                    tvCompOffDateDialogCompOff!!.text = strDate
+                } else if (leaveFrom == COMP_OFF_APPLY_DATE) {
+                    mCompOffApplyDate = strDate
+                    tvApplyDateDialogCompOff!!.text = strDate
                 }
 
             }
         })
-
-
-
 
 
     }
@@ -559,13 +717,13 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
                     }
                     R.id.rbHalfDay -> {
                         mDayType = "H"
-                        tvFromDateOD.text=""
-                        tvToDateOD.text=""
+                        tvFromDateOD.text = ""
+                        tvToDateOD.text = ""
                         llTimeHeaderOD.visibility = View.VISIBLE
                         llTimeOD.visibility = View.VISIBLE
                         tvTotalHoursOD.visibility = View.VISIBLE
                         rlToDateOD.isEnabled = false
-                        tvTotalDaysOD.text="Total Days : 0"
+                        tvTotalDaysOD.text = "Total Days : 0"
 
                     }
                 }
@@ -580,7 +738,7 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
             val year = calc.get(Calendar.YEAR)
             val month = calc.get(Calendar.MONTH)
             val day = calc.get(Calendar.DAY_OF_MONTH)
-            Utilities.getDate(activity!!,year, month, day, calc.getTimeInMillis(), object : GetDateTime {
+            Utilities.getDate(activity!!, year, month, day, calc.getTimeInMillis(), object : GetDateTime {
                 override fun getDateTime(strDate: String, strTime: String) {
                     if (mDayType.equals("H")) {
                         tvFromDateOD.text = strDate
@@ -588,14 +746,13 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
                         tvToDateOD.text = strDate
                         tvInTimeOD.text = ""
                         tvOutTimeOD.text = ""
-                        tvTotalDaysOD.text="Total Days : 1"
+                        tvTotalDaysOD.text = "Total Days : 1"
                     } else {
                         tvFromDateOD.text = strDate
                         tvToDateOD.text = ""
                         tvInTimeOD.text = ""
                         tvOutTimeOD.text = ""
                     }
-
 
 
                 }
@@ -622,11 +779,12 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
                     val mMonth = calendar.get(Calendar.MONTH)
                     val mYear = calendar.get(Calendar.YEAR)
 
-                    Utilities.getDate(activity!!,mYear, mMonth, mDay, calendar.getTimeInMillis(), object : GetDateTime {
+                    Utilities.getDate(activity!!, mYear, mMonth, mDay, calendar.getTimeInMillis(), object : GetDateTime {
                         override fun getDateTime(strDate: String, strTime: String) {
 
                             tvToDateOD.text = strDate
                             tvOutTimeOD.text = ""
+                            mToTimeOD = ""
 
                             var mTotalDays = getCountOfDays(mFromDateOD, strDate)
                             tvTotalDaysOD.text = ""
@@ -657,10 +815,11 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
 
                         tvInTimeOD.text = strTime
                         tvOutTimeOD.text = ""
+                        mToTimeOD = ""
 
 
                     }
-                })
+                }, 0, "")
             }
 
         }
@@ -682,7 +841,7 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
 
 
                     }
-                })
+                }, 1, mFromTimeOD)
             }
 
 
@@ -779,7 +938,7 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
         dialog.setContentView(R.layout.dialog_leave_apply)
         dialog.setCancelable(false)
         dialog.show()
-        calledMethod(LEAVE_TYPE_DAY_WFMS,"")
+        calledMethod(LEAVE_TYPE_DAY_WFMS, "")
         val btnSubmitApplyLeave = dialog.findViewById(R.id.btnSubmitApplyLeave) as Button
         val btnCancelApplyLeave = dialog.findViewById(R.id.btnCancelApplyLeave) as Button
         val rlFromDateApplyLeave = dialog.findViewById(R.id.rlFromDateApplyLeave) as RelativeLayout
@@ -798,8 +957,6 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
         mCurrentDate = DateUtils.currentDate();
 
         //setting adapter to spinner
-
-
 
 
         rlFromDateApplyLeave.setOnClickListener({ v ->
@@ -1010,4 +1167,127 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
         val dayCount = diff.toFloat() / (24 * 60 * 60 * 1000)
         return "" + (dayCount.toInt() + 1) + " Days"
     }
+
+    private fun dialogCompOff() {
+        dialogCompOff = Dialog(activity)
+        dialogCompOff.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogCompOff.setContentView(R.layout.dialog_comp_off)
+        dialogCompOff.setCancelable(false)
+        dialogCompOff.show()
+        calledMethod(LEAVE_TYPE_DAY_WFMS, "")
+        val btnSubmitDialogCompOff = dialogCompOff.findViewById(R.id.btnSubmitDialogCompOff) as Button
+        val btnCancelDialogCompOff = dialogCompOff.findViewById(R.id.btnCancelDialogCompOff) as Button
+        val rlCompOffDateDialogCompOff = dialogCompOff.findViewById(R.id.rlCompOffDateDialogCompOff) as RelativeLayout
+        val rlApplyDateDialogCompOff = dialogCompOff.findViewById(R.id.rlApplyDateDialogCompOff) as RelativeLayout
+        tvCompOffDateDialogCompOff = dialogCompOff.findViewById(R.id.tvCompOffDateDialogCompOff) as Ubuntu
+        tvApplyDateDialogCompOff = dialogCompOff.findViewById(R.id.tvApplyDateDialogCompOff) as Ubuntu
+        val etReasonDialogCompOff = dialogCompOff.findViewById(R.id.etReasonDialogCompOff) as UbuntuEditText
+        leaveTypeDaySpnrDialogCompOff = dialogCompOff.findViewById(R.id.leaveTypeDaySpnrDialogCompOff) as AppCompatSpinner
+        leaveTypeSpnrDialogCompOff = dialogCompOff.findViewById(R.id.leaveTypeSpnrDialogCompOff) as AppCompatSpinner
+
+
+        btnCancelDialogCompOff.setOnClickListener { view -> dialogCompOff.dismiss() }
+
+        //get current date
+        mCurrentDate = DateUtils.currentDate();
+
+        //setting adapter to spinner
+
+
+        rlCompOffDateDialogCompOff.setOnClickListener(
+                { v ->
+                    leaveFrom = COMP_OFF_APPLY_DATE
+                    val simpleDateFormat = SimpleDateFormat("dd-MMM-yyyy")
+
+
+                    leaveFrom = COMP_OFF_DATE
+
+                    val calendar = Calendar.getInstance()
+                    calendar.time = calendar.time
+                    val mDay = calendar.get(Calendar.DAY_OF_MONTH)
+                    val mMonth = calendar.get(Calendar.MONTH)
+                    val mYear = calendar.get(Calendar.YEAR)
+
+                    setDateTimeField(mYear, mMonth, mDay, calendar.timeInMillis)
+                })
+
+
+        //  leaveFrom = COMP_OFF_APPLY_DATE
+        val simpleDateFormat = SimpleDateFormat("dd-MMM-yyyy")
+
+
+        val calendar = Calendar.getInstance()
+        calendar.time = calendar.time
+        val mDay = calendar.get(Calendar.DAY_OF_MONTH)
+        val mMonth = calendar.get(Calendar.MONTH)
+        val mYear = calendar.get(Calendar.YEAR)
+
+        tvApplyDateDialogCompOff!!.text = Utilities.getCurrentDateInMonth()
+
+        //   setDateTimeField(mYear, mMonth, mDay, calendar.timeInMillis)
+
+
+        leaveTypeDaySpnrDialogCompOff!!.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+
+
+                mCompOffLeaveDayTypeId = leaveTypeDayList.get(position).dayTypeId
+
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+
+            }
+        })
+
+        leaveTypeSpnrDialogCompOff!!.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+
+
+                mCompOffLeaveTypeId = leaveTypeCompOffList.get(position).id
+
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        })
+
+
+
+        btnSubmitDialogCompOff.setOnClickListener({ v ->
+
+            mMessage = etReasonDialogCompOff.getText().toString().trim({ it <= ' ' })
+            if (TextUtils.isEmpty(mCompOffDate)) {
+                Utilities.showToast(activity, resources.getString(R.string.errCompOffDate))
+                return@setOnClickListener
+            } else if (TextUtils.isEmpty(mMessage)) {
+                Utilities.showToast(activity, resources.getString(R.string.reason_data))
+                return@setOnClickListener
+            } else {
+
+                val jsonObject = JSONObject()
+
+                jsonObject.put("EmpId", tinyDB.getString(TINYDB_EMP_ID))
+                jsonObject.put("FromDate", mCompOffDate)
+                jsonObject.put("ToDate", mCompOffDate)
+                jsonObject.put("LeaveTypeId", mCompOffLeaveTypeId)
+                jsonObject.put("FromDay", mCompOffLeaveDayTypeId)
+                jsonObject.put("ToDay", mCompOffLeaveDayTypeId)
+                jsonObject.put("LeavePurpose", mMessage)
+                jsonObject.put("CompoffId", mCompOffId)
+
+                calledMethod(ConstantsWFMS.APPLY_COMP_OFF_WFMS, jsonObject.toString())
+
+            }
+
+        })
+    }
+
+    fun sendCompId(compoffId: String) {
+        mCompOffId = compoffId
+        dialogCompOff()
+
+    }
+
 }

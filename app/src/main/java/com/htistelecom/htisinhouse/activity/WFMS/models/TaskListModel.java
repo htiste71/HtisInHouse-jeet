@@ -82,6 +82,15 @@ public class TaskListModel implements Serializable {
     @SerializedName("ToDate")
     @Expose
     private Object toDate;
+    @SerializedName("TaskRemarks")
+    @Expose
+    private String taskRemarks;
+    @SerializedName("SubActivityId")
+    @Expose
+    private String subActivityId;
+    @SerializedName("SubActivityTitle")
+    @Expose
+    private String subActivityTitle;
 
     public String getTaskId() {
         return taskId;
@@ -281,6 +290,30 @@ public class TaskListModel implements Serializable {
 
     public void setToDate(Object toDate) {
         this.toDate = toDate;
+    }
+
+    public String getTaskRemarks() {
+        return taskRemarks;
+    }
+
+    public void setTaskRemarks(String taskRemarks) {
+        this.taskRemarks = taskRemarks;
+    }
+
+    public String getSubActivityId() {
+        return subActivityId;
+    }
+
+    public void setSubActivityId(String subActivityId) {
+        this.subActivityId = subActivityId;
+    }
+
+    public String getSubActivityTitle() {
+        return subActivityTitle;
+    }
+
+    public void setSubActivityTitle(String subActivityTitle) {
+        this.subActivityTitle = subActivityTitle;
     }
 
 }

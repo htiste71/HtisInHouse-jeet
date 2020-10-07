@@ -4,13 +4,18 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.*
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
 import android.provider.Settings
 import android.support.annotation.RequiresApi
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -59,6 +64,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
     companion object {
         lateinit var obj: MainActivityNavigation
+        var isBackHome = false
     }
 
     var CHECK_TYPE = -1
@@ -93,7 +99,13 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
             override fun onDrawerOpened(p0: View) {
                 tvTaskCountDrawer.text = HomeFragmentWFMS.mTaskCount
                 Glide.with(this@MainActivityNavigation).load(tinyDB.getString(ConstantsWFMS.TINYDB_EMP_PROFILE_IMAGE)).into(ivUserImageHeaderWFMS);
-
+                try {
+                    val pInfo: PackageInfo = getPackageManager().getPackageInfo(packageName, 0)
+                    val version: String = pInfo.versionName
+                    tvAppVersionDrawer.text = "v" + version
+                } catch (e: PackageManager.NameNotFoundException) {
+                    e.printStackTrace()
+                }
             }
         })
 
@@ -203,8 +215,10 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
 
         }
-        tvSyncTimeDrawer.text = tinyDB.getString(ConstantsWFMS.TINYDB_SYNC_TIME)
-
+        if (!tinyDB.getString(ConstantsWFMS.TINYDB_SYNC_TIME).equals(""))
+            tvSyncTimeDrawer.text = tinyDB.getString(ConstantsWFMS.TINYDB_SYNC_TIME)
+        else
+            tvSyncTimeDrawer.text = "Not Sync"
 
     }
 
@@ -248,10 +262,12 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
     }
 
     private fun homeFragment() {
-        tvHeadingHeader.text = "Home"
+        hideShowHeader_FragmentHeading(resources.getString(R.string.strHome), GONE, GONE)
+
+
         changeColor(resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
-        ivAddHeader.visibility = GONE
+
         supportFragmentManager.beginTransaction().replace(R.id.frameLayout, HomeFragmentWFMS())
                 .commit()
     }
@@ -328,9 +344,9 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
             }
             R.id.llInnerProfileDrawer -> {
-                ivAddHeader.visibility = GONE
 
-                tvHeadingHeader.text = "Profile"
+                hideShowHeader_FragmentHeading("Profile", GONE, GONE)
+
                 changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
                 openFragment(ProfileFragmentWFMS())
 
@@ -338,8 +354,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
             }
             R.id.llInnerTeamDrawer -> {
-                tvHeadingHeader.text = "Team"
-                ivAddHeader.visibility = GONE
+                hideShowHeader_FragmentHeading(resources.getString(R.string.strTeam), GONE, VISIBLE)
 
                 changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
                 openFragment(TeamFragmentWFMS())
@@ -349,8 +364,9 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
             }
             R.id.llInnerTaskDrawer -> {
 
-                tvHeadingHeader.text = "Tasks"
-                ivAddHeader.visibility = VISIBLE
+                hideShowHeader_FragmentHeading(resources.getString(R.string.strTask), VISIBLE, GONE)
+
+
                 openFragment(TaskFragmentWFMS())
 
                 drawerLayout!!.closeDrawer(Gravity.START)
@@ -358,8 +374,8 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
             }
             R.id.llInnerLeaveODDrawer -> {
-                tvHeadingHeader.text = "Leave & OD"
-                ivAddHeader.visibility = VISIBLE
+                hideShowHeader_FragmentHeading(resources.getString(R.string.strLeaveOD), VISIBLE, GONE)
+
                 openFragment(LeaveType_OutdoorDutyFragment())
 
                 drawerLayout!!.closeDrawer(Gravity.START)
@@ -368,8 +384,9 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
             }
             R.id.llInnerAttendanceDrawer -> {
 
-                ivAddHeader.visibility = View.GONE
-                tvHeadingHeader.text = "Attendance"
+
+                hideShowHeader_FragmentHeading(resources.getString(R.string.strAttendance), GONE, GONE)
+
                 openFragment(AttendanceFragmentWFMS())
 
                 drawerLayout!!.closeDrawer(Gravity.START)
@@ -379,8 +396,8 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 "TEst"
             }
             R.id.llInnerDocumentDirectoryDrawer -> {
-                tvHeadingHeader.text = "Documents Directory"
-                ivAddHeader.visibility = VISIBLE
+                hideShowHeader_FragmentHeading(resources.getString(R.string.strDocumentDirectory), VISIBLE, GONE)
+
                 openFragment(DocumentDirectoryFragmentWFMS())
 
                 drawerLayout!!.closeDrawer(Gravity.START)
@@ -389,8 +406,9 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 "TEst"
             }
             R.id.llInnerSalaryDrawer -> {
-                tvHeadingHeader.text = "Salary"
-                ivAddHeader.visibility = GONE
+
+                hideShowHeader_FragmentHeading(resources.getString(R.string.strSalary), GONE, GONE)
+
                 changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
                 openFragment(SalaryFragmentWFMS())
 
@@ -398,8 +416,8 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 "TEst"
             }
             R.id.llInnerClaimDrawer -> {
-                tvHeadingHeader.text = "Claims"
-                ivAddHeader.visibility = GONE
+                hideShowHeader_FragmentHeading(resources.getString(R.string.strClaims), GONE, GONE)
+
                 changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
                 openFragment(ClaimFragmentWFMS())
@@ -408,8 +426,8 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 "TEst"
             }
             R.id.llInnerChatDrawer -> {
-                tvHeadingHeader.text = "Chat"
-                ivAddHeader.visibility = GONE
+                hideShowHeader_FragmentHeading(resources.getString(R.string.strChat), GONE, GONE)
+
 
                 supportFragmentManager.beginTransaction().replace(R.id.frameLayout, ChatFragmentWFMS())
                         .commit()
@@ -423,15 +441,18 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 "TEst"
             }
             R.id.llInnerHelpDrawer -> {
-                tvHeadingHeader.text = "Help"
-                ivAddHeader.visibility = GONE
+
+                hideShowHeader_FragmentHeading(resources.getString(R.string.strHelp), GONE, GONE)
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://wfms.htistelecom.in/home/softwaresupport"))
+                startActivity(browserIntent)
                 changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
                 "TEst"
             }
             R.id.llInnerFeedbackDrawer -> {
-                tvHeadingHeader.text = "Feedback"
-                ivAddHeader.visibility = GONE
+
+                hideShowHeader_FragmentHeading(resources.getString(R.string.strFeedback), GONE, GONE)
+
                 changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite))
 
                 openFragment(FeedbackFragmentWFMS())
@@ -443,8 +464,9 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 "TEst"
             }
             R.id.llInnerSettingDrawer -> {
-                tvHeadingHeader.text = "Settings"
-                ivAddHeader.visibility = GONE
+
+                hideShowHeader_FragmentHeading(resources.getString(R.string.strSetting), GONE, GONE)
+
                 openFragment(SettingsFragmentWFMS())
 
 
@@ -457,6 +479,13 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
 
         }
+    }
+
+    private fun hideShowHeader_FragmentHeading(heading: String, isShowAdd: Int, isShowProfile: Int) {
+        tvHeadingHeader.text = heading
+        ivAddHeader.visibility = isShowAdd
+        ivMyProfileHeader.visibility = isShowProfile
+
     }
 
 
@@ -511,25 +540,57 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                     .commit()
             changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
-        }
-        if (intent!!.getStringExtra("fragment") != null && intent!!.getStringExtra("fragment").equals("Claim")) {
+        } else if (intent!!.getStringExtra("fragment") != null && intent!!.getStringExtra("fragment").equals("Claim")) {
             supportFragmentManager.beginTransaction().replace(R.id.frameLayout, ClaimFragmentWFMS())
                     .commit()
             tvHeadingHeader.text = "Claims"
             ivAddHeader.visibility = GONE
             changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
+        } else if (intent!!.getStringExtra("fragment") != null && intent!!.getStringExtra("fragment").equals("Team")) {
+            hideShowHeader_FragmentHeading(resources.getString(R.string.strTeam), GONE, VISIBLE)
+
+            changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+            openFragment(TeamFragmentWFMS())
+
+        } else if (intent!!.getStringExtra("fragment") != null && intent!!.getStringExtra("fragment").equals("Settings")) {
+            hideShowHeader_FragmentHeading(resources.getString(R.string.strSetting), GONE, GONE)
+
+            openFragment(SettingsFragmentWFMS())
+
+
+            changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange))
+
+        } else if (intent!!.getStringExtra("fragment") != null && intent!!.getStringExtra("fragment").equals("Home")) {
+            homeFragment()
+        } else if (intent!!.getStringExtra("fragment") != null && intent!!.getStringExtra("fragment").equals("Task")) {
+            hideShowHeader_FragmentHeading(resources.getString(R.string.strTask), VISIBLE, GONE)
+
+
+            openFragment(TaskFragmentWFMS())
+
+            changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+
         }
+
 
     }
 
     fun openFragment(frag: Fragment) {
 
         supportFragmentManager.beginTransaction().replace(R.id.frameLayout, frag)
+
                 .commit()
     }
 
     override fun onBackPressed() {
+        var f: Fragment? = supportFragmentManager.findFragmentById(R.id.frameLayout)
+        if (f is HomeFragmentWFMS) {
+//do smth
+            finish()
+        } else {
+          homeFragment()
+        }
 
     }
 
@@ -549,7 +610,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
         registerReceiver(receiver, intentFilter)
 
 
-       val broadcastReceiverUpdateTime = object : BroadcastReceiver() {
+        val broadcastReceiverUpdateTime = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 if (intent!!.action.equals("FOR_UPDATE_TIME")) {
                     val syncTime = "Last Sync:" + intent!!.getStringExtra("data")
@@ -568,7 +629,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
             }
         }
-        LocalBroadcastManager.getInstance(this).registerReceiver (broadcastReceiverUpdateTime, IntentFilter("FOR_UPDATE_TIME"))
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverUpdateTime, IntentFilter("FOR_UPDATE_TIME"))
 
 
 
@@ -643,10 +704,9 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
     }
 
 
-
     override fun onDestroy() {
         super.onDestroy()
-       // unregisterReceiver(broadcastReceiver);
+        // unregisterReceiver(broadcastReceiver);
 
     }
 

@@ -90,13 +90,13 @@
                     <ImageView
                         android:id="@+id/ivShowPasswordLoginNewActivity"
                         android:layout_width="20dp"
-                        android:src="@drawable/icon_man"
+                        android:src="@drawable/icon_show_password"
                         android:layout_alignParentRight="true"
                         android:layout_height="20dp"/>
                     <ImageView
                         android:id="@+id/ivHidePasswordLoginNewActivity"
                         android:layout_width="20dp"
-                        android:src="@drawable/icon_man"
+                        android:src="@drawable/icon_hide_password"
                         android:visibility="gone"
                         android:layout_alignParentRight="true"
                         android:layout_height="20dp"/>

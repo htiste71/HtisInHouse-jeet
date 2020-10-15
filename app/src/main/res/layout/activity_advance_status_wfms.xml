@@ -7,7 +7,6 @@
     <include layout="@layout/toolbar" />
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,18 +50,19 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewWFMS"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
-        android:background="@color/colorSkyBlue" />
+        android:background="@color/colorSkyBlue"
+        android:visibility="visible" />
+
     <com.htistelecom.htisinhouse.font.UbuntuBold
         android:id="@+id/tvNoRecordAdvanceStatusActivityWFMS"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:visibility="gone"
         android:text="@string/strNoRecord"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:visibility="gone" />
 </LinearLayout>

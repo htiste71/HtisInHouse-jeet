@@ -1,10 +1,10 @@
 package com.htistelecom.htisinhouse.activity.WFMS.leave_managment.adapters
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.WFMS.models.ODListModel
 import kotlinx.android.synthetic.main.row_comp_off.view.*

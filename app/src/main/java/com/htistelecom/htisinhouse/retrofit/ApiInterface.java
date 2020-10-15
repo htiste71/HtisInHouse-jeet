@@ -115,6 +115,12 @@ public interface ApiInterface {
     @POST(ConstantsWFMS.WFMS_MY_TASK_LIST_API)
     Call<String> methodMyTaskListWFMS(@Body String params);
 
+
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_MY_TASK_LIST_NEW_API)
+    Call<String> methodMyTaskListNewWFMS(@Body String params);
+
+
     @Headers("Content-Type: application/json")
     @POST(ConstantsWFMS.WFMS_START_TASK_API)
     Call<String> methodStartTaskWFMS(@Body String params);
@@ -134,6 +140,12 @@ public interface ApiInterface {
     @Multipart
     @POST(ConstantsWFMS.WFMS_TASK_STATUS_API)
     Call<String> methodTaskStatusWFMS(@Part MultipartBody.Part file, @Part("TaskId") RequestBody taskId, @Part("EmpId") RequestBody empId, @Part("ActivityId") RequestBody activityId, @Part("Status") RequestBody status);
+
+    @Multipart
+    @POST(ConstantsWFMS.WFMS_NEW_TASK_STATUS_API)
+    Call<String> methodNewTaskStatusWFMS(@Part MultipartBody.Part file, @Part("TaskId") RequestBody taskId, @Part("EmpId") RequestBody empId, @Part("ActivityId") RequestBody activityId, @Part("Status") RequestBody status, @Part("SubActivityId") RequestBody subActivityId);
+
+
 
     @Multipart
     @POST(ConstantsWFMS.WFMS_PROFILE_IMAGE_API)

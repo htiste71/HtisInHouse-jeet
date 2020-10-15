@@ -1,18 +1,18 @@
 package com.htistelecom.htisinhouse.activity.WFMS.adapters
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
+import androidx.recyclerview.widget.RecyclerView
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.WFMS.activity.FilterActivity
 import com.htistelecom.htisinhouse.activity.WFMS.models.ThreeParameterModel
+import kotlinx.android.synthetic.main.row_status_filter_adapter.view.*
 
 
 class StatusFilterAdapter(val mContext: FilterActivity, val statusList: ArrayList<ThreeParameterModel>) : RecyclerView.Adapter<StatusFilterAdapter.MyHolder>() {
 
-    private var mSelectedItem=-1
+    private var mSelectedItem = -1
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, p1: Int): MyHolder {
         val view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_status_filter_adapter, viewGroup, false)
@@ -24,45 +24,38 @@ class StatusFilterAdapter(val mContext: FilterActivity, val statusList: ArrayLis
     }
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
-        holder.rbStatusRowStatusFilterAdapter.setChecked(position == mSelectedItem);
-        var clickListener = View.OnClickListener {
-           // mSelectedItem =
-           // notifyDataSetChanged()
+
+        holder.bind(mContext, statusList.get(position), statusList)
+    }
+
+    class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+
+        fun bind(mContext: FilterActivity, model: ThreeParameterModel, statusList: ArrayList<ThreeParameterModel>) {
+
+            itemView.rbStatusRowStatusFilterAdapter.text = model.name;
+            if (model.isChecked) {
+                itemView.rbStatusRowStatusFilterAdapter.isChecked = true
+            } else {
+                itemView.rbStatusRowStatusFilterAdapter.isChecked = false
+
+            }
+            itemView.rbStatusRowStatusFilterAdapter.setOnClickListener { view ->
+
+
+                for (i in 0 until statusList.size) {
+                    statusList.get(i).isChecked = false
+                }
+                statusList.get(position).isChecked = true
+                mContext.notifyMethod()
+
+            }
+
+
         }
-        holder.rbStatusRowStatusFilterAdapter.setOnClickListener(clickListener);
+
+
     }
 
-    class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
-    {
-        
-        var rbStatusRowStatusFilterAdapter=itemView.findViewById<RadioButton>(R.id.rbStatusRowStatusFilterAdapter)
 
-
-//        fun bind(mContext: Context, model: ThreeParameterModel, adapter: StatusFilterAdapter, position: Int) {
-//
-//            itemView.rbStatusRowStatusFilterAdapter.text = model.name;
-//
-//            itemView.rbStatusRowStatusFilterAdapter.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { compoundButton, b ->
-//
-//
-//                if (b) {
-//                    if(FilterActivity.lastPosition!=-1)
-//                        FilterActivity.filterStatusList.get(FilterActivity.lastPosition).isChecked = false
-//                    FilterActivity.lastPosition=position
-//
-//                    FilterActivity.filterStatusList.get(position).isChecked = true
-//
-//                    adapter.notifyDataSetChanged()
-//                }
-//
-//            })
-//            if (model.isChecked) {
-//                itemView.rbStatusRowStatusFilterAdapter.isChecked = true
-//            } else {
-//                itemView.rbStatusRowStatusFilterAdapter.isChecked = false
-//
-//            }
-//
-//        }
-    }
 }

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#f8f9fd"
     android:orientation="vertical"
-    tools:context=".activity.PerformActivity">
+    tools:context=".activity.WFMS.activity.PerformActivityWFMS">
 
     <include
         android:id="@+id/toolbar"
@@ -74,7 +74,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="@string/textview"
                     android:textColor="@color/grey_text"
                     android:textSize="16sp"
                     android:textStyle="normal" />
@@ -108,7 +107,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="@string/textview"
                     android:textColor="@color/grey_text"
                     android:textSize="16sp"
                     android:textStyle="normal" />
@@ -257,7 +255,6 @@
                     android:layout_marginTop="5dp"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    android:text="Router Installation"
                     android:textStyle="normal" />
 
                 <LinearLayout
@@ -285,6 +282,19 @@
                         android:src="@drawable/icon_man" />
                 </LinearLayout>
 
+<!--                <com.htistelecom.htisinhouse.font.Ubuntu-->
+<!--                    android:id="@+id/btnUploadImagePerformActivityWFMS"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginLeft="15dp"-->
+<!--                    android:layout_marginTop="20dp"-->
+<!--                    android:background="@drawable/rect_common"-->
+<!--                    android:paddingLeft="10dp"-->
+<!--                    android:paddingTop="5dp"-->
+<!--                    android:paddingRight="10dp"-->
+<!--                    android:paddingBottom="5dp"-->
+<!--                    android:text="UPLOAD"-->
+<!--                    android:textColor="@color/white" />-->
 
                 <!--                <com.htistelecom.htisinhouse.font.Ubuntu-->
                 <!--                    android:id="@+id/tvActivity"-->

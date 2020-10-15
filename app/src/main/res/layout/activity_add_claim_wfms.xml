@@ -161,7 +161,7 @@
                         android:minHeight="@dimen/_33sdp"
                         android:paddingBottom="8dp">
 
-                        <android.support.v7.widget.AppCompatSpinner
+                        <androidx.appcompat.widget.AppCompatSpinner
                             android:id="@+id/transportModeSpnrAddClaimActivityWFMS"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -337,6 +337,7 @@
                     android:layout_weight=".5"
                     android:background="@drawable/rect_fill_orange_less_border"
                     android:gravity="center"
+                    android:textAllCaps="false"
                     android:text="@string/submit"
                     android:textColor="@color/white" />
 
@@ -347,6 +348,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight=".5"
+                    android:textAllCaps="false"
+
                     android:background="@drawable/rect_no_background_border_orange"
                     android:gravity="center"
                     android:text="@string/cancel"

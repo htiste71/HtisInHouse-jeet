@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.htistelecom.htisinhouse.font.UbuntuBold
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlue"
+        android:gravity="center"
+        android:padding="@dimen/_15sdp"
+        android:text="@string/strApplyCompOff"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_16sdp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <com.htistelecom.htisinhouse.font.UbuntuBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/strCompOffDate"
+            android:textColor="@color/grey_text2"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+
+            android:baselineAligned="false"
+            android:weightSum="2">
+
+            <RelativeLayout
+                android:id="@+id/rlCompOffDateDialogCompOff"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edittext">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvCompOffDateDialogCompOff"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:hint="@string/select_the_date"
+                    android:text=""
+                    android:textSize="14sp" />
+
+
+                <ImageView
+                    android:id="@+id/ivCalendar"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_calendar"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlLeaveDayDialogCompOff"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_edittext"
+                android:padding="10dp">
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/leaveTypeDaySpnrDialogCompOff"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:gravity="start"
+                    android:spinnerMode="dropdown" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="3dp"
+                    android:src="@drawable/icon_down"
+                    tools:ignore="ContentDescription" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <com.htistelecom.htisinhouse.font.UbuntuBold
+            android:id="@+id/txtApplyDateDialogCompOff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14sp"
+            android:text="@string/strApplyDate"
+            android:textColor="@color/grey_text2"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:id="@+id/llApplyDateDialogCompOff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:baselineAligned="false"
+            android:weightSum="2">
+
+            <RelativeLayout
+                android:id="@+id/rlApplyDateDialogCompOff"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:background="@drawable/bg_edittext">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvApplyDateDialogCompOff"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:hint="@string/select_the_date"
+                    android:maxLength="12"
+                    android:text=""
+                    android:textSize="14sp" />
+
+
+                <ImageView
+                    android:id="@+id/ivCalendar1"
+                    android:layout_width="20sp"
+                    android:layout_height="20sp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_calendar" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14sp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_edittext"
+                android:padding="10dp">
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/leaveTypeSpnrDialogCompOff"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:gravity="start"
+                    android:spinnerMode="dropdown" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="3dp"
+                    android:src="@drawable/icon_down"
+                    tools:ignore="ContentDescription" />
+            </RelativeLayout>
+        </LinearLayout>
+
+
+        <com.htistelecom.htisinhouse.font.UbuntuBold
+            android:id="@+id/txtReasonDialogCompOff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14sp"
+            android:text="@string/reason"
+            android:textColor="@color/grey_text2"
+            android:textSize="14sp" />
+
+        <com.htistelecom.htisinhouse.font.UbuntuEditText
+            android:id="@+id/etReasonDialogCompOff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14sp"
+            android:background="@drawable/bg_edittext"
+            android:maxLines="3"
+            android:padding="@dimen/_20sdp"
+            android:textSize="14sp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/btnSubmitDialogCompOff"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:background="@drawable/rect_fill_orange_less_border"
+                android:gravity="center"
+                android:text="@string/submit"
+                android:textColor="@color/white" />
+
+
+            <Button
+                android:id="@+id/btnCancelDialogCompOff"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight=".5"
+                android:background="@drawable/rect_no_background_border_orange"
+                android:gravity="center"
+                android:text="@string/cancel"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

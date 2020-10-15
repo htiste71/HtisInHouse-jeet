@@ -12,10 +12,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
 import android.provider.Settings.SettingNotFoundException
-import android.support.annotation.RequiresApi
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import android.telephony.TelephonyManager
 import android.text.TextUtils
 import com.htistelecom.htisinhouse.R
@@ -38,7 +38,9 @@ class SplashActivityWFMS : AppCompatActivity() {
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
+
 
     )
 

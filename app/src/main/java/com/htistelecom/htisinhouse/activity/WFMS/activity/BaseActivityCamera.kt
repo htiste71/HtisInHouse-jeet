@@ -10,8 +10,9 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.support.v4.content.FileProvider
-import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
+import androidx.core.content.FileProvider
+import androidx.appcompat.app.AppCompatActivity
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ImageFileUtils
 import com.htistelecom.htisinhouse.activity.WFMS.claims.AddClaimActivityWFMS
 import com.karumi.dexter.Dexter
@@ -19,6 +20,8 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
 import java.io.File
 
 
@@ -97,7 +100,7 @@ open class BaseActivityCamera : AppCompatActivity() {
 
             val photoUploadFile = File(mDir, image_name)
             muri = Uri.fromFile(photoUploadFile)
-            selectedImagePath = muri.getPath()
+            selectedImagePath = muri.path.toString()
             val photoURI = FileProvider.getUriForFile(this,
                     getApplicationContext().getPackageName()+ ".htisinhouse.provider",
                     photoUploadFile)
@@ -108,7 +111,7 @@ open class BaseActivityCamera : AppCompatActivity() {
 
             val photoUploadFile = File(mDir, image_name)
             muri = Uri.fromFile(photoUploadFile)
-            selectedImagePath = muri.getPath()
+            selectedImagePath = muri.path.toString()
             intent.putExtra(MediaStore.EXTRA_OUTPUT, muri)
         }
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
@@ -127,7 +130,9 @@ open class BaseActivityCamera : AppCompatActivity() {
                 ).withListener(object : MultiplePermissionsListener {
                     override fun onPermissionsChecked(report: MultiplePermissionsReport) {
                         if (report.areAllPermissionsGranted()) {
-                            openPhotoDialog(type)
+                            onSelectImageClick()
+
+                            // openPhotoDialog(type)
                         }
                     }
 
@@ -139,31 +144,31 @@ open class BaseActivityCamera : AppCompatActivity() {
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-         super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == FOR_MEDIA_FILE) {
-
-                val uri = data?.getData()
-
-                val filePath = ImageFileUtils.compressImage(uri!!.toString(), this)
-                val file = File(filePath)
-                sendImage(file)
-
-            } else if (requestCode == FOR_REQUEST_CAMERA) {
-
-                val uri = Uri.parse(selectedImagePath)
-                val filePath = ImageFileUtils.compressImage(uri.toString(), this)
-                val file = File(filePath)
-                sendImage(file)
-
-
-            }
-        }
-
-
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//         super.onActivityResult(requestCode, resultCode, data)
+//
+//        if (resultCode == Activity.RESULT_OK) {
+//            if (requestCode == FOR_MEDIA_FILE) {
+//
+//                val uri = data?.getData()
+//
+//                val filePath = ImageFileUtils.compressImage(uri!!.toString(), this)
+//                val file = File(filePath)
+//                sendImage(file)
+//
+//            } else if (requestCode == FOR_REQUEST_CAMERA) {
+//
+//                val uri = Uri.parse(selectedImagePath)
+//                val filePath = ImageFileUtils.compressImage(uri.toString(), this)
+//                val file = File(filePath)
+//                sendImage(file)
+//
+//
+//            }
+//        }
+//
+//
+//    }
 
     private fun sendImage(file: File) {
         if (mActivityType.equals("com.htistelecom.htisinhouse.activity.WFMS.activity.PerformActivityWFMS")) {
@@ -179,5 +184,49 @@ open class BaseActivityCamera : AppCompatActivity() {
 //            val actName: PerformActivityNew = this as PerformActivityNew
 //            actName.imagePath(file.absolutePath,imageFrom)
 //        }
+    }
+
+    fun onSelectImageClick() {
+        CropImage.startPickImageActivity(this)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+
+        // handle result of pick image chooser
+        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val imageUri: Uri = CropImage.getPickImageResultUri(this, data)
+
+            // For API >= 23 we need to check specifically that we have permissions to read external storage.
+            if (CropImage.isReadExternalStoragePermissionsRequired(this, imageUri)) {
+                // request permissions and handle the result in onRequestPermissionsResult()
+               // mCropImageUri = imageUri
+            } else {
+                // no permissions required or already grunted, can start crop image activity
+                startCropImageActivity(imageUri)
+            }
+        }
+
+        // handle result of CropImageActivity
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            val result: CropImage.ActivityResult = CropImage.getActivityResult(data)
+            if (resultCode == Activity.RESULT_OK) {
+
+                var s = result.getUri()
+                sendImage(File(File(result.uri.path).absolutePath))
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG)
+                        .show()
+            }
+        }
+    }
+
+    private fun startCropImageActivity(imageUri: Uri) {
+        CropImage.activity(imageUri)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setMultiTouchEnabled(true)
+                .start(this)
     }
 }

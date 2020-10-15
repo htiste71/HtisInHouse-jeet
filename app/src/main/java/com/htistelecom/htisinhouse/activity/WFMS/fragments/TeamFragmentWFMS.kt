@@ -2,13 +2,13 @@ package com.htistelecom.htisinhouse.activity.WFMS.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.LinearLayoutManager.VERTICAL
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -24,11 +24,10 @@ import com.htistelecom.htisinhouse.activity.WFMS.models.MyTeamModel
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.retrofit.MyInterface
 import com.htistelecom.htisinhouse.utilities.Utilities
-import kotlinx.android.synthetic.main.fragment_team_wfms.*
-import kotlinx.android.synthetic.main.nav_header_main_activity_navigation.*
 import org.json.JSONObject
 import retrofit2.Response
 import java.lang.Exception
+import kotlinx.android.synthetic.main.fragment_team_wfms.*
 
 class TeamFragmentWFMS : Fragment(), MyInterface, View.OnClickListener {
 
@@ -69,10 +68,10 @@ class TeamFragmentWFMS : Fragment(), MyInterface, View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.llFilterFragmentTeamWFMS -> {
-                val intent = Intent(activity, FilterActivity::class.java)
-                startActivity(intent)
-            }
+//            R.id.llFilterFragmentTeamWFMS -> {
+//                val intent = Intent(activity, FilterActivity::class.java)
+//                startActivity(intent)
+//            }
             R.id.llMapFragmentTeamWFMS -> {
                 val intent = Intent(activity, TeamMapActivityWFMS::class.java)
                 intent.putExtra("Data", myTeamList)

@@ -2,15 +2,15 @@ package com.htistelecom.htisinhouse.activity.WFMS.claims
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.ApiData
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.CLAIM_DETAIL_TASK_WFMS
-import com.htistelecom.htisinhouse.activity.WFMS.activity.BaseActivity
 import com.htistelecom.htisinhouse.activity.WFMS.activity.MainActivityNavigation
 import com.htistelecom.htisinhouse.activity.WFMS.claims.adapters.SingleTaskClaimDetailAdapterWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.claims.models.ClaimSummaryModel
@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.toolbar.*
 import org.json.JSONObject
 import retrofit2.Response
 
-class SingleTaskClaimDetailActivityWFMS : BaseActivity(), View.OnClickListener, MyInterface {
+class SingleTaskClaimDetailActivityWFMS : AppCompatActivity(), View.OnClickListener, MyInterface {
     var mTaskId = ""
     var mDate = ""
     lateinit var summaryModel: ClaimSummaryModel

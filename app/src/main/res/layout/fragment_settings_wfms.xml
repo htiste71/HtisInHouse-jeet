@@ -24,6 +24,7 @@
             android:layout_height="70dp"
             android:src="@drawable/icon_man" />
 
+
         <com.htistelecom.htisinhouse.font.Ubuntu
             android:id="@+id/tvProfileNameSettingsWFMS"
             android:layout_width="wrap_content"
@@ -33,6 +34,18 @@
             android:layout_marginLeft="15dp"
             android:textSize="20sp"
             android:layout_toRightOf="@+id/ivProfileSettingsWFMS"/>
+
+
+        <com.htistelecom.htisinhouse.font.Ubuntu
+            android:id="@+id/tvDesignationSettingsWFMS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorLightBlack"
+            android:layout_marginLeft="15dp"
+            android:textSize="16sp"
+            android:layout_below="@+id/tvProfileNameSettingsWFMS"
+            android:layout_toRightOf="@+id/ivProfileSettingsWFMS"/>
+
         <com.htistelecom.htisinhouse.font.Ubuntu
             android:id="@+id/tvDeptSettingsWFMS"
             android:layout_width="wrap_content"
@@ -40,7 +53,7 @@
             android:textColor="@color/colorLightBlack"
             android:layout_marginLeft="15dp"
             android:textSize="16sp"
-            android:layout_below="@+id/tvProfileNameSettingsWFMS"
+            android:layout_below="@+id/tvDesignationSettingsWFMS"
             android:layout_toRightOf="@+id/ivProfileSettingsWFMS"/>
     </RelativeLayout>
 

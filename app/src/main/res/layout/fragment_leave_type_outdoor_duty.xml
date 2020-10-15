@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="10dp"
-        android:weightSum="2">
+        android:weightSum="3">
 
         <RadioButton
             android:id="@+id/radioLeaveStatusLeaveTypeOutdoorDutyFragment"
@@ -31,6 +31,16 @@
             android:layout_weight="1"
             android:checked="false"
             android:text="OD Status"
+            android:textColor="@color/colorDarkBlue"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+        <RadioButton
+            android:id="@+id/radioCompOffStatusLeaveTypeOutdoorDutyFragment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="Comp Off"
             android:textColor="@color/colorDarkBlue"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -92,7 +102,7 @@
         android:text="No Record"
         android:textSize="18sp" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

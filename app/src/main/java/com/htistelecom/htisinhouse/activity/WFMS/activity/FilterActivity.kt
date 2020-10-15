@@ -3,7 +3,7 @@ package com.htistelecom.htisinhouse.activity.WFMS.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.ApiData
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantKotlin
@@ -79,7 +79,12 @@ class FilterActivity : Activity(), MyInterface {
                 }
                 statusAdapter = StatusFilterAdapter(this, filterStatusList)
                 rvStatusFilter.adapter = statusAdapter
+
             }
         }
+    }
+
+    fun notifyMethod() {
+        statusAdapter.notifyDataSetChanged()
     }
 }

@@ -1,12 +1,12 @@
 package com.htistelecom.htisinhouse.activity.WFMS.fragments
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.LinearLayoutManager.VERTICAL
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.htistelecom.htisinhouse.R

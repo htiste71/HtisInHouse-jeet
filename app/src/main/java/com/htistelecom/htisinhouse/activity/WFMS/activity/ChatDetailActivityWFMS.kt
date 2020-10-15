@@ -2,8 +2,8 @@ package com.htistelecom.htisinhouse.activity.WFMS.activity
 
 import android.app.Activity
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.LinearLayoutManager.VERTICAL
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.WFMS.adapters.ChatDetailAdapterWFMS
 import kotlinx.android.synthetic.main.activity_chat_detail_wfms.*

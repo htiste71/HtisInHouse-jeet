@@ -1,7 +1,6 @@
 package com.htistelecom.htisinhouse.utilities;
 
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -10,7 +9,6 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,8 +27,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-import android.telephony.TelephonyManager;
+import androidx.core.app.ActivityCompat;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -569,7 +567,7 @@ public class Utilities {
             return false;
     }
 
-    public static void selectTime(Context context, GetDateTime intfc) {
+    public static void selectTime(Context context, GetDateTime intfc, int TYPE, String mInTime) {
 
 
         // Get Current Time
@@ -584,24 +582,63 @@ public class Utilities {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay,
                                           int minute) {
-                        String mHour = "";
-                        String mMinutes = "";
-                        if (hourOfDay <= 9)
-
-                            mHour = "0" + hourOfDay + "";
-
-                        else
-
-                            mHour = hourOfDay + "";
-
-                        if (minute <= 9)
-
-                            mMinutes = "0" + minute + "";
-                        else
-                            mMinutes = minute + "";
 
 
-                        intfc.getDateTime("", mHour + ":" + mMinutes);
+                        if (TYPE == 1) {
+                            String[] arrayTime = mInTime.split(":");
+                            int mHourInt = Integer.parseInt(arrayTime[0]);
+                            int mMinutesInt = Integer.parseInt(arrayTime[1]);
+                            Calendar datetime = Calendar.getInstance();
+                            Calendar c = Calendar.getInstance();
+                            datetime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                            datetime.set(Calendar.MINUTE, minute);
+
+                            c.set(Calendar.HOUR_OF_DAY, mHourInt);
+                            c.set(Calendar.MINUTE, mMinutesInt);
+
+                            if (datetime.getTimeInMillis() <= c.getTimeInMillis()) {
+                                Utilities.showToast(context, "Out Time should be greater than In Time");
+                            } else {
+                                String mHour = "";
+                                String mMinutes = "";
+                                if (hourOfDay <= 9)
+
+                                    mHour = "0" + hourOfDay + "";
+
+                                else
+
+                                    mHour = hourOfDay + "";
+
+                                if (minute <= 9)
+
+                                    mMinutes = "0" + minute + "";
+                                else
+                                    mMinutes = minute + "";
+
+
+                                intfc.getDateTime("", mHour + ":" + mMinutes);
+                            }
+
+                        } else {
+                            String mHour = "";
+                            String mMinutes = "";
+                            if (hourOfDay <= 9)
+
+                                mHour = "0" + hourOfDay + "";
+
+                            else
+
+                                mHour = hourOfDay + "";
+
+                            if (minute <= 9)
+
+                                mMinutes = "0" + minute + "";
+                            else
+                                mMinutes = minute + "";
+
+
+                            intfc.getDateTime("", mHour + ":" + mMinutes);
+                        }
 
 
                     }

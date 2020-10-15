@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.htistelecom.htisinhouse.R
@@ -21,7 +22,7 @@ import kotlinx.android.synthetic.main.toolbar.*
 import org.json.JSONObject
 import retrofit2.Response
 
-class LeaveDetailActivityWFMS : BaseActivity(), MyInterface, View.OnClickListener {
+class LeaveDetailActivityWFMS : AppCompatActivity(), MyInterface, View.OnClickListener {
     lateinit var activity: MainActivityNavigation
     private var leaveTypeList = ArrayList<LeaveTypeModel>()
     lateinit var leaveTypeArray: Array<String?>
@@ -112,7 +113,7 @@ class LeaveDetailActivityWFMS : BaseActivity(), MyInterface, View.OnClickListene
     }
 
     private fun backToHome() {
-        startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Settings"))
+        startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Attendance"))
         finish()
 
     }

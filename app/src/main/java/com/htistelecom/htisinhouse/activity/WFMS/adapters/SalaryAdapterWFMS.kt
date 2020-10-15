@@ -2,12 +2,12 @@ package com.htistelecom.htisinhouse.activity.WFMS.adapters
 
 import android.content.Intent
 import android.graphics.Typeface
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.FragmentActivity
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 
 import com.htistelecom.htisinhouse.R
 

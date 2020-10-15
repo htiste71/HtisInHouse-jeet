@@ -1,11 +1,11 @@
 package com.htistelecom.htisinhouse.activity.WFMS.fragments
 
 import android.os.Bundle
-import android.support.annotation.Nullable
+import androidx.annotation.Nullable
 import android.view.ViewGroup
 import android.view.LayoutInflater
-import android.support.design.widget.BottomSheetDialogFragment
 import android.view.View
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.htistelecom.htisinhouse.R
 
 

@@ -462,6 +462,8 @@ class PerformActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickListe
             if (json.getString("Status").equals("Success")) {
                 Utilities.showToast(this, json.getString("Message"))
                 dialog.dismiss()
+                startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Home"))
+
                 finish()
             } else {
                 Utilities.showToast(this, json.getString("Message"))

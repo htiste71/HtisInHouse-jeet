@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
@@ -21,7 +22,7 @@ import com.htistelecom.htisinhouse.activity.WFMS.models.MyTeamModel
 import kotlinx.android.synthetic.main.toolbar.*
 
 
-class TeamMapActivityWFMS : BaseActivity(), OnMapReadyCallback {
+class TeamMapActivityWFMS : AppCompatActivity(), OnMapReadyCallback {
     lateinit var bitmap: Bitmap
     lateinit var mapFragment: SupportMapFragment
     private var myTeamList = ArrayList<MyTeamModel>()

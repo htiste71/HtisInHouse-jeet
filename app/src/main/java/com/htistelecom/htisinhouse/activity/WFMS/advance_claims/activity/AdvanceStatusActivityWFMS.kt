@@ -4,13 +4,13 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.Window
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListPopupWindow
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.htistelecom.htisinhouse.R
@@ -50,12 +50,18 @@ class AdvanceStatusActivityWFMS : Activity(), View.OnClickListener, MyInterface 
     // var mSendToId = ""
 
 
+
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_advance_status_wfms)
         initViews()
         listeners()
-        ivBack.setOnClickListener { view -> finish() }
+        ivBack.setOnClickListener {
+            view ->backToHome()
+        }
         ivDrawer.setOnClickListener { view ->
 
             dialogAdvanceClaim()

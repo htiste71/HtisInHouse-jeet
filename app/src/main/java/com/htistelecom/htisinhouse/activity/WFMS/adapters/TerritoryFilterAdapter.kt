@@ -1,11 +1,11 @@
 package com.htistelecom.htisinhouse.activity.WFMS.adapters
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.recyclerview.widget.RecyclerView
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.WFMS.activity.FilterActivity
 import kotlinx.android.synthetic.main.row_territory_filter_adapter.view.*

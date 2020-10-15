@@ -32,6 +32,8 @@ class VerifyEmailActivity : Activity(), MyInterface {
         btnSubmitVerifyEmail.setOnClickListener { view ->
             var email = etEmailVerifyEmail.text.toString()
           //  email="shobinkumar25@gmail.com"
+          //  email="shobinjindal91@gmail.com"
+
             if (TextUtils.isEmpty(email)) run {
                 Utilities.showToast(this, "Please enter email address")
 
@@ -39,7 +41,7 @@ class VerifyEmailActivity : Activity(), MyInterface {
                 Utilities.showToast(this, "Please enter valid email address")
 
             } else {
-
+               // email="shobinjindal91@gmail.com"
                 var json = JSONObject()
                 json.put("DomainId", tinyDB.getString(ConstantsWFMS.TINYDB_DOMAIN_ID))
                 json.put("EmpEmail", email)

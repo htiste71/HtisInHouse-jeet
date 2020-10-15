@@ -40,7 +40,7 @@
                 android:paddingEnd="8dp"
                 android:paddingBottom="10dp">
 
-                <android.support.v7.widget.AppCompatSpinner
+                <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/spinnerClaimTitle"
                     android:layout_width="match_parent"
                     android:layout_marginTop="@dimen/_2sdp"
@@ -161,7 +161,7 @@
                         android:minHeight="@dimen/_33sdp"
                         android:paddingBottom="8dp">
 
-                        <android.support.v7.widget.AppCompatSpinner
+                        <androidx.appcompat.widget.AppCompatSpinner
                             android:id="@+id/transportmode_spnr"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

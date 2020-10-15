@@ -25,6 +25,7 @@
     <color name="colorWhite">#ffffff</color>
     <color name="colorLightBlack">#5c5c5c</color>
     <color name="colorLightBlackNew">#905c5c5c</color>
-
+    <color name="colorSalary">#00f8f9fd</color>
+<!--    <color name="colorSalary">#006600</color>-->
 
 </resources>

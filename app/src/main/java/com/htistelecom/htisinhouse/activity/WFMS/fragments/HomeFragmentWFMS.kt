@@ -19,6 +19,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -163,7 +164,11 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
                 }
             }
 
-            //    UtilitiesWFMS.showToast(activity!!, OreoLocationService.LATITUDE + "");
+
+            val success: Boolean = maps.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            activity, R.raw.style_json))
+
 
             val lati: Double = OreoLocationService.LATITUDE.toDouble()
             val longLat: Double = OreoLocationService.LONGITUDE.toDouble()
@@ -338,7 +343,7 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
     private fun openDialogAddNewTask() {
 
 
-        dialog = Dialog(activity)
+        dialog = Dialog(activity!!)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_add_task)
         dialog.setCancelable(false)
@@ -679,7 +684,7 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
                 projectArray[i] = projectList.get(i).name
             }
 
-            projectListAdapter = ArrayAdapter<String?>(activity, R.layout.spinner_item, projectArray)
+            projectListAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, projectArray)
             // hitAPI(ACTIVITY_LIST_WFMS, "")
         } else if (TYPE == SITE_LIST_WFMS) {
 
@@ -701,7 +706,7 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
                 siteArray[i] = siteList.get(i).name
             }
 
-            siteListAdapter = ArrayAdapter<String?>(activity, R.layout.spinner_item, siteArray)
+            siteListAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, siteArray)
 
         } else if (TYPE == ACTIVITY_LIST_WFMS) {
             activityArray= emptyArray()
@@ -721,7 +726,7 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
                 activityArray[i] = activityList.get(i).name
             }
 
-            activityListAdapter = ArrayAdapter<String?>(activity, R.layout.spinner_item, activityArray)
+            activityListAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, activityArray)
         } else if (TYPE == ADD_TASK_WFMS) {
 
             val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
@@ -765,7 +770,7 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
                 selectListTapLocationArray[i] = selectListTapLocation.get(i).name
             }
 
-            selectListTapLocationAdaopter = ArrayAdapter<String?>(activity, R.layout.spinner_item, selectListTapLocationArray)
+            selectListTapLocationAdaopter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, selectListTapLocationArray)
 
             hitAPI(SELECT_INDUSTRY_TAP_LOCATION_WFMS, "")
 
@@ -788,7 +793,7 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
                 selectIndustryTapLocationArray[i] = selectIndustryTapLocation.get(i).name
             }
 
-            selectIndustryTapLocationAdapter = ArrayAdapter<String?>(activity, R.layout.spinner_item, selectIndustryTapLocationArray)
+            selectIndustryTapLocationAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, selectIndustryTapLocationArray)
         } else if (TYPE == SUBMIT_TAP_LOCATION_WFMS) {
             val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
             if (jsonObj.getString("Status").equals("Success")) {
@@ -843,9 +848,9 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
 
 
     fun showDropdown(array: Array<String?>, spinnerData: SpinnerData, textView: Ubuntu, width: Int) {
-        listPopupWindow = ListPopupWindow(activity)
+        listPopupWindow = ListPopupWindow(activity!!)
         listPopupWindow!!.setAdapter(ArrayAdapter<Any?>(
-                activity,
+                activity!!,
                 R.layout.row_profile_spinner, array))
         listPopupWindow!!.setBackgroundDrawable(resources.getDrawable(R.drawable.rect_white_background_no_radius_border))
         listPopupWindow!!.anchorView = textView

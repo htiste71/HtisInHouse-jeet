@@ -25,43 +25,58 @@
             android:background="@color/white"
             android:padding="10dp">
 
-            <com.htistelecom.htisinhouse.font.Ubuntu
-                android:id="@+id/txtDescriptionSingleTaskClaimDetailActivityWFMS"
-                android:layout_width="wrap_content"
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/tvTaskDateSingleTaskClaimDetailActivityWFMS"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/description"
-                android:textColor="@color/black"
+                android:textColor="@color/colorDarkBlue"
+
+                android:text="Task Date:12 Aug 2020"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <com.htistelecom.htisinhouse.font.Ubuntu
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/txtDescriptionSingleTaskClaimDetailActivityWFMS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvTaskDateSingleTaskClaimDetailActivityWFMS"
+                android:layout_margin="5dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/description"
+                android:textSize="16sp"
+                android:textColor="@color/colorDarkBlue"
+
+                android:textStyle="bold" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
                 android:id="@+id/txtAmountSingleTaskClaimDetailActivityWFMS"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorDarkBlue"
+
+                android:layout_below="@+id/tvTaskDateSingleTaskClaimDetailActivityWFMS"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="5dp"
                 android:layout_toEndOf="@+id/txtTotalClaim"
                 android:gravity="right"
                 android:text="@string/amount_txt"
-                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvSingleTaskClaimDetailActivityWFMS"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
-                android:layout_below="@+id/txtDescriptionSingleTaskClaimDetailActivityWFMS" />
+                android:layout_below="@+id/txtDescriptionSingleTaskClaimDetailActivityWFMS"
+                android:visibility="gone" />
 
             <com.htistelecom.htisinhouse.font.Ubuntu
                 android:id="@+id/tvNoClaimAddedSingleTaskClaimDetailActivityWFMS"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/strNoClaimAdded"
                 android:gravity="center"
-                android:textSize="18sp"/>
+                android:text="@string/strNoClaimAdded"
+                android:textSize="18sp" />
 
 
         </RelativeLayout>

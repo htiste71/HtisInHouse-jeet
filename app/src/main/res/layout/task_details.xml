@@ -68,7 +68,7 @@
                     android:paddingEnd="8dp"
                     android:paddingBottom="8dp">
 
-                    <android.support.v7.widget.AppCompatSpinner
+                    <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/position_spnr"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -121,7 +121,7 @@
                     android:paddingEnd="8dp"
                     android:paddingBottom="8dp">
 
-                    <android.support.v7.widget.AppCompatSpinner
+                    <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/reachTime_spnr"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -156,7 +156,7 @@
                     android:paddingEnd="8dp"
                     android:paddingBottom="8dp">
 
-                    <android.support.v7.widget.AppCompatSpinner
+                    <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/outTime_spnr"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -198,7 +198,7 @@
                     android:paddingEnd="8dp"
                     android:paddingBottom="8dp">
 
-                    <android.support.v7.widget.AppCompatSpinner
+                    <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/entity_spnr"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -233,7 +233,7 @@
                     android:paddingEnd="8dp"
                     android:paddingBottom="8dp">
 
-                    <android.support.v7.widget.AppCompatSpinner
+                    <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/natureBusiness_spnr"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -290,7 +290,7 @@
                 android:paddingEnd="8dp"
                 android:paddingBottom="10dp">
 
-                <android.support.v7.widget.AppCompatSpinner
+                <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/spinnerClaimTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -409,7 +409,7 @@
                     android:paddingEnd="8dp"
                     android:paddingBottom="8dp">
 
-                    <android.support.v7.widget.AppCompatSpinner
+                    <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/city_spnr"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -444,7 +444,7 @@
                     android:paddingEnd="8dp"
                     android:paddingBottom="8dp">
 
-                    <android.support.v7.widget.AppCompatSpinner
+                    <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/state_spnr"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

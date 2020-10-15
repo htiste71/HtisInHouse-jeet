@@ -33,7 +33,7 @@ class LocalStorageProvider : DocumentsProvider() {
         // These columns are required
         row.add(Root.COLUMN_ROOT_ID, homeDir.absolutePath)
         row.add(Root.COLUMN_DOCUMENT_ID, homeDir.absolutePath)
-        row.add(Root.COLUMN_TITLE, context.getString(R.string.site_id))
+        row.add(Root.COLUMN_TITLE,R.string.site_id)
         row.add(Root.COLUMN_FLAGS, Root.FLAG_LOCAL_ONLY or Root.FLAG_SUPPORTS_CREATE)
         row.add(Root.COLUMN_ICON, R.drawable.bg_calender)
         // These columns are optional
@@ -58,57 +58,55 @@ class LocalStorageProvider : DocumentsProvider() {
         return null
     }
 
-    @Throws(FileNotFoundException::class)
-    override fun openDocumentThumbnail(documentId: String, sizeHint: Point,
-                                       signal: CancellationSignal): AssetFileDescriptor? {
-        // Assume documentId points to an image file. Build a thumbnail no
-        // larger than twice the sizeHint
-        val options = BitmapFactory.Options()
-        options.inJustDecodeBounds = true
-        BitmapFactory.decodeFile(documentId, options)
-        val targetHeight = 2 * sizeHint.y
-        val targetWidth = 2 * sizeHint.x
-        val height = options.outHeight
-        val width = options.outWidth
-        options.inSampleSize = 1
-        if (height > targetHeight || width > targetWidth) {
-            val halfHeight = height / 2
-            val halfWidth = width / 2
-            // Calculate the largest inSampleSize value that is a power of 2 and
-            // keeps both
-            // height and width larger than the requested height and width.
-            while (halfHeight / options.inSampleSize > targetHeight
-                    || halfWidth / options.inSampleSize > targetWidth) {
-                options.inSampleSize *= 2
-            }
-        }
-        options.inJustDecodeBounds = false
-        val bitmap = BitmapFactory.decodeFile(documentId, options)
-        // Write out the thumbnail to a temporary file
-        var tempFile: File? = null
-        var out: FileOutputStream? = null
-        try {
-            tempFile = File.createTempFile("thumbnail", null, context.cacheDir)
-            out = FileOutputStream(tempFile)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 90, out)
-        } catch (e: IOException) {
-            Log.e(LocalStorageProvider::class.java.simpleName, "Error writing thumbnail", e)
-            return null
-        } finally {
-            if (out != null) try {
-                out.close()
-            } catch (e: IOException) {
-                Log.e(LocalStorageProvider::class.java.simpleName, "Error closing thumbnail", e)
-            }
-        }
-        // It appears the Storage Framework UI caches these results quite
-        // aggressively so there is little reason to
-        // write your own caching layer beyond what you need to return a single
-        // AssetFileDescriptor
-        return AssetFileDescriptor(ParcelFileDescriptor.open(tempFile,
-                ParcelFileDescriptor.MODE_READ_ONLY), 0,
-                AssetFileDescriptor.UNKNOWN_LENGTH)
-    }
+
+
+//    override fun openDocument(documentId: String?, mode: String?, signal: CancellationSignal?): ParcelFileDescriptor {
+//        // Assume documentId points to an image file. Build a thumbnail no
+//        // larger than twice the sizeHint
+//        val options = BitmapFactory.Options()
+//        options.inJustDecodeBounds = true
+//        BitmapFactory.decodeFile(documentId, options)
+//        val targetHeight = 2 * sizeHint.y
+//        val targetWidth = 2 * sizeHint.x
+//        val height = options.outHeight
+//        val width = options.outWidth
+//        options.inSampleSize = 1
+//        if (height > targetHeight || width > targetWidth) {
+//            val halfHeight = height / 2
+//            val halfWidth = width / 2
+//            // Calculate the largest inSampleSize value that is a power of 2 and
+//            // keeps both
+//            // height and width larger than the requested height and width.
+//            while (halfHeight / options.inSampleSize > targetHeight
+//                    || halfWidth / options.inSampleSize > targetWidth) {
+//                options.inSampleSize *= 2
+//            }
+//        }
+//        options.inJustDecodeBounds = false
+//        val bitmap = BitmapFactory.decodeFile(documentId, options)
+//        // Write out the thumbnail to a temporary file
+//        var tempFile: File? = null
+//        var out: FileOutputStream? = null
+//        try {
+//            tempFile = File.createTempFile("thumbnail", null, context.cacheDir)
+//            out = FileOutputStream(tempFile)
+//            bitmap.compress(Bitmap.CompressFormat.PNG, 90, out)
+//        } catch (e: IOException) {
+//            Log.e(LocalStorageProvider::class.java.simpleName, "Error writing thumbnail", e)
+//            return null
+//        } finally {
+//            if (out != null) try {
+//                out.close()
+//            } catch (e: IOException) {
+//                Log.e(LocalStorageProvider::class.java.simpleName, "Error closing thumbnail", e)
+//            }
+//        }
+//        // It appears the Storage Framework UI caches these results quite
+//        // aggressively so there is little reason to
+//        // write your own caching layer beyond what you need to return a single
+//        // AssetFileDescriptor
+//        return AssetFileDescriptor(ParcelFileDescriptor.open(tempFile, ParcelFileDescriptor.MODE_READ_ONLY), 0, AssetFileDescriptor.UNKNOWN_LENGTH)
+//    }
 
     @Throws(FileNotFoundException::class)
     override fun queryChildDocuments(parentDocumentId: String, projection: Array<String>,
@@ -182,17 +180,16 @@ class LocalStorageProvider : DocumentsProvider() {
         File(documentId).delete()
     }
 
-    @Throws(FileNotFoundException::class)
-    override fun openDocument(documentId: String, mode: String,
-                              signal: CancellationSignal): ParcelFileDescriptor {
-        val file = File(documentId)
-        val isWrite = mode.indexOf('w') != -1
-        return if (isWrite) {
-            ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_WRITE)
-        } else {
-            ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
-        }
-    }
+    override fun openDocument(documentId: String?, mode: String?, signal: CancellationSignal?): ParcelFileDescriptor {
+            val file = File(documentId)
+            val isWrite = mode!!.indexOf('w') != -1
+            return if (isWrite) {
+                ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_WRITE)
+            } else {
+                ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
+            }    }
+
+
 
     override fun onCreate(): Boolean {
         return true

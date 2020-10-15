@@ -15,11 +15,10 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.JobIntentService;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.JobIntentService;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,7 +27,6 @@ import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS;
 import com.htistelecom.htisinhouse.activity.WFMS.activity.SplashActivityWFMS;
 import com.htistelecom.htisinhouse.activity.WFMS.models.FileModel;
 import com.htistelecom.htisinhouse.config.TinyDB;
-import com.htistelecom.htisinhouse.utilities.Utilities;
 
 
 import java.io.BufferedWriter;

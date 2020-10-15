@@ -61,12 +61,12 @@
             android:id="@+id/tvPunchedInTimeHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Punched In: 08:30 am, 02 May,2020"
+            android:text="Punched In:08:30 am,02 May,2020"
             android:textColor="@color/colorDarkBlue"
             android:gravity="center"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
-        <android.support.v7.widget.SwitchCompat
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/btnSwitchHeader"
             android:checked="false"
             android:layout_alignParentRight="true"

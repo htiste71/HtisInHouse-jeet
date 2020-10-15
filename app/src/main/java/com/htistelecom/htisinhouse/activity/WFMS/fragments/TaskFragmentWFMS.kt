@@ -2,12 +2,12 @@ package com.htistelecom.htisinhouse.activity.WFMS.fragments
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.htistelecom.htisinhouse.R
@@ -99,7 +99,7 @@ class TaskFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
     private fun openDialogAddNewTask() {
 
 
-        dialog = Dialog(activity)
+        dialog = Dialog(activity!!)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_add_task)
         dialog.setCancelable(false)
@@ -245,9 +245,9 @@ class TaskFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
 
 
     fun showDropdown(array: Array<String?>, spinnerData: SpinnerData, textView: Ubuntu, width: Int) {
-        listPopupWindow = ListPopupWindow(activity)
+        listPopupWindow = ListPopupWindow(activity!!)
         listPopupWindow!!.setAdapter(ArrayAdapter<Any?>(
-                activity,
+                activity!!,
                 R.layout.row_profile_spinner, array))
         listPopupWindow!!.setBackgroundDrawable(resources.getDrawable(R.drawable.rect_white_background_no_radius_border))
         listPopupWindow!!.anchorView = textView

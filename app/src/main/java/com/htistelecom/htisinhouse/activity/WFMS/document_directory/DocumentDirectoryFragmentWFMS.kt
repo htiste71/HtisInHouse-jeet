@@ -1,18 +1,20 @@
 package com.htistelecom.htisinhouse.activity.WFMS.document_directory
 
 
+import android.Manifest
+import android.app.Activity
 import android.app.Dialog
 import android.app.DownloadManager
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.FragmentActivity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +23,10 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -41,7 +47,10 @@ import com.htistelecom.htisinhouse.interfaces.SpinnerData
 import com.htistelecom.htisinhouse.retrofit.MyInterface
 import com.htistelecom.htisinhouse.utilities.DateUtils
 import com.htistelecom.htisinhouse.utilities.Utilities
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.fragment_document_directory.*
+import kotlinx.android.synthetic.main.fragment_profile_wfms.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -56,7 +65,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 
-class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener, MyInterface {
+class DocumentDirectoryFragmentWFMS : Fragment(), View.OnClickListener, MyInterface {
 
 
     lateinit var manager: DownloadManager
@@ -189,7 +198,7 @@ class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener
     fun dialogUploadDoc(docRequestId: String, docName: String) {
 
 
-        dialog = Dialog(activity)
+        dialog = Dialog(activity!!)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_upload_document_wfms)
         dialog.setCancelable(false)
@@ -228,14 +237,14 @@ class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener
         ivUploadImgUploadDoc!!.setOnClickListener { view ->
 
             IMGVIEW = 0
-            checkPermissions("com.htistelecom.htisinhouse.activity.NewKnjrkhana.document_directory.DocumentDirectoryFragmentWFMS", activity!!)
+            checkPermissions()
 
 
         }
 
         ivUploadImg1UploadDoc!!.setOnClickListener { view ->
             IMGVIEW = 1
-            checkPermissions("com.htistelecom.htisinhouse.activity.NewKnjrkhana.document_directory.DocumentDirectoryFragmentWFMS", activity!!)
+            checkPermissions()
         }
 
 
@@ -274,7 +283,7 @@ class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener
 
         var mDocTypeID = ""
         var mDeptId = ""
-        dialogRequestDoc = Dialog(activity)
+        dialogRequestDoc = Dialog(activity!!)
         dialogRequestDoc.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialogRequestDoc.setContentView(R.layout.dialog_request_document_wfms)
         dialogRequestDoc.setCancelable(false)
@@ -337,9 +346,9 @@ class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener
     }
 
     fun showDropdown(array: Array<String?>, spinnerData: SpinnerData, textView: Ubuntu, width: Int) {
-        listPopupWindow = ListPopupWindow(activity)
+        listPopupWindow = ListPopupWindow(activity!!)
         listPopupWindow!!.setAdapter(ArrayAdapter<Any?>(
-                activity,
+                activity!!,
                 R.layout.row_profile_spinner, array))
         listPopupWindow!!.setBackgroundDrawable(resources.getDrawable(R.drawable.rect_white_background_no_radius_border))
         listPopupWindow!!.anchorView = textView
@@ -732,6 +741,132 @@ class DocumentDirectoryFragmentWFMS : BaseFragmentCamera(), View.OnClickListener
             return null
         }
     }
+
+
+
+    public fun checkPermissions() {
+        if(Build.VERSION.SDK_INT<=23)
+        {
+            if(ContextCompat.checkSelfPermission(activity!!,android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(activity!!,android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(activity!!,android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(android.Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE),1);
+                return;
+            } else {
+                onSelectImageClick()
+
+            }
+        }
+        else{
+            onSelectImageClick()
+
+        }
+
+
+
+//        Dexter.with(activity)
+//                .withPermissions(
+//                        Manifest.permission.CAMERA,
+//                        Manifest.permission.READ_EXTERNAL_STORAGE,
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+//
+//                ).withListener(object : MultiplePermissionsListener {
+//                    override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+//                        if (report.areAllPermissionsGranted()) {
+//                            onSelectImageClick()
+//                        }
+//                    }
+//
+//                    override fun onPermissionRationaleShouldBeShown(permissions: List<PermissionRequest>, token: PermissionToken) {
+//                        token.continuePermissionRequest()
+//                    }
+//                }).check()
+
+
+    }
+
+
+
+    override fun onRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<out String>,
+            grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (grantResults.size > 0) {
+            val locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+            if (locationAccepted) {
+                CropImage.startPickImageActivity(activity!!)
+
+                //startLocationClass()
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(arrayOf(android.Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE),1);
+
+
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+
+        // handle result of CropImageActivity
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            val result: CropImage.ActivityResult = CropImage.getActivityResult(data)
+            if (resultCode == Activity.RESULT_OK) {
+
+                var s = result.getUri()
+                val file=File(File(result.uri.path).absolutePath)
+                if (IMGVIEW == 0) {
+
+                    Glide.with(activity!!).load(file).into(ivUploadImgUploadDoc!!)
+                    val mFile: RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), file!!)
+                    imgReqBody = MultipartBody.Part.createFormData("file", file.name, mFile)
+                    imagesAl.add(imgReqBody!!)
+                } else if (IMGVIEW == 1) {
+                    Glide.with(activity!!).load(file).into(ivUploadImg1UploadDoc!!);
+                    val mFile: RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), file!!)
+                    img1ReqBody = MultipartBody.Part.createFormData("file", file.name, mFile)
+                    imagesAl.add(img1ReqBody!!)
+                }
+
+
+
+
+
+
+                //sendImage(File(File(result.uri.path).absolutePath))
+                //  fragmentImage.setImageURI(s)
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(activity, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG)
+                        .show()
+            }
+        }
+    }
+
+    fun callMethod(imageUri: Uri) {
+        startCropImageActivity(imageUri)
+
+    }
+
+    private fun startCropImageActivity(imageUri: Uri) {
+        CropImage.activity(imageUri)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setMultiTouchEnabled(true)
+                .start(activity!!, this)
+    }
+
+
+
+    fun onSelectImageClick() {
+        CropImage.startPickImageActivity(activity!!)
+    }
+
+
+
 
 }
 

@@ -111,7 +111,7 @@ object ImageFileUtils {
     /**
      * @return The MIME type for the given file.
      */
-    fun getMimeType(file: File): String {
+    fun getMimeType(file: File): String? {
         val extension = getExtension(file.name)
         return if (extension!!.length > 0) MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.substring(1)) else "application/octet-stream"
     }
@@ -119,7 +119,7 @@ object ImageFileUtils {
     /**
      * @return The MIME type for the give Uri.
      */
-    fun getMimeType(context: Context, uri: Uri): String {
+    fun getMimeType(context: Context, uri: Uri): String? {
         val file = File(getPath(context, uri))
         return getMimeType(file)
     }
@@ -187,7 +187,7 @@ object ImageFileUtils {
                 column
         )
         try {
-            cursor = context.contentResolver.query(uri, projection, selection, selectionArgs,
+            cursor = context.contentResolver.query(uri!!, projection, selection, selectionArgs,
                     null)
             if (cursor != null && cursor.moveToFirst()) {
                 if (DEBUG) DatabaseUtils.dumpCursor(cursor)
@@ -244,8 +244,8 @@ object ImageFileUtils {
                         Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id))
                 return getDataColumn(context, contentUri, null, null)
             } else if (isMediaDocument(uri)) {
-                val docId = DocumentsContract.getDocumentId(uri)
-                val split = docId.split(":").toTypedArray()
+                var docId = DocumentsContract.getDocumentId(uri)
+                var split = docId.split(":").toTypedArray()
                 val type = split[0]
                 var contentUri: Uri? = null
                 if ("image" == type) {
@@ -255,8 +255,8 @@ object ImageFileUtils {
                 } else if ("audio" == type) {
                     contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
                 }
-                val selection = "_id=?"
-                val selectionArgs = arrayOf(
+                var selection = "_id=?"
+                var selectionArgs = arrayOf(
                         split[1]
                 )
                 return getDataColumn(context, contentUri, selection, selectionArgs)
@@ -327,7 +327,7 @@ object ImageFileUtils {
      * @author paulburke
      */
     fun getThumbnail(context: Context, file: File): Bitmap? {
-        return getThumbnail(context, getUri(file), getMimeType(file))
+        return getMimeType(file)?.let { getThumbnail(context, getUri(file), it) }
     }
 
     /**
@@ -340,7 +340,7 @@ object ImageFileUtils {
      * @author paulburke
      */
     fun getThumbnail(context: Context, uri: Uri): Bitmap? {
-        return getThumbnail(context, uri, getMimeType(context, uri))
+        return getMimeType(context, uri)?.let { getThumbnail(context, uri, it) }
     }
 
     /**
@@ -361,12 +361,12 @@ object ImageFileUtils {
         }
         var bm: Bitmap? = null
         if (uri != null) {
-            val resolver = context.contentResolver
+            var resolver = context.contentResolver
             var cursor: Cursor? = null
             try {
                 cursor = resolver.query(uri, null, null, null, null)
-                if (cursor.moveToFirst()) {
-                    val id = cursor.getInt(0)
+                if (cursor!!.moveToFirst()) {
+                    var id = cursor.getInt(0)
                     if (DEBUG) Log.d(TAG, "Got thumb ID: $id")
                     if (mimeType.contains("video")) {
                         bm = MediaStore.Video.Thumbnails.getThumbnail(
@@ -407,7 +407,7 @@ object ImageFileUtils {
      * @author paulburke
      */
     var sFileFilter = FileFilter { file ->
-        val fileName = file.name
+        var fileName = file.name
         // Return files only (not directories) and skip hidden files
         file.isFile && !fileName.startsWith(HIDDEN_PREFIX)
     }
@@ -417,7 +417,7 @@ object ImageFileUtils {
      * @author paulburke
      */
     var sDirFilter = FileFilter { file ->
-        val fileName = file.name
+        var fileName = file.name
         // Return directories only and skip hidden directories
         file.isDirectory && !fileName.startsWith(HIDDEN_PREFIX)
     }
@@ -429,7 +429,7 @@ object ImageFileUtils {
      * @author paulburke
      */
     fun createGetContentIntent(): Intent { // Implicitly allow the user to select a particular kind of data
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        var intent = Intent(Intent.ACTION_GET_CONTENT)
         // The MIME data type filter
         intent.type = "*/*"
         // Only return URIs that can be opened with ContentResolver
@@ -437,11 +437,11 @@ object ImageFileUtils {
         return intent
     }
 
-    @JvmStatic
     fun compressImage(imageUri: String?, context: Context): String {
-        val filePath = getRealPathFromURI(imageUri, context)
+        var filePath = getRealPathFromURI(imageUri, context)
         var scaledBitmap: Bitmap? = null
-        val options = BitmapFactory.Options()
+
+        var options = BitmapFactory.Options()
         //      by setting this field as true, the actual bitmap pixels are not loaded in the memory. Just the bounds are loaded. If
 //      you try the use the bitmap here, you will get null.
         options.inJustDecodeBounds = true
@@ -449,10 +449,10 @@ object ImageFileUtils {
         var actualHeight = options.outHeight
         var actualWidth = options.outWidth
         //      max Height and width values of the compressed image is taken as 816x612
-        val maxHeight = 816.0f
-        val maxWidth = 612.0f
+        var maxHeight = 816.0f
+        var maxWidth = 612.0f
         var imgRatio = actualWidth / actualHeight.toFloat()
-        val maxRatio = maxWidth / maxHeight
+        var maxRatio = maxWidth / maxHeight
         //      width and height values are set maintaining the aspect ratio of the image
         if (actualHeight > maxHeight || actualWidth > maxWidth) {
             if (imgRatio < maxRatio) {
@@ -486,23 +486,25 @@ object ImageFileUtils {
         } catch (exception: OutOfMemoryError) {
             exception.printStackTrace()
         }
-        val ratioX = actualWidth / options.outWidth.toFloat()
-        val ratioY = actualHeight / options.outHeight.toFloat()
-        val middleX = actualWidth / 2.0f
-        val middleY = actualHeight / 2.0f
-        val scaleMatrix = Matrix()
+        var ratioX = actualWidth / options.outWidth.toFloat()
+        var ratioY = actualHeight / options.outHeight.toFloat()
+        var middleX = actualWidth / 2.0f
+        var middleY = actualHeight / 2.0f
+        var scaleMatrix = Matrix()
         scaleMatrix.setScale(ratioX, ratioY, middleX, middleY)
-        val canvas = Canvas(scaledBitmap)
-        canvas.matrix = scaleMatrix
+        var canvas = Canvas(scaledBitmap!!)
+        //canvas.matrix = scaleMatrix
+       // canvas.matrix=scaleMatrix
+        canvas.setMatrix(scaleMatrix)
         canvas.drawBitmap(bmp, middleX - bmp.width / 2, middleY - bmp.height / 2, Paint(Paint.FILTER_BITMAP_FLAG))
         //      check the rotation of the image and display it properly
-        val exif: ExifInterface
+        var exif: ExifInterface
         try {
             exif = ExifInterface(filePath)
-            val orientation = exif.getAttributeInt(
+            var orientation = exif.getAttributeInt(
                     ExifInterface.TAG_ORIENTATION, 0)
             Log.d("EXIF", "Exif: $orientation")
-            val matrix = Matrix()
+            var matrix = Matrix()
             if (orientation == 6) {
                 matrix.postRotate(90f)
                 Log.d("EXIF", "Exif: $orientation")
@@ -513,14 +515,14 @@ object ImageFileUtils {
                 matrix.postRotate(270f)
                 Log.d("EXIF", "Exif: $orientation")
             }
-            scaledBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0,
+            scaledBitmap = Bitmap.createBitmap(scaledBitmap!!, 0, 0,
                     scaledBitmap!!.width, scaledBitmap.height, matrix,
                     true)
         } catch (e: IOException) {
             e.printStackTrace()
         }
         var out: FileOutputStream? = null
-        val filename = filename
+        var filename = filename
         try {
             out = FileOutputStream(filename)
             //          write the compressed bitmap at the destination specified by filename.
@@ -540,12 +542,13 @@ object ImageFileUtils {
             return file.absolutePath + "/" + System.currentTimeMillis() + ".jpg"
         }
 
-    fun getRealPathFromURI(contentURI: String?, context: Context): String {
+    fun getRealPathFromURI(contentURI: String?, context: Context): String? {
         val contentUri = Uri.parse(contentURI)
         val cursor = context.contentResolver.query(contentUri, null, null, null, null)
         return if (cursor == null) {
             contentUri.path
-        } else {
+        } else
+        {
             cursor.moveToFirst()
             val index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
             cursor.getString(index)
@@ -568,4 +571,28 @@ object ImageFileUtils {
         }
         return inSampleSize
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

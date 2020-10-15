@@ -28,7 +28,7 @@
             android:paddingStart="@dimen/_5sdp"
             android:paddingEnd="@dimen/_5sdp">
 
-            <android.support.v7.widget.AppCompatSpinner
+            <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/spnrStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -5,7 +5,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.support.v4.app.FragmentTransaction
+import androidx.fragment.app.FragmentTransaction
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -187,7 +187,7 @@ class AttendanceFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener
         val listener: CaldroidListener = object : CaldroidListener() {
             override fun onSelectDate(date: Date, view: View) {
                 for (i in calendarList.indices) {
-                    if (calendarList[i].dayStatus.equals("HH", ignoreCase = true)) {
+                    if (calendarList[i].dayStatus.equals("HH", ignoreCase = true) || calendarList[i].dayStatus.equals("WW", ignoreCase = true)) {
                         if (calendarList[i].attendanceDate.equals(formatter!!.format(date), ignoreCase = true)) {
                             customdialog(calendarList[i].title)
                         }

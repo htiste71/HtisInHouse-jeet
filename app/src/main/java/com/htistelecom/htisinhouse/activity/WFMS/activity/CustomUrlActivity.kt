@@ -26,11 +26,13 @@ class CustomUrlActivity : Activity(), MyInterface {
        btnBack.setOnClickListener { view -> finish() }
         btnContinueCustomUrl.setOnClickListener { view ->
             mDomainName = etCustomUrl.text.toString()
-          //  mDomainName="wfms"
+          //  mDomainName="aditya"
+
+            //  mDomainName="wfms"
             if (mDomainName.equals("")) {
                 Utilities.showToast(this, resources.getString(R.string.errCustomUrl))
             } else {
-
+           // mDomainName="aditya"
                 var json = JSONObject()
                 json.put("DomainName", mDomainName)
 

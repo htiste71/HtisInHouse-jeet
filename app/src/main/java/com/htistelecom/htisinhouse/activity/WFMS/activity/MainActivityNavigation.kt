@@ -1,5 +1,8 @@
 package com.htistelecom.htisinhouse.activity.WFMS.activity
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
@@ -12,15 +15,15 @@ import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
 import android.provider.Settings
-import android.support.annotation.RequiresApi
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
-import android.support.v4.content.LocalBroadcastManager
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import android.view.Gravity
 import android.view.Menu
 import android.view.View
@@ -45,6 +48,7 @@ import com.htistelecom.htisinhouse.retrofit.MyInterface
 import com.htistelecom.htisinhouse.utilities.ConstantKotlin
 import com.htistelecom.htisinhouse.utilities.DateUtils
 import com.htistelecom.htisinhouse.utilities.Utilities
+import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_drawer.*
 import kotlinx.android.synthetic.main.drawer_items.*
 import kotlinx.android.synthetic.main.nav_header_main_activity_navigation.*
@@ -61,6 +65,9 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
     private var mTime24Hrs: String = ""
     private var mPunchInTime: String = ""
     private var mPunchOutTime: String = ""
+
+   lateinit var fragmentImage:Fragment
+
 
     companion object {
         lateinit var obj: MainActivityNavigation
@@ -325,6 +332,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
     }
 
 
+    @SuppressLint("WrongConstant")
     override fun onClick(v: View) {
         when (v.id) {
             R.id.ivDrawerHeader -> {
@@ -345,10 +353,12 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
             }
             R.id.llInnerProfileDrawer -> {
 
+
+                fragmentImage=ProfileFragmentWFMS()
                 hideShowHeader_FragmentHeading("Profile", GONE, GONE)
 
                 changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
-                openFragment(ProfileFragmentWFMS())
+                openFragment(fragmentImage)
 
                 drawerLayout!!.closeDrawer(Gravity.START)
 
@@ -397,8 +407,9 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
             }
             R.id.llInnerDocumentDirectoryDrawer -> {
                 hideShowHeader_FragmentHeading(resources.getString(R.string.strDocumentDirectory), VISIBLE, GONE)
+                fragmentImage=DocumentDirectoryFragmentWFMS()
 
-                openFragment(DocumentDirectoryFragmentWFMS())
+                openFragment(fragmentImage)
 
                 drawerLayout!!.closeDrawer(Gravity.START)
                 changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
@@ -572,6 +583,16 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
             changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
         }
+        else if(intent!!.getStringExtra("fragment") != null && intent!!.getStringExtra("fragment").equals("Attendance"))
+        {
+            hideShowHeader_FragmentHeading(resources.getString(R.string.strAttendance), GONE, GONE)
+
+            openFragment(AttendanceFragmentWFMS())
+
+
+            changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+
+        }
 
 
     }
@@ -594,13 +615,13 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
     }
 
-    private fun checkNavigationMenuItem(): Int {
-        val menu: Menu = navigationView.menu
-        for (i in 0 until menu.size()) {
-            if (menu.getItem(i).isChecked()) return i
-        }
-        return -1
-    }
+//    private fun checkNavigationMenuItem(): Int {
+//        val menu: Menu = navigationView.menu
+//        for (i in 0 until menu.size()) {
+//            if (menu.getItem(i).isChecked()) return i
+//        }
+//        return -1
+//    }
 
     override fun onResume() {
         super.onResume()
@@ -695,6 +716,11 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
         }
         builder.setNegativeButton("No") { dialogInterface, which ->
             dialogInterface.dismiss()
+            btnSwitchHeader.setOnCheckedChangeListener(null)
+
+            btnSwitchHeader.isChecked=true
+            btnSwitchHeader.setOnCheckedChangeListener(mOnCheckChangedListener)
+
         }
         //Creating dialog box
         val alert = builder.create()
@@ -710,6 +736,30 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val imageUri: Uri = CropImage.getPickImageResultUri(this, data)
 
+            // For API >= 23 we need to check specifically that we have permissions to read external storage.
+            if (CropImage.isReadExternalStoragePermissionsRequired(this, imageUri)) {
+                // request permissions and handle the result in onRequestPermissionsResult()
+                //  mCropImageUri = imageUri
+              //  requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 0)
+            } else {
+
+                if(fragmentImage is ProfileFragmentWFMS)
+                {
+
+                    (fragmentImage as ProfileFragmentWFMS).callMethod(imageUri)
+
+                }
+                else{
+                    (fragmentImage as DocumentDirectoryFragmentWFMS).callMethod(imageUri)
+                }
+
+                // no permissions required or already grunted, can start crop image activity
+            }
+        }    }
 }
 

@@ -415,6 +415,8 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
                 Utilities.showToast(this, jsonObj.getString("Message"))
                 dialog.dismiss()
 
+                startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Team"))
+
                 finish()
 
             } else {

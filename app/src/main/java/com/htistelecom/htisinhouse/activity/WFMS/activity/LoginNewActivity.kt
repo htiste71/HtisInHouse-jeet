@@ -45,7 +45,9 @@ class LoginNewActivity : Activity(), MyInterface, View.OnClickListener {
         tvForgotPasswordLoginNewActivity.setOnClickListener { view -> dialogForgotPassword() }
         btnLogin.setOnClickListener { view ->
             var email = etUserName.text.toString()
-           // email="shobinkumar25@gmail.com"
+            //email="shobinjindal91@gmail.com"
+
+            // email="shobinkumar25@gmail.com"
             passWord = etPassword.text.toString()
             if (TextUtils.isEmpty(email)) {
                 Utilities.showToast(this, "Please enter email address")
@@ -63,7 +65,7 @@ class LoginNewActivity : Activity(), MyInterface, View.OnClickListener {
 //            }
             else {
 
-
+           // email="shobinjindal91@gmail.com"
                 var json = JSONObject()
                 json.put("EmpEmail", email)
                 json.put("EmpPassword", passWord)

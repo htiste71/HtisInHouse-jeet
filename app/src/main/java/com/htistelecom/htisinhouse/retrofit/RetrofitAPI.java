@@ -16,18 +16,21 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.ACTIVITY_LIST_WFMS;
+import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.APPLY_COMP_OFF_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.APPLY_LEAVE_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.ATTENDANCE_LIST_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.CLAIM_DETAIL_DATE_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.CLAIM_DETAIL_TASK_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.CLAIM_SUBMIT_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.CLAIM_SUMMARY_WFMS;
+import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.COMP_OFF_STATUS_LIST_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.DEPARTMENT_LIST_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.DOCUMENTS_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.LEAVE_LIST_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.LEAVE_TYPE_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.MEETING_STATUS_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.MY_TEAM_WFMS;
+import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.NEW_TASK_STATUS_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.OUTDOOR_LIST_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.OUTDOOR_REQUEST_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.PROFILE_IMAGE_WFMS;
@@ -81,20 +84,30 @@ public class RetrofitAPI {
         } else if (TYPE == ConstantsWFMS.MY_TASK_LIST_WFMS) {
             call = api.methodMyTaskListWFMS(params);
 
-        } else if (TYPE == ConstantsWFMS.START_TASK_WFMS) {
+        }
+        else if (TYPE == ConstantsWFMS.MY_TASK_LIST_NEW_WFMS) {
+            call = api.methodMyTaskListNewWFMS(params);
+
+        }
+        else if (TYPE == ConstantsWFMS.START_TASK_WFMS) {
             call = api.methodStartTaskWFMS(params);
 
         } else if (TYPE == ACTIVITY_LIST_WFMS) {
             call = api.methodActivityListWFMS(params);
         } else if (TYPE == MY_TEAM_WFMS) {
             call = api.methodMyTeamWFMS(params);
-        } else if (TYPE == PUNCH_IN_OUT_WFMS) {
+        }
+        else if (TYPE == PUNCH_IN_OUT_WFMS) {
             call = api.methodPunchStatusWFMS(params);
-        } else if (TYPE == MY_TEAM_WFMS) {
+        }
+        else if (TYPE == MY_TEAM_WFMS) {
             call = api.methodMyTeamWFMS(params);
-        } else if (TYPE == PUNCH_IN_OUT_WFMS) {
-            call = api.methodPunchStatusWFMS(params);
-        } else if (TYPE == APPLY_LEAVE_WFMS) {
+        }
+//        else if (TYPE == PUNCH_IN_OUT_WFMS) {
+//            call = api.methodPunchStatusWFMS(params);
+//        }
+
+        else if (TYPE == APPLY_LEAVE_WFMS) {
             call = api.methodLeaveApplyWFMS(params);
         } else if (TYPE == LEAVE_TYPE_WFMS) {
             call = api.methodLeaveTypeWFMS(params);
@@ -138,8 +151,15 @@ public class RetrofitAPI {
             call = api.methodUserFeedbackWFMS(params);
         }
 
-
-
+        else if (TYPE == COMP_OFF_STATUS_LIST_WFMS) {
+            call = api.methodCompOffListWFMS(params);
+        }
+        else if (TYPE == APPLY_COMP_OFF_WFMS) {
+            call = api.methodApplyCompOffListWFMS(params);
+        }
+        else if (TYPE == ConstantsWFMS.COMP_OFF_LEAVE_TYPE_WFMS) {
+            call = api.methodCompOffLeaveTypeWFMS(params);
+        }
 
 
 
@@ -181,6 +201,8 @@ public class RetrofitAPI {
         else if (TYPE == ConstantsWFMS.FILTER_TYPE_WFMS) {
             call = api.methodFilterTypeWFMS();
         }
+
+
         callRetrofit(call, TYPE);
 
     }
@@ -211,6 +233,24 @@ public class RetrofitAPI {
         {
             RequestBody mEmpId = RequestBody.create(MediaType.parse("text/plain"),mData);
             call = api.methodProfileImageWFMS(fileToUpload, mEmpId);
+
+        }
+
+       else if (TYPE == NEW_TASK_STATUS_WFMS) {
+            try {
+
+                JSONObject jsonObject = new JSONObject(mData);
+                RequestBody mTaskId = RequestBody.create(MediaType.parse("text/plain"), jsonObject.getString("TaskId"));
+                RequestBody mEmpId = RequestBody.create(MediaType.parse("text/plain"), jsonObject.getString("EmpId"));
+                RequestBody mStatus = RequestBody.create(MediaType.parse("text/plain"), jsonObject.getString("Status"));
+                RequestBody mActivityId = RequestBody.create(MediaType.parse("text/plain"), jsonObject.getString("ActivityId"));
+                RequestBody mSubActivityId = RequestBody.create(MediaType.parse("text/plain"), jsonObject.getString("SubActivityId"));
+
+                call = api.methodNewTaskStatusWFMS(fileToUpload, mTaskId, mEmpId, mActivityId, mStatus,mSubActivityId);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
 
         }
         callRetrofit(call, TYPE);
@@ -252,4 +292,33 @@ public class RetrofitAPI {
             }
         });
     }
+
+
+    public static void callAPIPunchOut(String params) {
+
+        ApiInterface api = RetrofitClients.createService(ApiInterface.class);
+
+        Call<String> call = null;
+            call = api.methodPunchStatusWFMS(params);
+        callRetrofitPunchOut(call);
+
+
+    }
+
+    public static <T> void callRetrofitPunchOut(Call call) {
+
+        call.enqueue(new Callback<T>() {
+            @Override
+            public void onResponse(Call<T> call, Response<T> response) {
+                Log.e("Response",response.toString());
+            }
+
+            @Override
+            public void onFailure(Call<T> call, Throwable t) {
+                Log.e("Re", "");
+
+            }
+        });
+    }
+
 }

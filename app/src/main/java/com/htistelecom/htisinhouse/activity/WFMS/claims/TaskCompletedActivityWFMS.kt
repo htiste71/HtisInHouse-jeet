@@ -2,16 +2,16 @@ package com.htistelecom.htisinhouse.activity.WFMS.claims
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.LinearLayoutManager.VERTICAL
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.ApiData
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.CLAIM_DETAIL_DATE_WFMS
-import com.htistelecom.htisinhouse.activity.WFMS.activity.BaseActivity
 import com.htistelecom.htisinhouse.activity.WFMS.activity.MainActivityNavigation
 import com.htistelecom.htisinhouse.activity.WFMS.claims.adapters.TaskCompletedAdapterWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.claims.models.ClaimSummaryModel
@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.toolbar.*
 import org.json.JSONObject
 import retrofit2.Response
 
-class TaskCompletedActivityWFMS : BaseActivity(), View.OnClickListener, MyInterface {
+class TaskCompletedActivityWFMS : AppCompatActivity(), View.OnClickListener, MyInterface {
     private var completedTaskList = ArrayList<CompletedTaskModel>()
     lateinit var tinyDB: TinyDB
     var mDate: String = ""

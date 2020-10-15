@@ -51,8 +51,9 @@
                         android:id="@+id/tvSelectDateRequestedDoc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Select the Date"
                         android:enabled="false"
+                        android:textColor="@color/black"
+                        android:layout_centerVertical="true"
                         android:textSize="14sp" />
 
                     <ImageView

@@ -4,10 +4,8 @@ package com.htistelecom.htisinhouse.activity.WFMS.leave_managment
 import android.app.Dialog
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.AppCompatSpinner
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.ContextCompat
+import androidx.appcompat.widget.AppCompatSpinner
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +15,8 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import butterknife.internal.Utils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -360,26 +360,36 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
             if (TYPE == LEAVE_TYPE_WFMS) {
                 leaveTypeList.clear()
                 leaveTypeArray = emptyArray()
+
                 val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
                 if (jsonObject.getString("Status").equals("Success")) {
                     leaveTypeList = Gson().fromJson<java.util.ArrayList<LeaveTypeModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<LeaveTypeModel>>() {
 
                     }.type)
-                    leaveTypeArray = arrayOfNulls<String>(leaveTypeList.size)
+
+                    var refinedList= ArrayList<LeaveTypeModel>()
                     for (i in leaveTypeList.indices) {
                         //Storing names to string array
                         if (leaveTypeList.get(i).canApply.equals("Y", true))
-                            leaveTypeArray[i] = leaveTypeList.get(i).leaveTypeName
+                            refinedList.add(leaveTypeList.get(i))
+
+                    }
+                    leaveTypeArray = arrayOfNulls<String>(refinedList.size)
+                    for(i in 0 until refinedList.size)
+                    {
+                        leaveTypeArray[i] = refinedList.get(i).leaveTypeName
                     }
                     mLeaveTypeId = leaveTypeList.get(0).leaveTypeId
-                    leaveTypeAdapter = ArrayAdapter<String?>(activity, R.layout.spinner_item, leaveTypeArray)
+                    leaveTypeAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, leaveTypeArray)
                     leaveTypeSpnrApplyLeave!!.setAdapter(leaveTypeAdapter)
                 } else {
                     Utilities.showToast(activity, "No Details found.")
                 }
 
 
-            } else if (TYPE == LEAVE_TYPE_DAY_WFMS) {
+            }
+
+            else if (TYPE == LEAVE_TYPE_DAY_WFMS) {
 
                 leaveTypeDayList.clear()
                 leaveTypeDayArray = emptyArray()
@@ -393,7 +403,7 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
                     for (i in leaveTypeDayList.indices) {
                         leaveTypeDayArray[i] = leaveTypeDayList.get(i).dayType
                     }
-                    leaveTypeDayAdapter = ArrayAdapter<String?>(activity, R.layout.spinner_item, leaveTypeDayArray)
+                    leaveTypeDayAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, leaveTypeDayArray)
 
 
                     mCompOffLeaveDayTypeId = leaveTypeDayList.get(0).dayTypeId
@@ -557,7 +567,7 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
                 for (i in leaveTypeCompOffList.indices) {
                     leaveTypeCompOffArray[i] = leaveTypeCompOffList.get(i).name
                 }
-                leaveTypeCompOffAdapter = ArrayAdapter<String?>(activity, R.layout.spinner_item, leaveTypeCompOffArray)
+                leaveTypeCompOffAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, leaveTypeCompOffArray)
                 leaveTypeSpnrDialogCompOff!!.adapter = leaveTypeCompOffAdapter
             }
         } catch (e: Exception) {
@@ -660,7 +670,7 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
     fun dialogODStatus() {
 
 
-        dialogOD = Dialog(activity)
+        dialogOD = Dialog(activity!!)
         dialogOD.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialogOD.setContentView(R.layout.dialog_od_status)
         dialogOD.setCancelable(false)
@@ -933,7 +943,7 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
     }
 
     private fun dialogApplyLeave() {
-        dialog = Dialog(activity)
+        dialog = Dialog(activity!!)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_leave_apply)
         dialog.setCancelable(false)
@@ -1169,7 +1179,7 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
     }
 
     private fun dialogCompOff() {
-        dialogCompOff = Dialog(activity)
+        dialogCompOff = Dialog(activity!!)
         dialogCompOff.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialogCompOff.setContentView(R.layout.dialog_comp_off)
         dialogCompOff.setCancelable(false)

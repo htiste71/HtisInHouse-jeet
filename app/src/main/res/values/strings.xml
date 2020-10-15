@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HTIS</string>
+    <string name="app_name">WFMS</string>
     <string name="go_to_home_page">Go To Home Page</string>
     <string name="start_day">Start Day</string>
     <string name="leave_management">Leave &amp; OD </string>
@@ -7,8 +7,8 @@
     <string name="my_claims">My Claims</string>
     <string name="my_salary">My salary</string>
     <string name="please_select_activities">Please Select Activities</string>
-    <string name="submit">Submit</string>
-    <string name="cancel">Cancel</string>
+    <string name="submit">SUBMIT</string>
+    <string name="cancel">CANCEL</string>
     <string name="select_a_project">Select a Project</string>
     <string name="activity_message">Enter activity message</string>
     <string name="enter_a_message">Enter a message</string>
@@ -253,7 +253,7 @@
     <string name="strMyTeam">My Team</string>
     <string name="strMyProfile">My Profile</string>
     <string name="strMyTask">My Task</string>
-    <string name="strLeaveOD"><![CDATA[Leave & OD]]></string>
+    <string name="strLeaveOD"><![CDATA[Leave & OD & Comp Off]]></string>
     <string name="strMyAttendance">My Attendance</string>
     <string name="strDocumentDirectory">Document Directory</string>
     <string name="strMySalary">My Salary</string>
@@ -334,7 +334,7 @@
     <string name="strApproved">Approved</string>
     <string name="strTotal">Total</string>
     <string name="gps_disabled_message">On the GPS</string>
-    <string name="errFromLocation">Enter For Location</string>
+    <string name="errFromLocation">Enter From Location</string>
     <string name="errToLocation">Enter To Location</string>
     <string name="errDistanceTravelled">Please enter the distance travelled</string>
     <string name="errRemarks">Enter the Remarks</string>
@@ -356,4 +356,18 @@
     <string name="strPunchOut">Are you sure to Punch Out?</string>
     <string name="strFeedbackText">We want to know what you thought of your experience so we would love to hear your feedback. </string>
     <string name="errFeedback">Please enter the message for feedback</string>
+    <string name="errUploadFile">Please upload the image</string>
+    <string name="strTeam">Team</string>
+    <string name="strAttendance">Attendance</string>
+    <string name="strSalary">Salary</string>
+    <string name="strRejected">Rejected</string>
+    <string name="errChangePendingFile">Upload the completed task Image</string>
+    <string name="strCompOffDate">Comp Off Date</string>
+    <string name="strApplyDate">Apply Date</string>
+    <string name="errCompOffDate">Select Comp Off Date</string>
+    <string name="errCompOffApplyDate">Select Comp Off Apply Date</string>
+    <string name="strDayType">Day Type</string>
+    <string name="strApply">APPLY</string>
+    <string name="strAttendanceDate">Attendance Date</string>
+    <string name="strApplyCompOff">Apply Comp Off</string>
 </resources>

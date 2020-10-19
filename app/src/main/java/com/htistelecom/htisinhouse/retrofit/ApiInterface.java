@@ -90,7 +90,8 @@ public interface ApiInterface {
 
     @GET(ConstantsWFMS.WFMS_DOCUMENT_TYPE_LIST_API)
     Call<String> methodDocumentTypeWFMS();
-
+    @GET(ConstantsWFMS.WFMS_BRANCH_LIST_API)
+    Call<String> methodBranchListWFMS();
 
 
 
@@ -248,20 +249,7 @@ public interface ApiInterface {
     Call<String> methodCompOffLeaveTypeWFMS(@Body String params);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_SEARCH_TEAM_LIST_API)
+    Call<String>    methodSearchTeamListWFMS(String params);
 }

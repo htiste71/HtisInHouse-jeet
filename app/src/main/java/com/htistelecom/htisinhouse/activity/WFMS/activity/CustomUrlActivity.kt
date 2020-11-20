@@ -23,16 +23,16 @@ class CustomUrlActivity : Activity(), MyInterface {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_custom_domain_form)
         tinyDB = TinyDB(this)
-       btnBack.setOnClickListener { view -> finish() }
+        btnBack.setOnClickListener { view -> finish() }
         btnContinueCustomUrl.setOnClickListener { view ->
-            mDomainName = etCustomUrl.text.toString()
-          //  mDomainName="aditya"
+             mDomainName = etCustomUrl.text.toString()+".htistelecom.in"
+           // mDomainName = etCustomUrl.text.toString()
 
-            //  mDomainName="wfms"
+            // mDomainName="htis"
             if (mDomainName.equals("")) {
                 Utilities.showToast(this, resources.getString(R.string.errCustomUrl))
             } else {
-           // mDomainName="aditya"
+                // mDomainName="aditya"
                 var json = JSONObject()
                 json.put("DomainName", mDomainName)
 
@@ -51,7 +51,7 @@ class CustomUrlActivity : Activity(), MyInterface {
                 tinyDB.putString(ConstantsWFMS.TINYDB_DOMAIN_ID, jsonObj.getString("DomainId"))
 
                 tinyDB.putBoolean(ConstantsWFMS.TINYDB_URL_VERIFIED, true)
-                Utilities.showToast(this,jsonObj.getString("Message"))
+                Utilities.showToast(this, jsonObj.getString("Message"))
 
                 val intent = Intent(this, VerifyEmailActivity::class.java)
                 startActivity(intent)

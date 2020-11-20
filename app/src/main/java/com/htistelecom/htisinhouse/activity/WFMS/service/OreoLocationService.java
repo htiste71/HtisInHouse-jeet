@@ -27,6 +27,7 @@ import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS;
 import com.htistelecom.htisinhouse.activity.WFMS.activity.SplashActivityWFMS;
 import com.htistelecom.htisinhouse.activity.WFMS.models.FileModel;
 import com.htistelecom.htisinhouse.config.TinyDB;
+import com.htistelecom.htisinhouse.utilities.Utilities;
 
 
 import java.io.BufferedWriter;
@@ -118,7 +119,7 @@ public class OreoLocationService extends JobIntentService {
             mLastLocation = location;
             LATITUDE = location.getLatitude() + "";
             LONGITUDE = location.getLongitude() + "";
-          //  Utilities.showToast(OreoLocationService.this,LATITUDE+" Oreo");
+           // Utilities.showToast(OreoLocationService.this,LATITUDE+" Oreo");
             mUserId = tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID);
 
             if(!mUserId.equalsIgnoreCase(""))

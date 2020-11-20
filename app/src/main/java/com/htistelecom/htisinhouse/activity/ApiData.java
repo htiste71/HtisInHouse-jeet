@@ -9,6 +9,7 @@ import com.htistelecom.htisinhouse.utilities.Utilities;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
+import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.BRANCH_LIST_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.CLAIM_SUMMARY_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.COMP_OFF_LEAVE_TYPE_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.DEPARTMENT_LIST_WFMS;
@@ -24,14 +25,9 @@ public class ApiData {
 
             } else if (Type == CLAIM_SUMMARY_WFMS) {
 
-            }
-            else if(Type==COMP_OFF_LEAVE_TYPE_WFMS)
-            {
+            } else if (Type == COMP_OFF_LEAVE_TYPE_WFMS) {
 
-            }
-
-
-            else {
+            } else {
                 Utilities.showDialog(context);
 
             }
@@ -47,6 +43,8 @@ public class ApiData {
             if (Type == DEPARTMENT_LIST_WFMS) {
 
             } else if (Type == SELECT_INDUSTRY_TAP_LOCATION_WFMS) {
+
+            } else if (Type == BRANCH_LIST_WFMS) {
 
             } else
                 Utilities.showDialog(context);
@@ -68,8 +66,10 @@ public class ApiData {
         }
 
     }
-    public static void forTaskImage(MultipartBody.Part fileToUpload, String mData, int Type, MyInterface myInterface, Context context) {
+
+    public static void forTaskImage(MultipartBody.Part fileToUpload, String mData, int Type, MyInterface myInterface, Context context,boolean isShow) {
         if (Utilities.isNetConnected(context)) {
+            if(isShow)
             Utilities.showDialog(context);
             RetrofitAPI.imageUpload(fileToUpload, mData, Type, myInterface);
         } else {
@@ -77,6 +77,7 @@ public class ApiData {
         }
 
     }
+
     public static void forImageDataArray(MultipartBody.Part[] fileToUpload, RequestBody mData, int Type, MyInterface myInterface, Context context) {
         if (Utilities.isNetConnected(context)) {
             Utilities.showDialog(context);
@@ -90,7 +91,7 @@ public class ApiData {
     public static void getDataPunchOut(String params) {
 
 
-            RetrofitAPI.callAPIPunchOut(params);
+        RetrofitAPI.callAPIPunchOut(params);
 
 
     }

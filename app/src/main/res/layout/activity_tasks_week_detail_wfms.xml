@@ -300,14 +300,24 @@
 
 
             <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/textTaskWeek"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textColor="@color/colorDarkBlue"
-                android:layout_marginTop="15dp"
                 android:layout_below="@+id/llClaimsTasksWeekDetailActivityWFMS"
                 android:layout_centerHorizontal="true"
-                android:text="@string/strTasksThisWeek"/>
+                android:layout_marginTop="15dp"
+                android:text="@string/strTasksThisWeek"
+                android:textColor="@color/colorDarkBlue"
+                android:textSize="18sp" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chart"
+                android:layout_below="@+id/textTaskWeek"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:minHeight="200dp"/>
+
+
         </RelativeLayout>
 
 

@@ -3,7 +3,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-apply plugin: 'com.google.gms.google-services'
 
 
 
@@ -13,8 +12,8 @@ android {
         applicationId "com.htistelecom.htisinhouse"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 5
-        versionName "1.0"
+        versionCode 6
+        versionName "1.1"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
@@ -52,7 +51,19 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation platform('com.google.firebase:firebase-bom:26.1.0')
+    //implementation 'com.google.firebase:firebase-analytics'
+    //implementation 'com.google.firebase:firebase-auth'
+   // implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-config-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-core'
 
+    // Firebase Remote Config (Java)
+  //  implementation 'com.google.firebase:firebase-config'
+
+    // Firebase Remote Config (Kotlin)
+  //  implementation 'com.google.firebase:firebase-config-ktx'
 
 //noinspection GradleCompatible
     implementation 'androidx.appcompat:appcompat:1.0.0'
@@ -134,8 +145,13 @@ dependencies {
     implementation 'com.github.xizzhu:simple-tool-tip:0.7.0'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.3.+'
 
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    // implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
+
 //    implementation 'com.github.yalantis:ucrop:2.2.2'
 
 
 
 }
+apply plugin: 'com.google.gms.google-services'

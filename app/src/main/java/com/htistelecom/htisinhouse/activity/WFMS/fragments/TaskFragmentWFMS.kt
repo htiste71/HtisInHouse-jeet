@@ -304,7 +304,7 @@ class TaskFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
 
                 }.type);
                 rvTaskFragmentWFMS.adapter = TaskAdapterWFMS(activity, taskAL)
-                HomeFragmentWFMS.mTaskCount = taskAL.size.toString()
+                HomeFragmentNew.mTaskCount = taskAL.size.toString()
             } else {
                 rvTaskFragmentWFMS.visibility = View.GONE
                 tvNoTaskFragmentWFMS.visibility = View.VISIBLE

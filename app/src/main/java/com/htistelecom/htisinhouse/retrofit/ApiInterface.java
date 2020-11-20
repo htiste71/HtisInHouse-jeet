@@ -251,5 +251,5 @@ public interface ApiInterface {
 
     @Headers("Content-Type: application/json")
     @POST(ConstantsWFMS.WFMS_SEARCH_TEAM_LIST_API)
-    Call<String>    methodSearchTeamListWFMS(String params);
+    Call<String> methodSearchTeamListWFMS(@Body  String params);
 }

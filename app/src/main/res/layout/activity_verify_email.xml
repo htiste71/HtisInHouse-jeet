@@ -98,7 +98,7 @@
                         android:background="@drawable/rect_no_background_border_orange"
                         android:gravity="center"
                         android:padding="@dimen/_8sdp"
-                        android:text="@string/strBack"
+                        android:text="BACK"
                         android:textAllCaps="false"
                         android:textColor="@color/colorOrange"
                         android:textSize="@dimen/_16sdp"

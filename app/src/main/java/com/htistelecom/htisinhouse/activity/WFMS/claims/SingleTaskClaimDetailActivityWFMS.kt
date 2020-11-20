@@ -35,9 +35,13 @@ class SingleTaskClaimDetailActivityWFMS : AppCompatActivity(), View.OnClickListe
         setContentView(R.layout.activity_single_task_claim_detail_wfms)
         initViews()
         clickListeners()
-        api()
+
     }
 
+    override fun onResume() {
+        super.onResume()
+        api()
+    }
     private fun api() {
 
         var json = JSONObject()

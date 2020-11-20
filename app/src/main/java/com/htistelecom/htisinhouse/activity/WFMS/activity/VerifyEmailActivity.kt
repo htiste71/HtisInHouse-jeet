@@ -32,7 +32,7 @@ class VerifyEmailActivity : Activity(), MyInterface {
         btnSubmitVerifyEmail.setOnClickListener { view ->
             var email = etEmailVerifyEmail.text.toString()
           //  email="shobinkumar25@gmail.com"
-          //  email="shobinjindal91@gmail.com"
+          //  email="kuldeep.singh@horizontelecom.in"
 
             if (TextUtils.isEmpty(email)) run {
                 Utilities.showToast(this, "Please enter email address")

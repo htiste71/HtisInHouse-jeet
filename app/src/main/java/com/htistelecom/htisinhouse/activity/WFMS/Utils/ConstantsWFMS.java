@@ -12,7 +12,7 @@ public class ConstantsWFMS {
     public static final String WFMS_EMAIL_VERIFICATION_API = "Account/EmpEmailVerification";
     public static final String WFMS_LOGIN_API = "Account/EmpEmailLogin";
     public static final String WFMS_PROFILE_API = "Service/EmpProfile";
-    public static final String WFMS_FORGOT_PASSWORD_API = "Account/EmpForgotPassword";
+    public static final String   WFMS_FORGOT_PASSWORD_API = "Account/EmpForgotPassword";
     public static final String WFMS_CHANGE_PASSWORD_API = "Account/EmpChangePassword";
     public static final String WFMS_PROJECT_LIST_API = "Service/ProjectList";
     public static final String WFMS_ACTIVITY_LIST_API = "Service/ActivityList";
@@ -59,6 +59,8 @@ public class ConstantsWFMS {
     public static final String WFMS_APPLY_COMP_OFF_API ="Service/CompOffApply";
     public static final String WFMS_COMP_OFF_LEAVE_TYPE_API ="Service/CompOffLeaveTypeList";
     public static final String WFMS_NEW_TASK_STATUS_API ="Service/TaskStatusUpdateNew";
+    public static final String WFMS_BRANCH_LIST_API ="Service/CompanyBranchList";
+    public static final String WFMS_SEARCH_TEAM_LIST_API ="Service/EmpTeamListNew";
 
 
     public static int DOMAIN_VERIFICATION_WFMS = 1;
@@ -113,6 +115,8 @@ public class ConstantsWFMS {
     public static final int COMP_OFF_LEAVE_TYPE_WFMS=47;
     public static final int MY_TASK_LIST_NEW_WFMS=48;
     public static final int NEW_TASK_STATUS_WFMS = 49;
+    public static final int BRANCH_LIST_WFMS = 50;
+    public static final int SEARCH_TEAM_LIST_WFMS = 51;
 
 
     public static final String TINYDB_DOMAIN_ID = "DOMAIN_ID";

@@ -45,10 +45,11 @@ class LoginNewActivity : Activity(), MyInterface, View.OnClickListener {
         tvForgotPasswordLoginNewActivity.setOnClickListener { view -> dialogForgotPassword() }
         btnLogin.setOnClickListener { view ->
             var email = etUserName.text.toString()
-            //email="shobinjindal91@gmail.com"
+            // email="kuldeep.singh@horizontelecom.in"
 
             // email="shobinkumar25@gmail.com"
             passWord = etPassword.text.toString()
+          //  passWord="Test@123"
             if (TextUtils.isEmpty(email)) {
                 Utilities.showToast(this, "Please enter email address")
 
@@ -82,7 +83,7 @@ class LoginNewActivity : Activity(), MyInterface, View.OnClickListener {
     private fun hitAPI(params: String, TYPE: Int) {
         if(TYPE==LOGIN_WFMS)
         {
-            ApiData.getData(params, ConstantsWFMS.LOGIN_WFMS, this, this)
+            ApiData. getData(params, ConstantsWFMS.LOGIN_WFMS, this, this)
 
         }
 

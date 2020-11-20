@@ -45,7 +45,7 @@ class DeviceRebootReceiver : BroadcastReceiver() {
 
 
             val calendar = Calendar.getInstance()
-            calendar[Calendar.HOUR_OF_DAY] = 0
+            calendar[Calendar.HOUR_OF_DAY] = 23
             calendar[Calendar.MINUTE] = 0
             val alarmMgr = context.getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
 

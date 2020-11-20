@@ -10,7 +10,7 @@ import com.htistelecom.htisinhouse.activity.WFMS.models.ThreeParameterModel
 import kotlinx.android.synthetic.main.row_status_filter_adapter.view.*
 
 
-class StatusFilterAdapter(val mContext: FilterActivity, val statusList: ArrayList<ThreeParameterModel>) : RecyclerView.Adapter<StatusFilterAdapter.MyHolder>() {
+class StatusFilterAdapter(val mContext: FilterActivity) : RecyclerView.Adapter<StatusFilterAdapter.MyHolder>() {
 
     private var mSelectedItem = -1
 
@@ -25,7 +25,7 @@ class StatusFilterAdapter(val mContext: FilterActivity, val statusList: ArrayLis
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
 
-        holder.bind(mContext, statusList.get(position), statusList)
+        holder.bind(mContext, FilterActivity.filterStatusList.get(position), FilterActivity.filterStatusList)
     }
 
     class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -43,10 +43,10 @@ class StatusFilterAdapter(val mContext: FilterActivity, val statusList: ArrayLis
             itemView.rbStatusRowStatusFilterAdapter.setOnClickListener { view ->
 
 
-                for (i in 0 until statusList.size) {
-                    statusList.get(i).isChecked = false
+                for (i in 0 until FilterActivity.filterStatusList.size) {
+                    FilterActivity.filterStatusList.get(i).isChecked = false
                 }
-                statusList.get(position).isChecked = true
+                FilterActivity.filterStatusList.get(position).isChecked = true
                 mContext.notifyMethod()
 
             }
@@ -55,7 +55,21 @@ class StatusFilterAdapter(val mContext: FilterActivity, val statusList: ArrayLis
         }
 
 
+
     }
 
+    fun getStatusId(): String
+    {
+        var mId=""
+        for(i in 0 until FilterActivity.filterStatusList.size)
+        {
+            if(FilterActivity.filterStatusList.get(i).isChecked)
+            {
+                mId=FilterActivity.filterStatusList.get(i).id
+                break
+            }
 
+        }
+        return mId
+    }
 }

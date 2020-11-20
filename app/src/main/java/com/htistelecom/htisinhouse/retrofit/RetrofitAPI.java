@@ -160,12 +160,9 @@ public class RetrofitAPI {
         else if (TYPE == ConstantsWFMS.COMP_OFF_LEAVE_TYPE_WFMS) {
             call = api.methodCompOffLeaveTypeWFMS(params);
         }
-
-
-
-
-
-
+        else if (TYPE == ConstantsWFMS.SEARCH_TEAM_LIST_WFMS) {
+            call = api.methodSearchTeamListWFMS(params);
+        }
         callRetrofit(call, TYPE);
 
     }
@@ -201,7 +198,9 @@ public class RetrofitAPI {
         else if (TYPE == ConstantsWFMS.FILTER_TYPE_WFMS) {
             call = api.methodFilterTypeWFMS();
         }
-
+        else if (TYPE == ConstantsWFMS.BRANCH_LIST_WFMS) {
+            call = api.methodBranchListWFMS();
+        }
 
         callRetrofit(call, TYPE);
 

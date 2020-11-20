@@ -1,10 +1,7 @@
 package com.htistelecom.htisinhouse.activity.WFMS.activity
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.app.AlarmManager
-import android.app.PendingIntent
+import android.app.*
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.*
 import android.content.pm.PackageInfo
@@ -15,24 +12,28 @@ import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
 import android.provider.Settings
-import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import android.text.TextUtils
+import android.util.Log
 import android.view.Gravity
-import android.view.Menu
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.CompoundButton
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.FirebaseApp
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.htistelecom.htisinhouse.BuildConfig
 import com.htistelecom.htisinhouse.R
-import com.htistelecom.htisinhouse.activity.AlertDialogActivity
 import com.htistelecom.htisinhouse.activity.ApiData
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.PUNCH_IN_OUT_WFMS
@@ -42,6 +43,7 @@ import com.htistelecom.htisinhouse.activity.WFMS.fragments.*
 import com.htistelecom.htisinhouse.activity.WFMS.leave_managment.LeaveType_OutdoorDutyFragment
 import com.htistelecom.htisinhouse.activity.WFMS.receiver.AlarmReceiverForPunchOut
 import com.htistelecom.htisinhouse.activity.WFMS.service.OreoLocationService
+import com.htistelecom.htisinhouse.activity.WFMS.service.PreOreoLocationService
 import com.htistelecom.htisinhouse.activity.WFMS.service.UploadDataServerService
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.retrofit.MyInterface
@@ -59,6 +61,7 @@ import java.util.*
 
 class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInterface {
 
+    private lateinit var remoteConfig: FirebaseRemoteConfig
     private var mTimeStr: String = ""
     private var mDateStr: String = ""
 
@@ -66,7 +69,8 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
     private var mPunchInTime: String = ""
     private var mPunchOutTime: String = ""
 
-   lateinit var fragmentImage:Fragment
+    lateinit var fragmentImage: Fragment
+    lateinit var locationManager: LocationManager
 
 
     companion object {
@@ -83,12 +87,16 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_drawer)
         initViews()
 
         listeneres()
         openDefaultFragment()
         setDefautData()
+        checkForUpdate()
+
+      //  initRemoteConfig()
 
 
         drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
@@ -104,7 +112,8 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
 
             override fun onDrawerOpened(p0: View) {
-                tvTaskCountDrawer.text = HomeFragmentWFMS.mTaskCount
+
+                tvTaskCountDrawer.text = HomeFragmentNew.mTaskCount
                 Glide.with(this@MainActivityNavigation).load(tinyDB.getString(ConstantsWFMS.TINYDB_EMP_PROFILE_IMAGE)).into(ivUserImageHeaderWFMS);
                 try {
                     val pInfo: PackageInfo = getPackageManager().getPackageInfo(packageName, 0)
@@ -118,6 +127,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
 
     }
+
 
     private fun listeneres() {
         ivDrawerHeader.setOnClickListener(this)
@@ -139,7 +149,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
     }
 
-    val mOnCheckChangedListener = CompoundButton.OnCheckedChangeListener { compoundButton, b ->
+    var mOnCheckChangedListener = CompoundButton.OnCheckedChangeListener { compoundButton, b ->
         val mAddress = Utilities.getAddressFromLatLong(this, OreoLocationService.LATITUDE.toDouble(), OreoLocationService.LONGITUDE.toDouble())
         val (mTime, mDate) = ConstantKotlin.getCurrentDateTime()
         mTimeStr = mTime
@@ -151,42 +161,96 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
         if (b) {
 
-            CHECK_TYPE = CHECK_IN
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                CHECK_TYPE = CHECK_IN
 
-            val jsonObject = JSONObject()
-            jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
-            jsonObject.put("StartDate", DateUtils.currentDate())
+                val jsonObject = JSONObject()
+                jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
+                jsonObject.put("StartDate", DateUtils.currentDate())
 
-            jsonObject.put("StartTime", mDateTime)
-            jsonObject.put("Latitude", OreoLocationService.LATITUDE)
-            jsonObject.put("Longitude", OreoLocationService.LONGITUDE)
-            jsonObject.put("LocationAddress", mAddress.get(0).getAddressLine(0))
-            jsonObject.put("DomainId", tinyDB.getString(ConstantsWFMS.TINYDB_DOMAIN_ID))
-            jsonObject.put("PunchType", "I")
+                jsonObject.put("StartTime", mDateTime)
+                jsonObject.put("Latitude", OreoLocationService.LATITUDE)
+                jsonObject.put("Longitude", OreoLocationService.LONGITUDE)
+                jsonObject.put("LocationAddress", mAddress.get(0).getAddressLine(0))
+                jsonObject.put("DomainId", tinyDB.getString(ConstantsWFMS.TINYDB_DOMAIN_ID))
+                jsonObject.put("PunchType", "I")
 
-            jsonObject.put("PunchCountry", mAddress.get(0).countryName)
-            jsonObject.put("PunchState", mAddress.get(0).adminArea)
-            jsonObject.put("PunchCity", mAddress.get(0).locality)
-            hitAPI(ConstantsWFMS.PUNCH_IN_OUT_WFMS, jsonObject.toString())
+                jsonObject.put("PunchCountry", mAddress.get(0).countryName)
+                jsonObject.put("PunchState", mAddress.get(0).adminArea)
+                jsonObject.put("PunchCity", mAddress.get(0).locality)
+                hitAPI(ConstantsWFMS.PUNCH_IN_OUT_WFMS, jsonObject.toString())
+            } else {
+
+                btnSwitchHeader.setOnCheckedChangeListener(null)
+
+                btnSwitchHeader.isChecked = false
+                callSwitcherChageListener()
+
+
+            }
+
+
         } else {
-            CHECK_TYPE = CHECK_OUT
-            //   btnSwitchHeader.isChecked=true
-            val jsonObject = JSONObject()
-            jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
-            jsonObject.put("StartDate", DateUtils.currentDate())
-            jsonObject.put("StartTime", mDateTime)
-            jsonObject.put("Latitude", OreoLocationService.LATITUDE)
-            jsonObject.put("Longitude", OreoLocationService.LONGITUDE)
-            jsonObject.put("LocationAddress", mAddress.get(0).getAddressLine(0))
-            jsonObject.put("DomainId", tinyDB.getString(ConstantsWFMS.TINYDB_DOMAIN_ID))
-            jsonObject.put("PunchType", "O")
-            jsonObject.put("PunchCountry", mAddress.get(0).countryName)
-            jsonObject.put("PunchState", mAddress.get(0).adminArea)
-            jsonObject.put("PunchCity", mAddress.get(0).locality)
-            // hitAPI(ConstantsWFMS.PUNCH_IN_OUT_WFMS, jsonObject.toString())
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                CHECK_TYPE = CHECK_OUT
+                //   btnSwitchHeader.isChecked=true
+                val jsonObject = JSONObject()
+                jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
+                jsonObject.put("StartDate", DateUtils.currentDate())
+                jsonObject.put("StartTime", mDateTime)
+                jsonObject.put("Latitude", OreoLocationService.LATITUDE)
+                jsonObject.put("Longitude", OreoLocationService.LONGITUDE)
+                jsonObject.put("LocationAddress", mAddress.get(0).getAddressLine(0))
+                jsonObject.put("DomainId", tinyDB.getString(ConstantsWFMS.TINYDB_DOMAIN_ID))
+                jsonObject.put("PunchType", "O")
+                jsonObject.put("PunchCountry", mAddress.get(0).countryName)
+                jsonObject.put("PunchState", mAddress.get(0).adminArea)
+                jsonObject.put("PunchCity", mAddress.get(0).locality)
+                // hitAPI(ConstantsWFMS.PUNCH_IN_OUT_WFMS, jsonObject.toString())
 
-            showAlertDialogForPunchOut(jsonObject.toString())
+                showAlertDialogForPunchOut(jsonObject.toString())
+            } else {
+                btnSwitchHeader.setOnCheckedChangeListener(null)
+
+                btnSwitchHeader.isChecked = true
+                callSwitcherChageListener()
+            }
+
+
         }
+    }
+
+    private fun callSwitcherChageListener() {
+        btnSwitchHeader.setOnCheckedChangeListener(mOnCheckChangedListener)
+        openDialog()
+        //  startActivity(Intent(this@MainActivityNavigation, AlertDialogActivity::class.java))
+
+    }
+
+
+    fun openDialog() {
+
+
+        val Builder = AlertDialog.Builder(this)
+                .setMessage(R.string.location_settings_desktop)
+                .setTitle(R.string.location_warning)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setCancelable(false)
+
+                .setPositiveButton("Cancel") { dialogInterface, which ->
+                    dialogInterface.dismiss();
+                }
+
+                .setNegativeButton("Settings") { dialogInterface, which ->
+                    startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+
+                }
+
+
+        val alertDialog: AlertDialog = Builder.create()
+        // Set other dialog properties
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 
 
@@ -213,12 +277,23 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
             btnSwitchHeader.isChecked = false
             btnSwitchHeader.setOnCheckedChangeListener(mOnCheckChangedListener)
 
+
             if (tinyDB.getString(ConstantsWFMS.TINYDB_PUNCH_OUT_TIME).equals("")) {
                 tvPunchedInTimeHeader.text = "Not Logged In"
             } else {
                 tvPunchedInTimeHeader.text = tinyDB.getString(ConstantsWFMS.TINYDB_PUNCH_OUT_TIME)
 
             }
+
+
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                cancelService()
+//               // startService(Intent(this, OreoLocationService::class.java))
+//
+//            } else {
+//                stopService(Intent(this, PreOreoLocationService::class.java))
+//
+//            }
 
 
         }
@@ -231,6 +306,8 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
 
     private fun initViews() {
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
         obj = this
         if (Build.VERSION.SDK_INT > 9) {
             val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
@@ -256,7 +333,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
     private fun registerAlarmPunchOut() {
         val calendar = Calendar.getInstance()
-        calendar[Calendar.HOUR_OF_DAY] = 0
+        calendar[Calendar.HOUR_OF_DAY] = 23
         calendar[Calendar.MINUTE] = 0
         val alarmMgr = this.getSystemService(ALARM_SERVICE) as AlarmManager
 
@@ -275,7 +352,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
         changeColor(resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
 
-        supportFragmentManager.beginTransaction().replace(R.id.frameLayout, HomeFragmentWFMS())
+        supportFragmentManager.beginTransaction().replace(R.id.frameLayout, HomeFragmentNew())
                 .commit()
     }
 
@@ -300,6 +377,9 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                     //btnSwitchHeader.isChecked = true
                     tinyDB.putBoolean(ConstantsWFMS.TINYDB_IS_PUNCH_IN, true)
                     tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_IN_TIME, mPunchInTime)
+                    startLocationClass()
+
+
                 } else {
                     mPunchOutTime = "Punched Out: " + mTimeStr + ", " + mDateStr
                     tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_OUT_TIME, mPunchOutTime)
@@ -346,15 +426,16 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
             }
             R.id.llInnerHomeDrawer -> {
 
-
+                clearFilter()
                 homeFragment()
                 drawerLayout!!.closeDrawer(Gravity.START)
 
             }
             R.id.llInnerProfileDrawer -> {
 
+                clearFilter()
 
-                fragmentImage=ProfileFragmentWFMS()
+                fragmentImage = ProfileFragmentWFMS()
                 hideShowHeader_FragmentHeading("Profile", GONE, GONE)
 
                 changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
@@ -373,6 +454,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 drawerLayout!!.closeDrawer(Gravity.START)
             }
             R.id.llInnerTaskDrawer -> {
+                clearFilter()
 
                 hideShowHeader_FragmentHeading(resources.getString(R.string.strTask), VISIBLE, GONE)
 
@@ -384,6 +466,8 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
             }
             R.id.llInnerLeaveODDrawer -> {
+                clearFilter()
+
                 hideShowHeader_FragmentHeading(resources.getString(R.string.strLeaveOD), VISIBLE, GONE)
 
                 openFragment(LeaveType_OutdoorDutyFragment())
@@ -393,6 +477,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
             }
             R.id.llInnerAttendanceDrawer -> {
+                clearFilter()
 
 
                 hideShowHeader_FragmentHeading(resources.getString(R.string.strAttendance), GONE, GONE)
@@ -406,8 +491,10 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 "TEst"
             }
             R.id.llInnerDocumentDirectoryDrawer -> {
+                clearFilter()
+
                 hideShowHeader_FragmentHeading(resources.getString(R.string.strDocumentDirectory), VISIBLE, GONE)
-                fragmentImage=DocumentDirectoryFragmentWFMS()
+                fragmentImage = DocumentDirectoryFragmentWFMS()
 
                 openFragment(fragmentImage)
 
@@ -417,6 +504,8 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 "TEst"
             }
             R.id.llInnerSalaryDrawer -> {
+                clearFilter()
+
 
                 hideShowHeader_FragmentHeading(resources.getString(R.string.strSalary), GONE, GONE)
 
@@ -427,6 +516,8 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 "TEst"
             }
             R.id.llInnerClaimDrawer -> {
+                clearFilter()
+
                 hideShowHeader_FragmentHeading(resources.getString(R.string.strClaims), GONE, GONE)
 
                 changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
@@ -447,11 +538,14 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
             }
             R.id.llInnerFormDrawer -> {
+                clearFilter()
+
                 changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
                 "TEst"
             }
             R.id.llInnerHelpDrawer -> {
+                clearFilter()
 
                 hideShowHeader_FragmentHeading(resources.getString(R.string.strHelp), GONE, GONE)
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://wfms.htistelecom.in/home/softwaresupport"))
@@ -461,6 +555,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 "TEst"
             }
             R.id.llInnerFeedbackDrawer -> {
+                clearFilter()
 
                 hideShowHeader_FragmentHeading(resources.getString(R.string.strFeedback), GONE, GONE)
 
@@ -475,6 +570,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 "TEst"
             }
             R.id.llInnerSettingDrawer -> {
+                clearFilter()
 
                 hideShowHeader_FragmentHeading(resources.getString(R.string.strSetting), GONE, GONE)
 
@@ -490,6 +586,11 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
 
         }
+    }
+
+    private fun clearFilter() {
+        FilterActivity.filterStatusList.clear()
+        FilterActivity.branchList.clear()
     }
 
     private fun hideShowHeader_FragmentHeading(heading: String, isShowAdd: Int, isShowProfile: Int) {
@@ -582,9 +683,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
             changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
-        }
-        else if(intent!!.getStringExtra("fragment") != null && intent!!.getStringExtra("fragment").equals("Attendance"))
-        {
+        } else if (intent!!.getStringExtra("fragment") != null && intent!!.getStringExtra("fragment").equals("Attendance")) {
             hideShowHeader_FragmentHeading(resources.getString(R.string.strAttendance), GONE, GONE)
 
             openFragment(AttendanceFragmentWFMS())
@@ -606,11 +705,11 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
     override fun onBackPressed() {
         var f: Fragment? = supportFragmentManager.findFragmentById(R.id.frameLayout)
-        if (f is HomeFragmentWFMS) {
+        if (f is HomeFragmentNew) {
 //do smth
             finish()
         } else {
-          homeFragment()
+            homeFragment()
         }
 
     }
@@ -673,8 +772,9 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
                     // Handle Location turned ON
                 } else {
+                    openDialog()
                     // Handle Location turned OFF
-                    context.startActivity(Intent(context, AlertDialogActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                    //    context.startActivity(Intent(context, AlertDialogActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                 }
             }
         }
@@ -712,13 +812,14 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 .setCancelable(false)
         builder.setPositiveButton("Yes") { dialogInterface, which ->
             hitAPI(ConstantsWFMS.PUNCH_IN_OUT_WFMS, params)
+            cancelService()
 
         }
         builder.setNegativeButton("No") { dialogInterface, which ->
             dialogInterface.dismiss()
             btnSwitchHeader.setOnCheckedChangeListener(null)
 
-            btnSwitchHeader.isChecked=true
+            btnSwitchHeader.isChecked = true
             btnSwitchHeader.setOnCheckedChangeListener(mOnCheckChangedListener)
 
         }
@@ -745,21 +846,162 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
             if (CropImage.isReadExternalStoragePermissionsRequired(this, imageUri)) {
                 // request permissions and handle the result in onRequestPermissionsResult()
                 //  mCropImageUri = imageUri
-              //  requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 0)
+                //  requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 0)
             } else {
 
-                if(fragmentImage is ProfileFragmentWFMS)
-                {
+                if (fragmentImage is ProfileFragmentWFMS) {
 
                     (fragmentImage as ProfileFragmentWFMS).callMethod(imageUri)
 
-                }
-                else{
+                } else {
                     (fragmentImage as DocumentDirectoryFragmentWFMS).callMethod(imageUri)
                 }
 
                 // no permissions required or already grunted, can start crop image activity
             }
-        }    }
+        }
+    }
+
+
+    @SuppressLint("MissingPermission")
+    fun cancelService() {
+        val am: ActivityManager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        val runningAppProcesses: List<ActivityManager.RunningAppProcessInfo> = am.getRunningAppProcesses()
+
+        val iter: Iterator<ActivityManager.RunningAppProcessInfo> = runningAppProcesses.iterator()
+
+        while (iter.hasNext()) {
+            val next: ActivityManager.RunningAppProcessInfo = iter.next()
+            val pricessName = "$packageName:service"
+            if (next.processName.equals(pricessName)) {
+                android.os.Process.killProcess(next.pid)
+                break
+            }
+        }
+    }
+
+    private fun startLocationClass() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startService(Intent(this, OreoLocationService::class.java))
+
+        } else {
+            startService(Intent(this, PreOreoLocationService::class.java))
+
+        }
+
+    }
+
+
+
+    private fun checkForUpdate() {
+
+        val appVersion: String = getAppVersion(this)
+        val remoteConfig = FirebaseRemoteConfig.getInstance()
+
+        val currentVersion =
+                remoteConfig.getString("min_version_of_app")
+        val minVersion =
+                remoteConfig.getString("latest_version_of_app")
+        if (!TextUtils.isEmpty(minVersion) && !TextUtils.isEmpty(appVersion) && checkMandateVersionApplicable(
+                        getAppVersionWithoutAlphaNumeric(minVersion),
+                        getAppVersionWithoutAlphaNumeric(appVersion)
+                )
+        ) {
+            onUpdateNeeded(true)
+        } else if (!TextUtils.isEmpty(currentVersion) && !TextUtils.isEmpty(appVersion) && !TextUtils.equals(
+                        currentVersion,
+                        appVersion
+                )
+        ) {
+         //   onUpdateNeeded(false)
+        } else {
+            moveForward()
+        }
+    }
+
+
+    private fun checkMandateVersionApplicable(
+            minVersion: String,
+            appVersion: String
+    ): Boolean {
+        return try {
+            val minVersionInt = minVersion.toInt()
+            val appVersionInt = appVersion.toInt()
+            minVersionInt > appVersionInt
+        } catch (exp: NumberFormatException) {
+            false
+        }
+    }
+
+    private fun getAppVersion(context: Context): String {
+        var result: String? = ""
+        try {
+            result = context.packageManager
+                    .getPackageInfo(context.packageName, 0).versionName
+        } catch (e: PackageManager.NameNotFoundException) {
+            Log.e("TAG", e.message)
+        }
+        return result ?: ""
+    }
+
+    private fun getAppVersionWithoutAlphaNumeric(result: String): String {
+        var version_str = ""
+        version_str = result.replace(".", "")
+        return version_str
+    }
+
+    private fun onUpdateNeeded(isMandatoryUpdate: Boolean) {
+
+
+        val dialogBuilder = AlertDialog.Builder(this)
+                .setTitle("New Version Available")
+                .setCancelable(false)
+                .setMessage(if (isMandatoryUpdate) "A new version is found on Play store, please update for better usage." else "A new version is found on Play store, please update for better usage.")
+                .setPositiveButton("now")
+                { dialog, which ->
+                    openAppOnPlayStore(this, null)
+                }
+
+
+            dialogBuilder.setNegativeButton("Later") { dialog, which ->
+                moveForward()
+                dialog?.dismiss()
+            }.create()
+
+        val dialog: AlertDialog = dialogBuilder.create()
+        dialog.show()
+    }
+
+    private fun moveForward() {
+       // Toast.makeText(this, "Next Page Intent", Toast.LENGTH_SHORT).show()
+    }
+
+    fun openAppOnPlayStore(ctx: Context, package_name: String?) {
+        var package_name = package_name
+        if (package_name == null) {
+            package_name = ctx.packageName
+        }
+        val uri = Uri.parse("market://details?id=$package_name")
+        openURI(ctx, uri, "Play Store not found in your device")
+    }
+
+    fun openURI(
+            ctx: Context,
+            uri: Uri?,
+            error_msg: String?
+    ) {
+        val i = Intent(Intent.ACTION_VIEW, uri)
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+        if (ctx.packageManager.queryIntentActivities(i, 0).size > 0) {
+            ctx.startActivity(i)
+        } else if (error_msg != null) {
+            Toast.makeText(this, error_msg, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+
+
 }
 

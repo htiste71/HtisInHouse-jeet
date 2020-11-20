@@ -168,7 +168,7 @@ class AddClaimActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickList
     }
 
     fun backToHome() {
-        startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Claim"))
+       // startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Claim"))
         finish()
     }
 

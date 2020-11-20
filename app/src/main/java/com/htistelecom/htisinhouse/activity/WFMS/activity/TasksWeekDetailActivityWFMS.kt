@@ -1,5 +1,6 @@
 package com.htistelecom.htisinhouse.activity.WFMS.activity
 
+
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
@@ -14,6 +15,14 @@ import android.widget.Button
 import android.widget.ListPopupWindow
 import android.widget.RelativeLayout
 import com.bumptech.glide.Glide
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.XAxis.XAxisPosition
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.ApiData
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
@@ -35,6 +44,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Response
 import java.util.*
+import kotlin.collections.ArrayList
 
 class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterface {
     private var mCurrentDate: String = ""
@@ -65,6 +75,7 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
     }
 
 
+
     private fun initViews() {
         tinyDB = TinyDB(this)
 
@@ -72,7 +83,7 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
 
             tv_title.text = "Profile Detail"
         else
-            tv_title.text = "Member Detail"
+            tv_title.text = "Member Details"
 
 
         ivDrawer.visibility = View.GONE
@@ -113,7 +124,85 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
             llMessageTasksWeekDetailActivityWFMS.visibility = VISIBLE
         }
 
+
+        val array: Array<String> = model.weeklyTasks.split(",").toTypedArray()
+
+        callBarChart(array[0],array[1],array[2],array[3],array[4],array[5],array[6])
+
+
+
     }
+
+    private fun callBarChart(s: String, s1: String, s2: String, s3: String, s4: String, s5: String, s6: String) {
+        val xAxisLabel = java.util.ArrayList<String>()
+        xAxisLabel.add("Mon")
+        xAxisLabel.add("Tue")
+        xAxisLabel.add("Wed")
+        xAxisLabel.add("Thu")
+        xAxisLabel.add("Fri")
+        xAxisLabel.add("Sat")
+        xAxisLabel.add("Sun")
+
+        val weekdays = arrayOf( "Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun") // Your List / array with String Values For X-axis Labels
+
+
+        val xAxis: XAxis = chart.getXAxis()
+        xAxis.position = XAxisPosition.BOTTOM
+        xAxis.setValueFormatter(IndexAxisValueFormatter(weekdays));
+
+        //xAxis.setValueFormatter(IAxisValueFormatter { value, axis -> xAxisLabel[value.toInt()] })
+       // xAxis.valueFormatter = IAxisValueFormatter { value, axis -> xAxisLabel[value.toInt()] }
+
+
+
+
+        chart.setTouchEnabled(false)
+        val fMon=s.toFloat()
+        val fTue=s1.toFloat()
+        val fWed=s2.toFloat()
+        val fThu=s3.toFloat()
+        val fFri=s4.toFloat()
+        val fSat=s5.toFloat()
+        val fSun=s6.toFloat()
+
+
+
+
+
+        val entries: MutableList<BarEntry> = java.util.ArrayList()
+        entries.add(BarEntry(0f, fMon))
+        entries.add(BarEntry(1f, fTue))
+        entries.add(BarEntry(2f, fWed))
+        entries.add(BarEntry(3f, fThu))
+        entries.add(BarEntry(4f, fFri))
+        // gap of 2f
+        // gap of 2f
+        entries.add(BarEntry(5f, fSat))
+        entries.add(BarEntry(6f, fSun))
+        chart.getDescription().setEnabled(false)
+
+        val leg: Legend = chart.getLegend()
+        leg.isEnabled = false
+        chart.getAxisLeft().setDrawGridLines(false)
+        chart.getXAxis().setDrawGridLines(false)
+        val rightYAxis: YAxis = chart.getAxisRight()
+        val y: YAxis = chart.getAxisLeft()
+        y.setAxisMaxValue(7f)
+        y.setAxisMinValue(0f)
+
+
+
+        rightYAxis.isEnabled = false
+        val set = BarDataSet(entries, "BarDataSet")
+        val data = BarData(set)
+        data.setDrawValues(false)
+
+        data.barWidth = 0.9f // set custom bar width
+
+        chart.setData(data)
+        chart.setFitBars(true) // make the x-axis fit exactly all bars
+
+        chart.invalidate()    }
 
     private fun listeners() {
         ivAddTasksWeekDetailActivityWFMS.setOnClickListener(this)
@@ -138,7 +227,7 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
         } else if (v.id == R.id.llMessageTasksWeekDetailActivityWFMS) {
             val mPhoneNumber=model.empMobileNo
 
-            val sms_uri = Uri.parse("smsto:"+mPhoneNumber)
+            val sms_uri = Uri.parse("smsto:" + mPhoneNumber)
             val sms_intent = Intent(Intent.ACTION_SENDTO, sms_uri)
             startActivity(sms_intent)
         }
@@ -411,13 +500,17 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
         } else if (TYPE == ADD_TASK_WFMS) {
 
             val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
-            if (jsonObj.getString("Status").equals("Success")) {
+              if (jsonObj.getString("Status").equals("Success")) {
                 Utilities.showToast(this, jsonObj.getString("Message"))
+                val array: Array<String> = jsonObj.getString("WeeklyTasks").split(",").toTypedArray()
+
+                callBarChart(array[0],array[1],array[2],array[3],array[4],array[5],array[6])
+                tvTasksWeekDetailActivityWFMS.text=jsonObj.getString("TotalTasks")
                 dialog.dismiss()
 
-                startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Team"))
+               // startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Team"))
 
-                finish()
+                //finish()
 
             } else {
                 Utilities.showToast(this!!, jsonObj.getString("Message"))
@@ -430,7 +523,8 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
     }
 
     fun backToHome() {
-        startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Team"))
+       // startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Team"))
         finish()
     }
+
 }

@@ -9,17 +9,33 @@ import android.provider.Settings.SettingNotFoundException
 import android.text.TextUtils
 import android.util.Log
 import com.htistelecom.htisinhouse.activity.AlertDialogActivity
+import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.service.OreoLocationService
 import com.htistelecom.htisinhouse.activity.WFMS.service.PreOreoLocationService
+import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.services.ServiceDetector
 
-class NetworkChangeReceiver:BroadcastReceiver() {
+class NetworkChangeReceiver : BroadcastReceiver() {
     private val TAG = "LocationProviderChanged"
     val REQUEST_CODE = 12345
     var detector = ServiceDetector()
+
+    private fun isPunchInMethod(tinyDB: TinyDB): Boolean {
+        return tinyDB!!.getBoolean(ConstantsWFMS.TINYDB_IS_PUNCH_IN)
+
+
+    }
+
     override fun onReceive(context: Context, intent: Intent) {
+        val tinyDB = TinyDB(context)
+
         if (!isLocationEnabled(context)) {
-            context.startActivity(Intent(context, AlertDialogActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            if (isPunchInMethod(tinyDB)) {
+                context.startActivity(Intent(context, AlertDialogActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+
+            } else {
+
+            }
         } else {
             //check the service is running or not
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -37,6 +53,7 @@ class NetworkChangeReceiver:BroadcastReceiver() {
             }
         }
     }
+
     fun isLocationEnabled(context: Context): Boolean {
         var locationMode = 0
         val locationProviders: String

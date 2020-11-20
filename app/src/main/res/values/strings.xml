@@ -370,4 +370,5 @@
     <string name="strApply">APPLY</string>
     <string name="strAttendanceDate">Attendance Date</string>
     <string name="strApplyCompOff">Apply Comp Off</string>
+    <string name="strApplySmall">Apply</string>
 </resources>

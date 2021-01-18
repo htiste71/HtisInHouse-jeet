@@ -12,8 +12,10 @@ import okhttp3.RequestBody;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.BRANCH_LIST_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.CLAIM_SUMMARY_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.COMP_OFF_LEAVE_TYPE_WFMS;
+import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.COUNTRY_LIST_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.DEPARTMENT_LIST_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.LEAVE_TYPE_WFMS;
+import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.PROJECT_LIST_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.SELECT_INDUSTRY_TAP_LOCATION_WFMS;
 
 public class ApiData {
@@ -38,6 +40,21 @@ public class ApiData {
 
     }
 
+
+
+    public static void getDataNoAuth(String params, int Type, MyInterface myInterface, Context context) {
+
+        if (Utilities.isNetConnected(context)) {
+            Utilities.showDialog(context);
+
+            RetrofitAPI.callAPIWithoutAuth(params, Type, myInterface);
+        } else {
+            Utilities.showToast(context, "Internet is not connected");
+        }
+
+    }
+
+
     public static void getGetData(int Type, MyInterface myInterface, Context context) {
         if (Utilities.isNetConnected(context)) {
             if (Type == DEPARTMENT_LIST_WFMS) {
@@ -55,6 +72,21 @@ public class ApiData {
         }
 
     }
+
+    public static void getGetDataSiteAdd(int Type, MyInterface myInterface, Context context) {
+        if (Utilities.isNetConnected(context)) {
+            if (Type == COUNTRY_LIST_WFMS) {
+
+            }  else
+                Utilities.showDialog(context);
+
+            RetrofitAPI.callGetAPI(Type, myInterface);
+        } else {
+            Utilities.showToast(context, "Internet is not connected");
+        }
+
+    }
+
 
 
     public static void forImageData(MultipartBody.Part fileToUpload, String mData, int Type, MyInterface myInterface, Context context) {
@@ -88,10 +120,13 @@ public class ApiData {
 
     }
 
-    public static void getDataPunchOut(String params) {
+    public static void getMarketingData(int TYPE, MyInterface myInterface) {
 
 
-        RetrofitAPI.callAPIPunchOut(params);
+
+
+
+        RetrofitAPI.callGetAPI(TYPE,myInterface);
 
 
     }

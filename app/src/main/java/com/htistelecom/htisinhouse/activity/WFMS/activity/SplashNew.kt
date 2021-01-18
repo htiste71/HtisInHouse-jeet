@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.WFMS.MyApplication
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
+import com.htistelecom.htisinhouse.activity.WFMS.Utils.show
 import com.htistelecom.htisinhouse.activity.WFMS.service.GPSTrackerWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.service.OreoLocationService
 import com.htistelecom.htisinhouse.activity.WFMS.service.PreOreoLocationService
@@ -43,6 +44,8 @@ class SplashNew : AppCompatActivity() {
     var im: String = ""
     lateinit var locationManager: LocationManager
     lateinit var tinyDB: TinyDB
+
+
     private val LOCATION_PERMISSION_REQUEST_CODE = 103
     var PERMISSIONS = arrayOf(
             Manifest.permission.READ_PHONE_STATE,
@@ -59,6 +62,8 @@ class SplashNew : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
         MyApplication.context = this
         tinyDB = TinyDB(this)
+       // SingletonClass.connect()
+
 
 
         initOtherViews()

@@ -20,16 +20,10 @@ import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.PROFILE_IMAGE_WFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.PROFILE_WFMS
 import com.htistelecom.htisinhouse.activity.WFMS.activity.LoginNewActivity
-import com.htistelecom.htisinhouse.activity.WFMS.document_directory.DocumentDirectoryFragmentWFMS
 import com.htistelecom.htisinhouse.config.TinyDB
-import com.htistelecom.htisinhouse.fragment.BaseFragment
 import com.htistelecom.htisinhouse.retrofit.MyInterface
+import com.htistelecom.htisinhouse.utilities.ConstantKotlin
 import com.htistelecom.htisinhouse.utilities.Utilities
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.fragment_profile_wfms.*
@@ -71,6 +65,7 @@ class ProfileFragmentWFMS : Fragment(), MyInterface, View.OnClickListener {
     }
 
     private fun clearCredentials() {
+        tinyDB.putBoolean(ConstantsWFMS.TINYDB_IS_LOGIN,false)
 //        tinyDB.putString(ConstantsWFMS.TINYDB_DOMAIN_ID, "")
 //        tinyDB.putString(ConstantsWFMS.TINYDB_EMAIL, "")
 //        tinyDB.putString(ConstantsWFMS.TINYDB_EMP_ID, "")
@@ -106,33 +101,38 @@ class ProfileFragmentWFMS : Fragment(), MyInterface, View.OnClickListener {
 
     override fun sendResponse(response: Any?, TYPE: Int) {
         Utilities.dismissDialog()
+        if ((response as Response<*>).code() == 401 ||  (response as Response<*>).code() == 403) {
+            if (Utilities.isShowing())
+                Utilities.dismissDialog()
+            ConstantKotlin.logout(activity!!, tinyDB)
+        } else {
+            if (TYPE == PROFILE_WFMS) {
+                var jsonObj = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObj.getString("Status").equals("Success")) {
 
-        if (TYPE == PROFILE_WFMS) {
-            var jsonObj = JSONObject((response as Response<*>).body()!!.toString())
-            if (jsonObj.getString("Status").equals("Success")) {
-
-                tvFirstNameProfileFragmentWFMS.text = jsonObj.getString("EmpName")
-                tvDesignationProfileFragmentWFMS.text = jsonObj.getString("EmpDesignation")
-                tvDeptProfileFragmentWFMS.text = jsonObj.getString("EmpDepartment")
-                tvEmailProfileFragmentWFMS.text = tinyDB.getString(ConstantsWFMS.TINYDB_EMAIL)
-                tvContactProfileFragmentWFMS.text = tinyDB.getString(ConstantsWFMS.TINYDB_EMP_MOBILE)
-                if (!jsonObj.getString("EmpImg").equals(""))
-                    Glide.with(this).load(jsonObj.getString("EmpImgPath") + jsonObj.getString("EmpImg")).into(ivProfileFragmentWFMS);
-                else
-                    Glide.with(this).load(R.drawable.icon_man).into(ivProfileFragmentWFMS);
+                    tvFirstNameProfileFragmentWFMS.text = jsonObj.getString("EmpName")
+                    tvDesignationProfileFragmentWFMS.text = jsonObj.getString("EmpDesignation")
+                    tvDeptProfileFragmentWFMS.text = jsonObj.getString("EmpDepartment")
+                    tvEmailProfileFragmentWFMS.text = tinyDB.getString(ConstantsWFMS.TINYDB_EMAIL)
+                    tvContactProfileFragmentWFMS.text = tinyDB.getString(ConstantsWFMS.TINYDB_EMP_MOBILE)
+                    if (!jsonObj.getString("EmpImg").equals(""))
+                        Glide.with(this).load(jsonObj.getString("EmpImgPath") + jsonObj.getString("EmpImg")).into(ivProfileFragmentWFMS);
+                    else
+                        Glide.with(this).load(R.drawable.icon_man).into(ivProfileFragmentWFMS);
 
 
+                }
+
+
+            } else if (TYPE == PROFILE_IMAGE_WFMS) {
+                var jsonObj = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObj.getString("Status").equals("Success")) {
+                    tinyDB.putString(ConstantsWFMS.TINYDB_EMP_PROFILE_IMAGE, jsonObj.getString("ImageURL") + jsonObj.getString("ImageName"))
+                    Utilities.showToast(activity, jsonObj.getString("Message"))
+                }
             }
 
-        } else if (TYPE == PROFILE_IMAGE_WFMS) {
-            var jsonObj = JSONObject((response as Response<*>).body()!!.toString())
-            if (jsonObj.getString("Status").equals("Success")) {
-                tinyDB.putString(ConstantsWFMS.TINYDB_EMP_PROFILE_IMAGE,jsonObj.getString("ImageURL")+jsonObj.getString("ImageName"))
-                Utilities.showToast(activity, jsonObj.getString("Message"))
-            }
         }
-
-
     }
 
     override fun onClick(v: View) {
@@ -154,29 +154,19 @@ class ProfileFragmentWFMS : Fragment(), MyInterface, View.OnClickListener {
     }
 
 
-
-
-
-
-
-
-
     public fun checkPermissions() {
-        if(Build.VERSION.SDK_INT<=23)
-        {
-            if(ContextCompat.checkSelfPermission(activity!!,android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(activity!!,android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(activity!!,android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(android.Manifest.permission.CAMERA,Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE),1);
+        if (Build.VERSION.SDK_INT <= 23) {
+            if (ContextCompat.checkSelfPermission(activity!!, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(activity!!, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(activity!!, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(android.Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE), 1);
                 return;
             } else {
                 onSelectImageClick()
 
             }
-        }
-        else{
+        } else {
             onSelectImageClick()
 
         }
-
 
 
 //        Dexter.with(activity)
@@ -201,7 +191,6 @@ class ProfileFragmentWFMS : Fragment(), MyInterface, View.OnClickListener {
     }
 
 
-
     override fun onRequestPermissionsResult(
             requestCode: Int,
             permissions: Array<out String>,
@@ -217,7 +206,7 @@ class ProfileFragmentWFMS : Fragment(), MyInterface, View.OnClickListener {
                 //startLocationClass()
             } else {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    requestPermissions(arrayOf(android.Manifest.permission.CAMERA,Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE),1);
+                    requestPermissions(arrayOf(android.Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), 1);
 
 
                 }
@@ -235,7 +224,7 @@ class ProfileFragmentWFMS : Fragment(), MyInterface, View.OnClickListener {
             if (resultCode == Activity.RESULT_OK) {
 
                 var s = result.getUri()
-                val file=File(File(result.uri.path).absolutePath)
+                val file = File(File(result.uri.path).absolutePath)
                 Glide.with(activity!!).load(file).into(ivProfileFragmentWFMS);
                 val mFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
                 val fileToUpload = MultipartBody.Part.createFormData("EmpImage", file.name, mFile)
@@ -264,15 +253,9 @@ class ProfileFragmentWFMS : Fragment(), MyInterface, View.OnClickListener {
     }
 
 
-
     fun onSelectImageClick() {
         CropImage.startPickImageActivity(activity!!)
     }
-
-
-
-
-
 
 
 }

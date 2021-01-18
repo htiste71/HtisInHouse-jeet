@@ -18,6 +18,7 @@ import com.htistelecom.htisinhouse.activity.WFMS.claims.models.ClaimSummaryModel
 import com.htistelecom.htisinhouse.activity.WFMS.models.CompletedTaskModel
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.retrofit.MyInterface
+import com.htistelecom.htisinhouse.utilities.ConstantKotlin
 import com.htistelecom.htisinhouse.utilities.Utilities
 import kotlinx.android.synthetic.main.activity_task_completed_activity_wfms.*
 import kotlinx.android.synthetic.main.layout_claim_detail.*
@@ -106,20 +107,28 @@ class TaskCompletedActivityWFMS : AppCompatActivity(), View.OnClickListener, MyI
     }
 
     override fun sendResponse(response: Any?, TYPE: Int) {
-        Utilities.dismissDialog()
-        if (TYPE == CLAIM_DETAIL_DATE_WFMS) {
-            var jsonObj = JSONObject((response as Response<*>).body()!!.toString())
-            if (jsonObj.getString("Status").equals("Success")) {
-                rvDescriptionClaimDetailActivityWFMS.visibility = View.VISIBLE
-                tvNoTaskClaimDetailActivityWFMS.visibility = View.GONE
 
-                completedTaskList = Gson().fromJson<java.util.ArrayList<CompletedTaskModel>>(jsonObj.getJSONArray("Output").toString(), object : TypeToken<ArrayList<CompletedTaskModel>>() {}.type)
-                rvDescriptionClaimDetailActivityWFMS.adapter = TaskCompletedAdapterWFMS(this, completedTaskList, model)
+        if ((response as Response<*>).code() == 401 ||  (response as Response<*>).code() == 403) {
+            if (Utilities.isShowing())
+                Utilities.dismissDialog()
+            finish()
+            ConstantKotlin.logout(this, tinyDB)
+        } else {
+            Utilities.dismissDialog()
+            if (TYPE == CLAIM_DETAIL_DATE_WFMS) {
+                var jsonObj = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObj.getString("Status").equals("Success")) {
+                    rvDescriptionClaimDetailActivityWFMS.visibility = View.VISIBLE
+                    tvNoTaskClaimDetailActivityWFMS.visibility = View.GONE
+
+                    completedTaskList = Gson().fromJson<java.util.ArrayList<CompletedTaskModel>>(jsonObj.getJSONArray("Output").toString(), object : TypeToken<ArrayList<CompletedTaskModel>>() {}.type)
+                    rvDescriptionClaimDetailActivityWFMS.adapter = TaskCompletedAdapterWFMS(this, completedTaskList, model)
 
 
-            } else {
-                rvDescriptionClaimDetailActivityWFMS.visibility = View.GONE
-                tvNoTaskClaimDetailActivityWFMS.visibility = View.VISIBLE
+                } else {
+                    rvDescriptionClaimDetailActivityWFMS.visibility = View.GONE
+                    tvNoTaskClaimDetailActivityWFMS.visibility = View.VISIBLE
+                }
             }
         }
     }

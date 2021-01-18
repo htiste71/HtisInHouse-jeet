@@ -30,13 +30,13 @@
         android:textSize="@dimen/_19sdp" />
 
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivProfilePicChatDetailWFMS"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/icon_man"
-        tools:ignore="ContentDescription" />
+
+        />
 
 </RelativeLayout>

@@ -36,7 +36,7 @@ class CustomUrlActivity : Activity(), MyInterface {
                 var json = JSONObject()
                 json.put("DomainName", mDomainName)
 
-                ApiData.getData(json.toString(), ConstantsWFMS.DOMAIN_VERIFICATION_WFMS, this, this)
+                ApiData.getDataNoAuth(json.toString(), ConstantsWFMS.DOMAIN_VERIFICATION_WFMS, this, this)
 
             }
         }

@@ -31,6 +31,7 @@ import com.htistelecom.htisinhouse.activity.WFMS.models.TwoParameterModel
 import com.htistelecom.htisinhouse.activity.WFMS.service.OreoLocationService
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.retrofit.MyInterface
+import com.htistelecom.htisinhouse.utilities.ConstantKotlin
 import com.htistelecom.htisinhouse.utilities.Utilities
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
@@ -91,7 +92,7 @@ class PerformActivityNew : AppCompatActivity(), MyInterface, View.OnClickListene
     var taskListSelected = ArrayList<TaskListModel>()
 
     lateinit var dialog: Dialog
-    var tinyDB: TinyDB? = null
+    lateinit var tinyDB: TinyDB
     var statusAdapter: ArrayAdapter<String?>? = null
 
     var status: String? = null
@@ -309,7 +310,8 @@ class PerformActivityNew : AppCompatActivity(), MyInterface, View.OnClickListene
     var etMessage: EditText? = null
 
 
-    private fun show_statusPopup() {
+    private fun show_statusPopup()
+    {
         dialog = Dialog(this@PerformActivityNew)
         dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog!!.setContentView(R.layout.status_dialog)
@@ -462,6 +464,8 @@ class PerformActivityNew : AppCompatActivity(), MyInterface, View.OnClickListene
     }
 
     fun hitAPI(params: String?, TYPE: Int) {
+
+
         if (TYPE == ConstantsWFMS.START_TASK_WFMS) {
             ApiData.getData(params, ConstantsWFMS.START_TASK_WFMS, this, this)
         } else if (TYPE == TASK_STATUS_LIST_WFMS) {
@@ -490,83 +494,88 @@ class PerformActivityNew : AppCompatActivity(), MyInterface, View.OnClickListene
     }
 
     override fun sendResponse(response: Any, TYPE: Int) {
-        if(status.equals("Pending"))
-        Utilities.dismissDialog()
-        else if(status.equals("Completed"))
-        {
-            if(value==taskListSelected.size-1)
-            {
+
+
+        if ((response as Response<*>).code() == 401 ||  (response as Response<*>).code() == 403) {
+            if (Utilities.isShowing())
                 Utilities.dismissDialog()
-            }
-        }
-        else if(TYPE== START_TASK_WFMS)
-        {
-            Utilities.dismissDialog()
+            ConstantKotlin.logout(this, tinyDB)
+        } else {
 
-        }
-
-        if (TYPE == ConstantsWFMS.START_TASK_WFMS) {
-            val json = JSONObject((response as Response<*>).body()!!.toString())
-            if (json.getString("Status").equals("Success")) {
-                Utilities.showToast(this, json.getString("Message"))
-                btnStatus.setVisibility(View.VISIBLE)
-                tvStatus.text = "Started"
-                btnStart.setVisibility(View.GONE)
-                tvViewMap.setVisibility(View.GONE)
-            } else {
-                Utilities.showToast(this, json.getString("Message"))
+            if (status.equals("Pending"))
+                Utilities.dismissDialog()
+            else if (status.equals("Completed")) {
+                if (value == taskListSelected.size - 1) {
+                    Utilities.dismissDialog()
+                }
+            } else if (TYPE == START_TASK_WFMS) {
+                Utilities.dismissDialog()
 
             }
-        } else if (TYPE == ConstantsWFMS.TASK_STATUS_LIST_WFMS) {
-            val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
 
-            val model = TwoParameterModel()
-            model.name = "Select a Status"
-            model.id = "-1"
-            listTaskStatus.add(model)
-            for (i in 0 until jsonArray.length()) {
-                val item = jsonArray.getJSONObject(i)
+            if (TYPE == ConstantsWFMS.START_TASK_WFMS) {
+                val json = JSONObject((response as Response<*>).body()!!.toString())
+                if (json.getString("Status").equals("Success")) {
+                    Utilities.showToast(this, json.getString("Message"))
+                    btnStatus.setVisibility(View.VISIBLE)
+                    tvStatus.text = "Started"
+                    btnStart.setVisibility(View.GONE)
+                    tvViewMap.setVisibility(View.GONE)
+                } else {
+                    Utilities.showToast(this, json.getString("Message"))
+
+                }
+            } else if (TYPE == ConstantsWFMS.TASK_STATUS_LIST_WFMS) {
+                val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
 
                 val model = TwoParameterModel()
-                model.id = item.getString("CompanyNatureId")
-                model.name = item.getString("TapLocationTypeName")
+                model.name = "Select a Status"
+                model.id = "-1"
                 listTaskStatus.add(model)
-            }
+                for (i in 0 until jsonArray.length()) {
+                    val item = jsonArray.getJSONObject(i)
 
-
-            taskStatusListArray = arrayOfNulls<String>(listTaskStatus.size)
-            for (i in listTaskStatus.indices) {
-                taskStatusListArray[i] = listTaskStatus.get(i).name
-            }
-
-
-        } else if (TYPE == ConstantsWFMS.NEW_TASK_STATUS_WFMS) {
-            val json = JSONObject((response as Response<*>).body()!!.toString())
-            if (json.getString("Status").equals("Success")) {
-                Utilities.showToast(this, json.getString("Message"))
-
-                if (status.equals("Pending")) {
-                    dialog.dismiss()
-
-                } else {
-
-                    if (value != taskListSelected.size - 1) {
-                        value = value + 1;
-                        completeImageListToUpload()
-
-                    } else {
-                        finish()
-
-                        dialog.dismiss()
-
-                    }
+                    val model = TwoParameterModel()
+                    model.id = item.getString("CompanyNatureId")
+                    model.name = item.getString("TapLocationTypeName")
+                    listTaskStatus.add(model)
                 }
 
-            } else {
-                Utilities.showToast(this, json.getString("Message"))
+
+                taskStatusListArray = arrayOfNulls<String>(listTaskStatus.size)
+                for (i in listTaskStatus.indices) {
+                    taskStatusListArray[i] = listTaskStatus.get(i).name
+                }
+
+
+            } else if (TYPE == ConstantsWFMS.NEW_TASK_STATUS_WFMS) {
+                val json = JSONObject((response as Response<*>).body()!!.toString())
+                if (json.getString("Status").equals("Success")) {
+                    Utilities.showToast(this, json.getString("Message"))
+
+                    if (status.equals("Pending")) {
+                        dialog.dismiss()
+
+                    } else {
+
+                        if (value != taskListSelected.size - 1) {
+                            value = value + 1;
+                            completeImageListToUpload()
+
+                        } else {
+                            finish()
+
+                            dialog.dismiss()
+
+                        }
+                    }
+
+                } else {
+                    Utilities.showToast(this, json.getString("Message"))
+
+                }
 
             }
-
         }
     }
 
@@ -653,7 +662,7 @@ class PerformActivityNew : AppCompatActivity(), MyInterface, View.OnClickListene
 
                 var s = result.getUri()
                 //  (findViewById<View>(R.id.quick_start_cropped_image) as ImageButton).setImageURI(File())
-                Toast.makeText(this, "Cropping successful, Sample: " + result.getSampleSize(), Toast.LENGTH_LONG).show()
+               // Toast.makeText(this, "Cropping successful, Sample: " + result.getSampleSize(), Toast.LENGTH_LONG).show()
                 taskListSelected.get(position).activityImage = File(result.uri.path).absolutePath
                 taskListSelected.get(position).activityImagePath = ""
                 adapter.notifyDataSetChanged()

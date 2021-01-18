@@ -65,7 +65,7 @@ lateinit var db:TinyDB
 
 
                         val data = RequestBody.create("text/plain".toMediaTypeOrNull(), json.toString())
-                        val apiService = ApiClient.getClient().create(ApiInterface::class.java)
+                        val apiService = ApiClient.getClient(db).create(ApiInterface::class.java)
                         val call = apiService.methodUploadLogFileWFMS(fileToUpload, data)
 
                         call.enqueue(object : Callback<Any> {

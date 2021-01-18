@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_color"
     android:orientation="vertical"
-    android:padding="@dimen/_12sdp"
-    tools:context=".fragment.OfficeFragment">
+    android:padding="@dimen/_12sdp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +23,7 @@
             android:textSize="@dimen/_12sdp" />
 
         <com.htistelecom.htisinhouse.font.UbuntuButton
-            android:id="@+id/btnOfficeMarketing"
+            android:id="@+id/btnSubmitOfficeFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -40,5 +39,9 @@
 
     </LinearLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvOfficeFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

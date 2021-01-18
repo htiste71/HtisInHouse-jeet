@@ -1,5 +1,6 @@
 package com.htistelecom.htisinhouse.activity.WFMS.dialog
 
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
@@ -31,10 +32,12 @@ class SheetDialogFragmentNew : BottomSheetDialogFragment() {
         return v
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+
+
+
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
     }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         taskAL = arguments!!.getSerializable("data") as ArrayList<TaskListModel>
@@ -57,16 +60,15 @@ class SheetDialogFragmentNew : BottomSheetDialogFragment() {
 
     }
 
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
+    override fun onAttach(activity: Activity) {
+        super.onAttach(activity)
         try {
             mContext=context
         } catch (e: ClassCastException) {
             throw ClassCastException(context!!.toString() + " must implement BottomSheetListener")
         }
-
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

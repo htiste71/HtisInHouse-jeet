@@ -28,10 +28,7 @@ public interface ApiInterface {
     //@Headers("Content-Type: application/json")
 
 
-
-
     // this is all new code
-
 
 
     @Headers("Content-Type: application/json")
@@ -50,7 +47,6 @@ public interface ApiInterface {
     @Headers("Content-Type: application/json")
     @POST(ConstantsWFMS.WFMS_FORGOT_PASSWORD_API)
     Call<String> methodForgotPasswordWFMS(@Body String params);
-
 
 
     @Headers("Content-Type: application/json")
@@ -90,16 +86,33 @@ public interface ApiInterface {
 
     @GET(ConstantsWFMS.WFMS_DOCUMENT_TYPE_LIST_API)
     Call<String> methodDocumentTypeWFMS();
+
     @GET(ConstantsWFMS.WFMS_BRANCH_LIST_API)
     Call<String> methodBranchListWFMS();
 
+    @GET(ConstantsWFMS.WFMS_COUNTRY_API)
+    Call<String> methodCountryWFMS();
 
 
+
+    @GET(ConstantsWFMS.WFMS_POSITION_API)
+    Call<String> methodPositionWFMS();
+
+    @GET(ConstantsWFMS.WFMS_CUSTOMER_ENTITY_API)
+    Call<String> methodEntityWFMS();
+
+
+    @GET(ConstantsWFMS.WFMS_BUSINESS_NATURE_API)
+    Call<String> methodNatureWFMS();
+
+    @GET(ConstantsWFMS.WFMS_TURNOVER_API)
+    Call<String> methodTurnoverWFMS();
 
 
     @Headers("Content-Type: application/json")
     @POST(ConstantsWFMS.WFMS_ACTIVITY_LIST_API)
     Call<String> methodActivityListWFMS(@Body String params);
+
     @Headers("Content-Type: application/json")
     @POST(ConstantsWFMS.WFMS_ADD_TASK_API)
     Call<String> methodAddTaskWFMS(@Body String params);
@@ -147,26 +160,22 @@ public interface ApiInterface {
     Call<String> methodNewTaskStatusWFMS(@Part MultipartBody.Part file, @Part("TaskId") RequestBody taskId, @Part("EmpId") RequestBody empId, @Part("ActivityId") RequestBody activityId, @Part("Status") RequestBody status, @Part("SubActivityId") RequestBody subActivityId);
 
 
-
     @Multipart
     @POST(ConstantsWFMS.WFMS_PROFILE_IMAGE_API)
-    Call<String> methodProfileImageWFMS(@Part MultipartBody.Part file,@Part("EmpId") RequestBody empId);
+    Call<String> methodProfileImageWFMS(@Part MultipartBody.Part file, @Part("EmpId") RequestBody empId);
 
     @Multipart
     @POST(ConstantsWFMS.WFMS_LOG_REPORT_API)
-    Call<Object> methodUploadLogFileWFMS(@Part MultipartBody.Part fileToUpload,@Part("Data") RequestBody id );
+    Call<Object> methodUploadLogFileWFMS(@Part MultipartBody.Part fileToUpload, @Part("Data") RequestBody id);
 
 
     @Multipart
     @POST(ConstantsWFMS.WFMS_CLAIM_SUBMIT_API)
-    Call<String> methodAddClaimWFMS(@Part MultipartBody.Part[] fileToUpload,@Part("ClaimData") RequestBody id );
+    Call<String> methodAddClaimWFMS(@Part MultipartBody.Part[] fileToUpload, @Part("ClaimData") RequestBody id);
 
     @Multipart
     @POST(ConstantsWFMS.WFMS_DOCUMENT_UPLOAD_API)
-    Call<String> methodUploadDocumentWFMS(@Part MultipartBody.Part[] fileToUpload,@Part("ReqDocData") RequestBody id );
-
-
-
+    Call<String> methodUploadDocumentWFMS(@Part MultipartBody.Part[] fileToUpload, @Part("ReqDocData") RequestBody id);
 
 
     @Headers("Content-Type: application/json")
@@ -207,7 +216,6 @@ public interface ApiInterface {
     Call<String> methodClaimSummaryWFMS(@Body String params);
 
 
-
     @Headers("Content-Type: application/json")
     @POST(ConstantsWFMS.WFMS_CLAIM_DETAIL_TASK_API)
     Call<String> methodClaimDetailTaskWFMS(@Body String params);
@@ -222,7 +230,7 @@ public interface ApiInterface {
 
     @Headers("Content-Type: application/json")
     @POST(ConstantsWFMS.WFMS_SHOW_ADVANCE_DETAIL_API)
-    Call<String> methodShowAdvanceDetailWFMS(@Body  String params);
+    Call<String> methodShowAdvanceDetailWFMS(@Body String params);
 
 //    @Headers("Content-Type: application/json")
 //    @POST(ConstantsWFMS.WFMS_SALARY_API)
@@ -234,11 +242,11 @@ public interface ApiInterface {
 
     @Headers("Content-Type: application/json")
     @POST(ConstantsWFMS.WFMS_REQUEST_DOCUMENT_API)
-    Call<String> methodRequestDocumentWFMS(@Body  String params);
+    Call<String> methodRequestDocumentWFMS(@Body String params);
 
     @Headers("Content-Type: application/json")
     @POST(ConstantsWFMS.WFMS_SALARY_SLIP_API)
-    Call<String> methodSalarySlipWFMS(@Body  String params);
+    Call<String> methodSalarySlipWFMS(@Body String params);
 
     @Headers("Content-Type: application/json")
     @POST(ConstantsWFMS.WFMS_MEETING_STATUS_API)
@@ -250,6 +258,82 @@ public interface ApiInterface {
 
 
     @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_STATE_API)
+    Call<String> methodStateWFMS(@Body String params);
+
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_CITY_API)
+    Call<String> methodCityWFMS(@Body String params);
+
+
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_SUBMIT_PROJECT_API)
+    Call<String> methodSubmitProjectWFMS(@Body String params);
+
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_SUBMIT_SITE_API)
+    Call<String> methodSubmitSiteWFMS(@Body String params);
+
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_SUBMIT_ACTIVITY_API)
+    Call<String> methodSubmitActivityWFMS(@Body String params);
+
+
+    @Headers("Content-Type: application/json")
     @POST(ConstantsWFMS.WFMS_SEARCH_TEAM_LIST_API)
-    Call<String> methodSearchTeamListWFMS(@Body  String params);
+    Call<String> methodSearchTeamListWFMS(@Body String params);
+
+
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_SEARCH_TEAM_LIST_API)
+    Call<String> methodAddSiteWFMS(@Body String params);
+
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_SEARCH_TEAM_LIST_API)
+    Call<String> methodAddActivityWFMS(@Body String params);
+
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_PUNCH_STATUS_API)
+    Call<String> methodPunchDetailWFMS(@Body String params);
+
+
+
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_OFFICE_SUBMIT_API)
+    Call<String> methodOfficeSubmitWFMS(@Body String params);
+
+
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_OFFICE_LIST_API)
+    Call<String> methodOfficeListWFMS(@Body String params);
+
+
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_TRAVEL_SUBMIT_API)
+    Call<String> methodTravelSubmitWFMS(@Body String params);
+
+
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_TRAVEL_LIST_API)
+    Call<String> methodTravelListWFMS(@Body String params);
+
+
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_TASK_SUBMIT_API)
+    Call<String> methodTaskSubmitMarketingWFMS(@Body String params);
+
+
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_TASK_LIST_API)
+    Call<String> methodTaskListMarketingWFMS(@Body String params);
+
+
+    @Headers("Content-Type: application/json")
+    @POST(ConstantsWFMS.WFMS_TRAVEL_LIST_API)
+    Call<String> methodTaskListWFMS(@Body String params);
+
+
+
+
+
 }

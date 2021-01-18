@@ -28,6 +28,7 @@ import com.htistelecom.htisinhouse.activity.WFMS.adapters.TeamAdapterWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.models.MyTeamModel
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.retrofit.MyInterface
+import com.htistelecom.htisinhouse.utilities.ConstantKotlin
 import com.htistelecom.htisinhouse.utilities.Utilities
 import kotlinx.android.synthetic.main.fragment_team_wfms.*
 import org.json.JSONObject
@@ -76,11 +77,11 @@ class TeamFragmentWFMS : Fragment(), MyInterface, View.OnClickListener {
                         if (s.length > 0) {
                             last_text_edit = System.currentTimeMillis();
                             handler.postDelayed(input_finish_checker, delay);
-                            mSearchText=s.toString()
+                            mSearchText = s.toString()
                         } else {
                             last_text_edit = System.currentTimeMillis();
                             handler.postDelayed(input_finish_checker, delay);
-                            mSearchText=""
+                            mSearchText = ""
                         }
                         //  searchMethod(s.toString())
 
@@ -118,11 +119,12 @@ class TeamFragmentWFMS : Fragment(), MyInterface, View.OnClickListener {
             //Do something after 100ms
             mSearchText = text
             //mSearchText = "sho"
-         //   Utilities.showToast(activity!!, mSearchText)
+            //   Utilities.showToast(activity!!, mSearchText)
             callMethod()
         }, 1000)
 
     }
+
     var delay: Long = 1000 // 1 seconds after user stops typing
 
     var last_text_edit: Long = 0
@@ -130,9 +132,9 @@ class TeamFragmentWFMS : Fragment(), MyInterface, View.OnClickListener {
 
     private val input_finish_checker = Runnable {
         if (System.currentTimeMillis() > last_text_edit + delay - 500) {
-          //  mSearchText = text
+            //  mSearchText = text
             //mSearchText = "sho"
-          //  Utilities.showToast(activity!!, mSearchText)
+            //  Utilities.showToast(activity!!, mSearchText)
             callMethod()
         }
     }
@@ -189,51 +191,59 @@ class TeamFragmentWFMS : Fragment(), MyInterface, View.OnClickListener {
 
     override fun sendResponse(response: Any?, TYPE: Int) {
         Utilities.dismissDialog()
-        if (TYPE == SEARCH_TEAM_LIST_WFMS) {
-            try {
-                val json = JSONObject((response as Response<*>).body()!!.toString())
-                if (json.getString("Status").equals("Success")) {
 
-                    myTeamList = Gson().fromJson<java.util.ArrayList<MyTeamModel>>(json.getJSONArray("Output").toString(), object : TypeToken<ArrayList<MyTeamModel>>() {
-                    }.type)
-
-
-                    if (myTeamList.size == 1 && myTeamList.get(0).empId.equals(tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))) {
-                        rvTeamFragmentWFMS.visibility = View.GONE
-                        tvNoTeamMemberFoundTeamFragmentWFMS.visibility = View.VISIBLE
-                        for (i in 0 until myTeamList.size) {
-                            if (myTeamList.get(i).empId == tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID)) {
-                                model = myTeamList.get(i)
-                                myTeamList.remove(model)
-                                break
-
-                            }
-                        }
-                    } else {
-                        rvTeamFragmentWFMS.visibility = View.VISIBLE
-                        tvNoTeamMemberFoundTeamFragmentWFMS.visibility = View.GONE
-                        for (i in 0 until myTeamList.size) {
-                            if (myTeamList.get(i).empId == tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID)) {
-                                model = myTeamList.get(i)
-                                myTeamList.remove(model)
-                                break
-
-                            }
-                        }
-                        teamAdapter = TeamAdapterWFMS(activity, myTeamList, tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
-                        rvTeamFragmentWFMS.adapter = teamAdapter
-                    }
-
-                } else {
-                    rvTeamFragmentWFMS.visibility = View.GONE
-                    tvNoTeamMemberFoundTeamFragmentWFMS.visibility = View.VISIBLE
-                }
-            } catch (e: Exception) {
-
-            }
-
+        if ((response as Response<*>).code() == 401 ||  (response as Response<*>).code() == 403) {
+            if (Utilities.isShowing())
+                Utilities.dismissDialog()
+            ConstantKotlin.logout(activity!!, tinyDB)
         } else {
 
+            if (TYPE == SEARCH_TEAM_LIST_WFMS) {
+                try {
+                    val json = JSONObject((response as Response<*>).body()!!.toString())
+                    if (json.getString("Status").equals("Success")) {
+
+                        myTeamList = Gson().fromJson<java.util.ArrayList<MyTeamModel>>(json.getJSONArray("Output").toString(), object : TypeToken<ArrayList<MyTeamModel>>() {
+                        }.type)
+
+
+                        if (myTeamList.size == 1 && myTeamList.get(0).empId.equals(tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))) {
+                            rvTeamFragmentWFMS.visibility = View.GONE
+                            tvNoTeamMemberFoundTeamFragmentWFMS.visibility = View.VISIBLE
+                            for (i in 0 until myTeamList.size) {
+                                if (myTeamList.get(i).empId == tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID)) {
+                                    model = myTeamList.get(i)
+                                    myTeamList.remove(model)
+                                    break
+
+                                }
+                            }
+                        } else {
+                            rvTeamFragmentWFMS.visibility = View.VISIBLE
+                            tvNoTeamMemberFoundTeamFragmentWFMS.visibility = View.GONE
+                            for (i in 0 until myTeamList.size) {
+                                if (myTeamList.get(i).empId == tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID)) {
+                                    model = myTeamList.get(i)
+                                    myTeamList.remove(model)
+                                    break
+
+                                }
+                            }
+                            teamAdapter = TeamAdapterWFMS(activity, myTeamList, tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
+                            rvTeamFragmentWFMS.adapter = teamAdapter
+                        }
+
+                    } else {
+                        rvTeamFragmentWFMS.visibility = View.GONE
+                        tvNoTeamMemberFoundTeamFragmentWFMS.visibility = View.VISIBLE
+                    }
+                } catch (e: Exception) {
+
+                }
+
+            } else {
+
+            }
         }
     }
 

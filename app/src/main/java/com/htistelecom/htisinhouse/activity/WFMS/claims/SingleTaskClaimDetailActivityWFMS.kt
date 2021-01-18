@@ -17,6 +17,7 @@ import com.htistelecom.htisinhouse.activity.WFMS.claims.models.ClaimSummaryModel
 import com.htistelecom.htisinhouse.activity.WFMS.claims.models.SingleTaskDetailModel
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.retrofit.MyInterface
+import com.htistelecom.htisinhouse.utilities.ConstantKotlin
 import com.htistelecom.htisinhouse.utilities.Utilities
 import kotlinx.android.synthetic.main.activity_single_task_claim_detail_wfms.*
 import kotlinx.android.synthetic.main.layout_claim_detail.*
@@ -42,6 +43,7 @@ class SingleTaskClaimDetailActivityWFMS : AppCompatActivity(), View.OnClickListe
         super.onResume()
         api()
     }
+
     private fun api() {
 
         var json = JSONObject()
@@ -105,22 +107,31 @@ class SingleTaskClaimDetailActivityWFMS : AppCompatActivity(), View.OnClickListe
     }
 
     override fun sendResponse(response: Any?, TYPE: Int) {
-        Utilities.dismissDialog()
-        if (TYPE == CLAIM_DETAIL_TASK_WFMS) {
-            var jsonObj = JSONObject((response as Response<*>).body()!!.toString())
-            if (jsonObj.getString("Status").equals("Success")) {
-                taskDetailList.clear()
-                tvNoClaimAddedSingleTaskClaimDetailActivityWFMS.visibility = View.GONE
-                rvSingleTaskClaimDetailActivityWFMS.visibility = View.VISIBLE
-                taskDetailList = Gson().fromJson<java.util.ArrayList<SingleTaskDetailModel>>(jsonObj.getJSONArray("Output").toString(), object : TypeToken<ArrayList<SingleTaskDetailModel>>() {}.type)
+        if ((response as Response<*>).code() == 401 ||  (response as Response<*>).code() == 403) {
+            if (Utilities.isShowing())
+                Utilities.dismissDialog()
+            finish()
+            ConstantKotlin.logout(this, tinyDB)
+        } else {
 
-                rvSingleTaskClaimDetailActivityWFMS.adapter = SingleTaskClaimDetailAdapterWFMS(this, taskDetailList)
-            } else {
-                tvNoClaimAddedSingleTaskClaimDetailActivityWFMS.visibility = View.VISIBLE
-                rvSingleTaskClaimDetailActivityWFMS.visibility = View.GONE
+
+            Utilities.dismissDialog()
+            if (TYPE == CLAIM_DETAIL_TASK_WFMS) {
+                var jsonObj = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObj.getString("Status").equals("Success")) {
+                    taskDetailList.clear()
+                    tvNoClaimAddedSingleTaskClaimDetailActivityWFMS.visibility = View.GONE
+                    rvSingleTaskClaimDetailActivityWFMS.visibility = View.VISIBLE
+                    taskDetailList = Gson().fromJson<java.util.ArrayList<SingleTaskDetailModel>>(jsonObj.getJSONArray("Output").toString(), object : TypeToken<ArrayList<SingleTaskDetailModel>>() {}.type)
+
+                    rvSingleTaskClaimDetailActivityWFMS.adapter = SingleTaskClaimDetailAdapterWFMS(this, taskDetailList)
+                } else {
+                    tvNoClaimAddedSingleTaskClaimDetailActivityWFMS.visibility = View.VISIBLE
+                    rvSingleTaskClaimDetailActivityWFMS.visibility = View.GONE
+                }
+
+
             }
-
-
         }
     }
 

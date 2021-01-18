@@ -74,12 +74,23 @@ public class DateUtils {
         Date date = monthFormatDate.parse(mDate);
         return myFormat.format(date);
     }
-public static String currentDate()
-{
-    Date date = Calendar.getInstance().getTime();
-    SimpleDateFormat df =new  SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
-    String currentDate = df.format(date);
-    return currentDate;
-}
+
+    public static String currentDate() {
+        Date date = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+        String currentDate = df.format(date);
+        return currentDate;
+    }
+
+
+    public static Date getCurrentTime() {
+        String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+        try {
+            return new SimpleDateFormat("HH:mm").parse(currentTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

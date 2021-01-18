@@ -17,7 +17,6 @@ import android.view.Window
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.internal.Utils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.htistelecom.htisinhouse.R
@@ -35,10 +34,10 @@ import com.htistelecom.htisinhouse.font.UbuntuEditText
 import com.htistelecom.htisinhouse.fragment.BaseFragment
 import com.htistelecom.htisinhouse.interfaces.GetDateTime
 import com.htistelecom.htisinhouse.retrofit.MyInterface
+import com.htistelecom.htisinhouse.utilities.ConstantKotlin
 import com.htistelecom.htisinhouse.utilities.DateUtils
 import com.htistelecom.htisinhouse.utilities.Utilities
 import kotlinx.android.synthetic.main.fragment_leave_type_outdoor_duty.*
-import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Response
 import java.text.ParseException
@@ -353,227 +352,226 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
 
 
     override fun sendResponse(response: Any, TYPE: Int) {
-        if (TYPE == LEAVE_TYPE_DAY_WFMS)
-        else
-            Utilities.dismissDialog()
-        try {
-            if (TYPE == LEAVE_TYPE_WFMS) {
-                leaveTypeList.clear()
-                leaveTypeArray = emptyArray()
 
-                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
-                if (jsonObject.getString("Status").equals("Success")) {
-                    leaveTypeList = Gson().fromJson<java.util.ArrayList<LeaveTypeModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<LeaveTypeModel>>() {
+        if ((response as Response<*>).code() == 401 ||  (response as Response<*>).code() == 403) {
+            if (Utilities.isShowing())
+                Utilities.dismissDialog()
+            ConstantKotlin.logout(activity!!, tinyDB)
+        } else {
 
-                    }.type)
+            if (TYPE == LEAVE_TYPE_DAY_WFMS)
+            else
+                Utilities.dismissDialog()
+            try {
+                if (TYPE == LEAVE_TYPE_WFMS) {
+                    leaveTypeList.clear()
+                    leaveTypeArray = emptyArray()
 
-                    var refinedList= ArrayList<LeaveTypeModel>()
-                    for (i in leaveTypeList.indices) {
-                        //Storing names to string array
-                        if (leaveTypeList.get(i).canApply.equals("Y", true))
-                            refinedList.add(leaveTypeList.get(i))
+                    val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                    if (jsonObject.getString("Status").equals("Success")) {
+                        leaveTypeList = Gson().fromJson<java.util.ArrayList<LeaveTypeModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<LeaveTypeModel>>() {
 
+                        }.type)
+
+                        var refinedList = ArrayList<LeaveTypeModel>()
+                        for (i in leaveTypeList.indices) {
+                            //Storing names to string array
+                            if (leaveTypeList.get(i).canApply.equals("Y", true))
+                                refinedList.add(leaveTypeList.get(i))
+
+                        }
+                        leaveTypeArray = arrayOfNulls<String>(refinedList.size)
+                        for (i in 0 until refinedList.size) {
+                            leaveTypeArray[i] = refinedList.get(i).leaveTypeName
+                        }
+                        mLeaveTypeId = leaveTypeList.get(0).leaveTypeId
+                        leaveTypeAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, leaveTypeArray)
+                        leaveTypeSpnrApplyLeave!!.setAdapter(leaveTypeAdapter)
+                    } else {
+                        Utilities.showToast(activity, "No Details found.")
                     }
-                    leaveTypeArray = arrayOfNulls<String>(refinedList.size)
-                    for(i in 0 until refinedList.size)
-                    {
-                        leaveTypeArray[i] = refinedList.get(i).leaveTypeName
-                    }
-                    mLeaveTypeId = leaveTypeList.get(0).leaveTypeId
-                    leaveTypeAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, leaveTypeArray)
-                    leaveTypeSpnrApplyLeave!!.setAdapter(leaveTypeAdapter)
-                } else {
-                    Utilities.showToast(activity, "No Details found.")
-                }
 
 
-            }
+                } else if (TYPE == LEAVE_TYPE_DAY_WFMS) {
 
-            else if (TYPE == LEAVE_TYPE_DAY_WFMS) {
+                    leaveTypeDayList.clear()
+                    leaveTypeDayArray = emptyArray()
+                    val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                    if (jsonObject.getString("Status").equals("Success")) {
+                        leaveTypeDayList = Gson().fromJson<java.util.ArrayList<LeaveTypeDayModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<LeaveTypeDayModel>>() {
 
-                leaveTypeDayList.clear()
-                leaveTypeDayArray = emptyArray()
-                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
-                if (jsonObject.getString("Status").equals("Success")) {
-                    leaveTypeDayList = Gson().fromJson<java.util.ArrayList<LeaveTypeDayModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<LeaveTypeDayModel>>() {
+                        }.type)
 
-                    }.type)
-
-                    leaveTypeDayArray = arrayOfNulls<String?>(leaveTypeDayList.size)
-                    for (i in leaveTypeDayList.indices) {
-                        leaveTypeDayArray[i] = leaveTypeDayList.get(i).dayType
-                    }
-                    leaveTypeDayAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, leaveTypeDayArray)
+                        leaveTypeDayArray = arrayOfNulls<String?>(leaveTypeDayList.size)
+                        for (i in leaveTypeDayList.indices) {
+                            leaveTypeDayArray[i] = leaveTypeDayList.get(i).dayType
+                        }
+                        leaveTypeDayAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, leaveTypeDayArray)
 
 
-                    mCompOffLeaveDayTypeId = leaveTypeDayList.get(0).dayTypeId
+                        mCompOffLeaveDayTypeId = leaveTypeDayList.get(0).dayTypeId
 
-                    if (LEAVE_TYPE == COMP_OFF) {
-                        leaveTypeDaySpnrDialogCompOff!!.setAdapter(leaveTypeDayAdapter)
+                        if (LEAVE_TYPE == COMP_OFF) {
+                            leaveTypeDaySpnrDialogCompOff!!.setAdapter(leaveTypeDayAdapter)
+
+                        } else {
+                            leaveTypeFromDateSpnrApplyLeave!!.setAdapter(leaveTypeDayAdapter)
+                            leaveTypeToDateSpnrApplyLeave!!.setAdapter(leaveTypeDayAdapter)
+                        }
+
 
                     } else {
-                        leaveTypeFromDateSpnrApplyLeave!!.setAdapter(leaveTypeDayAdapter)
-                        leaveTypeToDateSpnrApplyLeave!!.setAdapter(leaveTypeDayAdapter)
+                        Utilities.showToast(activity, "No Details found.")
+                    }
+                    val jsonObj = JSONObject()
+                    jsonObj.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
+                    if (LEAVE_TYPE == COMP_OFF)
+                        calledMethod(COMP_OFF_LEAVE_TYPE_WFMS, jsonObj.toString())
+                    else
+                        calledMethod(LEAVE_TYPE_WFMS, jsonObj.toString())
+
+
+                } else if (TYPE == ConstantsWFMS.APPLY_LEAVE_WFMS) {
+                    val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                    if (jsonObject.getString("Status").equals("Success")) {
+                        Utilities.showToast(activity, jsonObject.getString("Message"))
+                        dialog.dismiss()
+                        calledMethodCommon()
+
+                    } else {
+                        Utilities.showToast(activity, jsonObject.getString("Message"))
                     }
 
+                } else if (TYPE == ConstantsWFMS.OUTDOOR_REQUEST_WFMS) {
+                    val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                    if (jsonObject.getString("Status").equals("Success")) {
+                        Utilities.showToast(activity, jsonObject.getString("Message"))
+                        dialogOD.dismiss()
+                        calledMethodCommon()
+                    } else {
+                        Utilities.showToast(activity, jsonObject.getString("Message"))
+                    }
 
-                } else {
-                    Utilities.showToast(activity, "No Details found.")
-                }
-                val jsonObj = JSONObject()
-                jsonObj.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
-                if (LEAVE_TYPE == COMP_OFF)
-                    calledMethod(COMP_OFF_LEAVE_TYPE_WFMS, jsonObj.toString())
-                else
-                    calledMethod(LEAVE_TYPE_WFMS, jsonObj.toString())
+                } else if (TYPE == LEAVE_LIST_WFMS) {
+                    leaveList.clear()
+                    tvNoRecord.visibility = View.GONE
+                    recyclerView.visibility = VISIBLE
+                    val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                    if (jsonObject.getString("Status").equals("Success")) {
+                        leaveList = Gson().fromJson<java.util.ArrayList<LeaveListModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<LeaveListModel>>() {
 
-
-            } else if (TYPE == ConstantsWFMS.APPLY_LEAVE_WFMS) {
-                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
-                if (jsonObject.getString("Status").equals("Success")) {
-                    Utilities.showToast(activity, jsonObject.getString("Message"))
-                    dialog.dismiss()
-                    calledMethodCommon()
-
-                } else {
-                    Utilities.showToast(activity, jsonObject.getString("Message"))
-                }
-
-            } else if (TYPE == ConstantsWFMS.OUTDOOR_REQUEST_WFMS) {
-                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
-                if (jsonObject.getString("Status").equals("Success")) {
-                    Utilities.showToast(activity, jsonObject.getString("Message"))
-                    dialogOD.dismiss()
-                    calledMethodCommon()
-                } else {
-                    Utilities.showToast(activity, jsonObject.getString("Message"))
-                }
-
-            } else if (TYPE == LEAVE_LIST_WFMS) {
-                leaveList.clear()
-                tvNoRecord.visibility = View.GONE
-                recyclerView.visibility = VISIBLE
-                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
-                if (jsonObject.getString("Status").equals("Success")) {
-                    leaveList = Gson().fromJson<java.util.ArrayList<LeaveListModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<LeaveListModel>>() {
-
-                    }.type)
-                    val adapter = LeaveListAdapter(activity!!, leaveList, FOR_TYPE)
-                    recyclerView.adapter = adapter
+                        }.type)
+                        val adapter = LeaveListAdapter(activity!!, leaveList, FOR_TYPE)
+                        recyclerView.adapter = adapter
 
 
-                } else {
-                    tvNoRecord.visibility = View.VISIBLE
-                    recyclerView.visibility = GONE
-                }
+                    } else {
+                        tvNoRecord.visibility = View.VISIBLE
+                        recyclerView.visibility = GONE
+                    }
 
-            } else if (TYPE == OUTDOOR_LIST_WFMS) {
+                } else if (TYPE == OUTDOOR_LIST_WFMS) {
 
-                ODList.clear()
-                tvNoRecord.visibility = View.GONE
-                recyclerView.visibility = VISIBLE
-                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
-                if (jsonObject.getString("Status").equals("Success")) {
-                    ODList = Gson().fromJson<java.util.ArrayList<ODListModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<ODListModel>>() {
+                    ODList.clear()
+                    tvNoRecord.visibility = View.GONE
+                    recyclerView.visibility = VISIBLE
+                    val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                    if (jsonObject.getString("Status").equals("Success")) {
+                        ODList = Gson().fromJson<java.util.ArrayList<ODListModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<ODListModel>>() {
 
-                    }.type)
-                    val adapter = ODListAdapter(activity!!, ODList, FOR_TYPE)
-                    recyclerView.adapter = adapter
+                        }.type)
+                        val adapter = ODListAdapter(activity!!, ODList, FOR_TYPE)
+                        recyclerView.adapter = adapter
 
 
-                } else {
-                    tvNoRecord.visibility = View.VISIBLE
-                    recyclerView.visibility = GONE
-                }
+                    } else {
+                        tvNoRecord.visibility = View.VISIBLE
+                        recyclerView.visibility = GONE
+                    }
 
-            } else if (TYPE == COMP_OFF_STATUS_LIST_WFMS) {
-                compOffList.clear()
-                tvNoRecord.visibility = View.GONE
-                recyclerView.visibility = VISIBLE
-                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
-                if (jsonObject.getString("Status").equals("Success")) {
-                    compOffList = Gson().fromJson<java.util.ArrayList<CompOffListModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<CompOffListModel>>() {
+                } else if (TYPE == COMP_OFF_STATUS_LIST_WFMS) {
+                    compOffList.clear()
+                    tvNoRecord.visibility = View.GONE
+                    recyclerView.visibility = VISIBLE
+                    val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                    if (jsonObject.getString("Status").equals("Success")) {
+                        compOffList = Gson().fromJson<java.util.ArrayList<CompOffListModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<CompOffListModel>>() {
 
-                    }.type)
+                        }.type)
 
-                    var newList = ArrayList<CompOffListModel>()
-                    for (i in 0 until compOffList.size)
-                    {
-                        if (FOR_TYPE == FOR_SUBMITTED) {
-                            if (compOffList.get(i).statusId.equals("") || compOffList.get(i).statusId.equals("0") || compOffList.get(i).statusId.equals("1")) {
-                                newList.add(compOffList.get(i))
-                            }
+                        var newList = ArrayList<CompOffListModel>()
+                        for (i in 0 until compOffList.size) {
+                            if (FOR_TYPE == FOR_SUBMITTED) {
+                                if (compOffList.get(i).statusId.equals("") || compOffList.get(i).statusId.equals("0") || compOffList.get(i).statusId.equals("1")) {
+                                    newList.add(compOffList.get(i))
+                                }
 
-                        } else if (FOR_TYPE == FOR_APPROVED) {
-                            if (compOffList.get(i).statusId.equals("2")) {
-                                newList.add(compOffList.get(i))
-                            }
-                        } else {
-                            if (compOffList.get(i).statusId.equals("3")) {
-                                newList.add(compOffList.get(i))
+                            } else if (FOR_TYPE == FOR_APPROVED) {
+                                if (compOffList.get(i).statusId.equals("2")) {
+                                    newList.add(compOffList.get(i))
+                                }
+                            } else {
+                                if (compOffList.get(i).statusId.equals("3")) {
+                                    newList.add(compOffList.get(i))
+                                }
                             }
                         }
-                    }
-                      if(newList.size>0)
-                      {
-                          tvNoRecord.visibility = View.GONE
-                          recyclerView.visibility = VISIBLE
-                          val adapter = CompOffAdapter(activity!!, compOffList, FOR_TYPE, this)
-                          recyclerView.adapter = adapter
-                      }
-                    else
-                      {
-                          tvNoRecord.visibility = View.VISIBLE
-                          recyclerView.visibility = GONE
-                      }
+                        if (newList.size > 0) {
+                            tvNoRecord.visibility = View.GONE
+                            recyclerView.visibility = VISIBLE
+                            val adapter = CompOffAdapter(activity!!, compOffList, FOR_TYPE, this)
+                            recyclerView.adapter = adapter
+                        } else {
+                            tvNoRecord.visibility = View.VISIBLE
+                            recyclerView.visibility = GONE
+                        }
 
 
-
-                } else {
-                    tvNoRecord.visibility = View.VISIBLE
-                    recyclerView.visibility = GONE
-                }
-
-            } else if (TYPE == APPLY_COMP_OFF_WFMS) {
-                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
-                if (jsonObject.getString("Status").equals("Success")) {
-                    Utilities.showToast(activity, jsonObject.getString("Message"))
-                    dialogCompOff.dismiss()
-                    calledMethodCommon()
-
-                } else {
-                    Utilities.showToast(activity, jsonObject.getString("Message"))
-                }
-
-            } else if (TYPE == COMP_OFF_LEAVE_TYPE_WFMS) {
-                leaveTypeCompOffList.clear()
-                leaveTypeCompOffArray = emptyArray()
-                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
-                if (jsonObject.getString("Status").equals("Success")) {
-                    val jsonArray = jsonObject.getJSONArray("Output")
-                    for (i in 0 until jsonArray.length()) {
-                        val item = jsonArray.getJSONObject(i)
-
-                        val model = TwoParameterModel()
-                        model.id = item.getString("LeaveTypeId")
-                        model.name = item.getString("LeaveType")
-                        leaveTypeCompOffList.add(model)
+                    } else {
+                        tvNoRecord.visibility = View.VISIBLE
+                        recyclerView.visibility = GONE
                     }
 
-                }
+                } else if (TYPE == APPLY_COMP_OFF_WFMS) {
+                    val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                    if (jsonObject.getString("Status").equals("Success")) {
+                        Utilities.showToast(activity, jsonObject.getString("Message"))
+                        dialogCompOff.dismiss()
+                        calledMethodCommon()
 
-                mCompOffLeaveTypeId = leaveTypeCompOffList.get(0).id
-                leaveTypeCompOffArray = arrayOfNulls<String>(leaveTypeCompOffList.size)
-                for (i in leaveTypeCompOffList.indices) {
-                    leaveTypeCompOffArray[i] = leaveTypeCompOffList.get(i).name
+                    } else {
+                        Utilities.showToast(activity, jsonObject.getString("Message"))
+                    }
+
+                } else if (TYPE == COMP_OFF_LEAVE_TYPE_WFMS) {
+                    leaveTypeCompOffList.clear()
+                    leaveTypeCompOffArray = emptyArray()
+                    val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                    if (jsonObject.getString("Status").equals("Success")) {
+                        val jsonArray = jsonObject.getJSONArray("Output")
+                        for (i in 0 until jsonArray.length()) {
+                            val item = jsonArray.getJSONObject(i)
+
+                            val model = TwoParameterModel()
+                            model.id = item.getString("LeaveTypeId")
+                            model.name = item.getString("LeaveType")
+                            leaveTypeCompOffList.add(model)
+                        }
+
+                    }
+
+                    mCompOffLeaveTypeId = leaveTypeCompOffList.get(0).id
+                    leaveTypeCompOffArray = arrayOfNulls<String>(leaveTypeCompOffList.size)
+                    for (i in leaveTypeCompOffList.indices) {
+                        leaveTypeCompOffArray[i] = leaveTypeCompOffList.get(i).name
+                    }
+                    leaveTypeCompOffAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, leaveTypeCompOffArray)
+                    leaveTypeSpnrDialogCompOff!!.adapter = leaveTypeCompOffAdapter
                 }
-                leaveTypeCompOffAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, leaveTypeCompOffArray)
-                leaveTypeSpnrDialogCompOff!!.adapter = leaveTypeCompOffAdapter
+            } catch (e: Exception) {
+                Log.e("Error", e.message)
             }
-        } catch (e: Exception) {
-            Log.e("Error", e.message)
         }
-
     }
 
     fun getLeaveType(leaveType: String): String {

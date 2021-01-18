@@ -1,8 +1,11 @@
 package com.htistelecom.htisinhouse.retrofit;
 
+import android.content.Intent;
 import android.util.Log;
 
+import com.htistelecom.htisinhouse.activity.WFMS.MyApplication;
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS;
+import com.htistelecom.htisinhouse.activity.WFMS.activity.LoginNewActivity;
 import com.htistelecom.htisinhouse.utilities.Constants;
 
 import org.json.JSONException;
@@ -15,6 +18,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static androidx.core.content.ContextCompat.startActivity;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.ACTIVITY_LIST_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.APPLY_COMP_OFF_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.APPLY_LEAVE_WFMS;
@@ -47,13 +51,13 @@ public class RetrofitAPI {
 
     static MyInterface commonInterface;
 
-    public static void callAPI(String params, int TYPE, MyInterface myInterface) {
+
+    public static void callAPIWithoutAuth(String params, int TYPE, MyInterface myInterface) {
         commonInterface = myInterface;
 
-        ApiInterface api = RetrofitClients.createService(ApiInterface.class);
+        ApiInterface api = ApiClientWithoutAuth.createService(ApiInterface.class);
 
         Call<String> call = null;
-
         if (TYPE == ConstantsWFMS.DOMAIN_VERIFICATION_WFMS) {
             call = api.methodVerifyDomainWFMS(params);
 
@@ -63,7 +67,19 @@ public class RetrofitAPI {
         } else if (TYPE == ConstantsWFMS.LOGIN_WFMS) {
             call = api.methodLoginWFMS(params);
 
-        } else if (TYPE == ConstantsWFMS.FORGOT_PASSWORD_WFMS) {
+        }
+        callRetrofit(call, TYPE);
+
+    }
+
+    public static void callAPI(String params, int TYPE, MyInterface myInterface) {
+        commonInterface = myInterface;
+
+        ApiInterface api = RetrofitClients.createService(ApiInterface.class);
+
+        Call<String> call = null;
+
+        if (TYPE == ConstantsWFMS.FORGOT_PASSWORD_WFMS) {
             call = api.methodForgotPasswordWFMS(params);
 
         } else if (TYPE == ConstantsWFMS.PROFILE_WFMS) {
@@ -84,23 +100,19 @@ public class RetrofitAPI {
         } else if (TYPE == ConstantsWFMS.MY_TASK_LIST_WFMS) {
             call = api.methodMyTaskListWFMS(params);
 
-        }
-        else if (TYPE == ConstantsWFMS.MY_TASK_LIST_NEW_WFMS) {
+        } else if (TYPE == ConstantsWFMS.MY_TASK_LIST_NEW_WFMS) {
             call = api.methodMyTaskListNewWFMS(params);
 
-        }
-        else if (TYPE == ConstantsWFMS.START_TASK_WFMS) {
+        } else if (TYPE == ConstantsWFMS.START_TASK_WFMS) {
             call = api.methodStartTaskWFMS(params);
 
         } else if (TYPE == ACTIVITY_LIST_WFMS) {
             call = api.methodActivityListWFMS(params);
         } else if (TYPE == MY_TEAM_WFMS) {
             call = api.methodMyTeamWFMS(params);
-        }
-        else if (TYPE == PUNCH_IN_OUT_WFMS) {
+        } else if (TYPE == PUNCH_IN_OUT_WFMS) {
             call = api.methodPunchStatusWFMS(params);
-        }
-        else if (TYPE == MY_TEAM_WFMS) {
+        } else if (TYPE == MY_TEAM_WFMS) {
             call = api.methodMyTeamWFMS(params);
         }
 //        else if (TYPE == PUNCH_IN_OUT_WFMS) {
@@ -121,48 +133,70 @@ public class RetrofitAPI {
             call = api.methodAttendanceListWFMS(params);
         } else if (TYPE == CLAIM_SUMMARY_WFMS) {
             call = api.methodClaimSummaryWFMS(params);
-        }
-        else if (TYPE == CLAIM_DETAIL_TASK_WFMS) {
+        } else if (TYPE == CLAIM_DETAIL_TASK_WFMS) {
             call = api.methodClaimDetailTaskWFMS(params);
         } else if (TYPE == CLAIM_DETAIL_DATE_WFMS) {
             call = api.methodClaimDetailDateWFMS(params);
-        }
-        else if (TYPE ==REQUEST_ADVANCE_WFMS) {
+        } else if (TYPE == REQUEST_ADVANCE_WFMS) {
             call = api.methodRequestAdvanceWFMS(params);
-        }
-        else if (TYPE == SHOW_ADVANCE_DETAIL_WFMS) {
+        } else if (TYPE == SHOW_ADVANCE_DETAIL_WFMS) {
             call = api.methodShowAdvanceDetailWFMS(params);
-        }
-
-        else if (TYPE == ConstantsWFMS.SALARY_SLIP_WFMS) {
+        } else if (TYPE == ConstantsWFMS.SALARY_SLIP_WFMS) {
             call = api.methodSalarySlipWFMS(params);
-        }
-        else if (TYPE == DOCUMENTS_WFMS) {
+        } else if (TYPE == DOCUMENTS_WFMS) {
             call = api.methodDocumentsWFMS(params);
-        }
-
-        else if (TYPE == REQUEST_DOCUMENT_WFMS) {
+        } else if (TYPE == REQUEST_DOCUMENT_WFMS) {
             call = api.methodRequestDocumentWFMS(params);
-        }
-        else if (TYPE == MEETING_STATUS_WFMS) {
+        } else if (TYPE == MEETING_STATUS_WFMS) {
             call = api.methodMeetingStatusWFMS(params);
-        }
-        else if (TYPE == USER_FEEDBACK_WFMS) {
+        } else if (TYPE == USER_FEEDBACK_WFMS) {
             call = api.methodUserFeedbackWFMS(params);
+        } else if (TYPE == COMP_OFF_STATUS_LIST_WFMS) {
+            call = api.methodCompOffListWFMS(params);
+        } else if (TYPE == APPLY_COMP_OFF_WFMS) {
+            call = api.methodApplyCompOffListWFMS(params);
+        } else if (TYPE == ConstantsWFMS.COMP_OFF_LEAVE_TYPE_WFMS) {
+            call = api.methodCompOffLeaveTypeWFMS(params);
+        } else if (TYPE == ConstantsWFMS.SEARCH_TEAM_LIST_WFMS) {
+            call = api.methodSearchTeamListWFMS(params);
+        } else if (TYPE == ConstantsWFMS.STATE_LIST_WFMS) {
+            call = api.methodStateWFMS(params);
+        } else if (TYPE == ConstantsWFMS.CITY_LIST_WFMS) {
+            call = api.methodCityWFMS(params);
+        } else if (TYPE == ConstantsWFMS.SUBMIT_PROJECT_WFMS) {
+            call = api.methodSubmitProjectWFMS(params);
+        } else if (TYPE == ConstantsWFMS.SUBMIT_SITE_WFMS) {
+            call = api.methodSubmitSiteWFMS(params);
+        } else if (TYPE == ConstantsWFMS.SUBMIT_ACTIVITY_WFMS) {
+            call = api.methodSubmitActivityWFMS(params);
+        }
+        else if (TYPE == ConstantsWFMS.PUNCH_STATUS_WFMS) {
+            call = api.methodPunchDetailWFMS(params);
         }
 
-        else if (TYPE == COMP_OFF_STATUS_LIST_WFMS) {
-            call = api.methodCompOffListWFMS(params);
+        else if (TYPE == ConstantsWFMS.OFFICE_LIST_WFMS) {
+            call = api.methodOfficeListWFMS(params);
         }
-        else if (TYPE == APPLY_COMP_OFF_WFMS) {
-            call = api.methodApplyCompOffListWFMS(params);
+
+        else if (TYPE == ConstantsWFMS.OFFICE_SUBMIT_WFMS) {
+            call = api.methodOfficeSubmitWFMS(params);
         }
-        else if (TYPE == ConstantsWFMS.COMP_OFF_LEAVE_TYPE_WFMS) {
-            call = api.methodCompOffLeaveTypeWFMS(params);
+        else if (TYPE == ConstantsWFMS.TRAVEL_LIST_WFMS) {
+            call = api.methodTravelListWFMS(params);
         }
-        else if (TYPE == ConstantsWFMS.SEARCH_TEAM_LIST_WFMS) {
-            call = api.methodSearchTeamListWFMS(params);
+        else if (TYPE == ConstantsWFMS.TRAVEL_SUBMIT_WFMS) {
+            call = api.methodTravelSubmitWFMS(params);
         }
+
+        else if (TYPE == ConstantsWFMS.MARKETING_TASK_LIST_WFMS) {
+            call = api.methodTaskListMarketingWFMS(params);
+        }
+        else if (TYPE == ConstantsWFMS.MARKETING_TASK_SUBMIT_WFMS) {
+            call = api.methodTaskSubmitMarketingWFMS(params);
+        }
+
+
+
         callRetrofit(call, TYPE);
 
     }
@@ -183,24 +217,31 @@ public class RetrofitAPI {
             call = api.methodTaskStatusListWFMS();
         } else if (TYPE == ConstantsWFMS.LEAVE_TYPE_DAY_WFMS) {
             call = api.methodLeaveDayTypeWFMS();
-        }
-        else if (TYPE == ConstantsWFMS.TRANSPORT_MODE_WFMS) {
+        } else if (TYPE == ConstantsWFMS.TRANSPORT_MODE_WFMS) {
             call = api.methodTransportModeWFMS();
-        }
-        else if (TYPE == ConstantsWFMS.DOCUMENT_TYPE_WFMS) {
+        } else if (TYPE == ConstantsWFMS.DOCUMENT_TYPE_WFMS) {
             call = api.methodDocumentTypeWFMS();
-        }
-
-        else if (TYPE == DEPARTMENT_LIST_WFMS) {
+        } else if (TYPE == DEPARTMENT_LIST_WFMS) {
             call = api.methodDepartmentListWFMS();
+        } else if (TYPE == ConstantsWFMS.FILTER_TYPE_WFMS) {
+            call = api.methodFilterTypeWFMS();
+        } else if (TYPE == ConstantsWFMS.BRANCH_LIST_WFMS) {
+            call = api.methodBranchListWFMS();
+        } else if (TYPE == ConstantsWFMS.COUNTRY_LIST_WFMS) {
+            call = api.methodCountryWFMS();
         }
 
-        else if (TYPE == ConstantsWFMS.FILTER_TYPE_WFMS) {
-            call = api.methodFilterTypeWFMS();
+        else if (TYPE == ConstantsWFMS.MARKETING_ENTITY_WFMS) {
+            call = api.methodEntityWFMS();
+        } else if (TYPE == ConstantsWFMS.MARKETING_NATURE_WFMS) {
+            call = api.methodNatureWFMS();
         }
-        else if (TYPE == ConstantsWFMS.BRANCH_LIST_WFMS) {
-            call = api.methodBranchListWFMS();
+        else if (TYPE == ConstantsWFMS.MARKETING_POSITION_WFMS) {
+            call = api.methodPositionWFMS();
+        } else if (TYPE == ConstantsWFMS.MARKETING_TURNOVER_WFMS) {
+            call = api.methodTurnoverWFMS();
         }
+
 
         callRetrofit(call, TYPE);
 
@@ -227,15 +268,11 @@ public class RetrofitAPI {
             }
 
 
-        }
-        else if(TYPE==PROFILE_IMAGE_WFMS)
-        {
-            RequestBody mEmpId = RequestBody.create(MediaType.parse("text/plain"),mData);
+        } else if (TYPE == PROFILE_IMAGE_WFMS) {
+            RequestBody mEmpId = RequestBody.create(MediaType.parse("text/plain"), mData);
             call = api.methodProfileImageWFMS(fileToUpload, mEmpId);
 
-        }
-
-       else if (TYPE == NEW_TASK_STATUS_WFMS) {
+        } else if (TYPE == NEW_TASK_STATUS_WFMS) {
             try {
 
                 JSONObject jsonObject = new JSONObject(mData);
@@ -245,7 +282,7 @@ public class RetrofitAPI {
                 RequestBody mActivityId = RequestBody.create(MediaType.parse("text/plain"), jsonObject.getString("ActivityId"));
                 RequestBody mSubActivityId = RequestBody.create(MediaType.parse("text/plain"), jsonObject.getString("SubActivityId"));
 
-                call = api.methodNewTaskStatusWFMS(fileToUpload, mTaskId, mEmpId, mActivityId, mStatus,mSubActivityId);
+                call = api.methodNewTaskStatusWFMS(fileToUpload, mTaskId, mEmpId, mActivityId, mStatus, mSubActivityId);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -266,10 +303,7 @@ public class RetrofitAPI {
 
             call = api.methodAddClaimWFMS(fileToUpload, mData);
 
-        }
-        else if(TYPE==UPLOAD_DOCUMENT_WFMS)
-
-        {
+        } else if (TYPE == UPLOAD_DOCUMENT_WFMS) {
             call = api.methodUploadDocumentWFMS(fileToUpload, mData);
 
         }
@@ -281,12 +315,19 @@ public class RetrofitAPI {
         call.enqueue(new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
-                commonInterface.sendResponse(response, TYPE);
+
+                if (response.code() == 401 || response.code()==403) {
+                    commonInterface.sendResponse(response, TYPE);
+
+                } else {
+                    commonInterface.sendResponse(response, TYPE);
+
+                }
             }
 
             @Override
             public void onFailure(Call<T> call, Throwable t) {
-                Log.e("Re", "");
+                commonInterface.sendResponse(t.getMessage(), TYPE);
 
             }
         });
@@ -298,7 +339,7 @@ public class RetrofitAPI {
         ApiInterface api = RetrofitClients.createService(ApiInterface.class);
 
         Call<String> call = null;
-            call = api.methodPunchStatusWFMS(params);
+        call = api.methodPunchStatusWFMS(params);
         callRetrofitPunchOut(call);
 
 
@@ -309,7 +350,8 @@ public class RetrofitAPI {
         call.enqueue(new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
-                Log.e("Response",response.toString());
+
+                Log.e("Response", response.toString());
             }
 
             @Override

@@ -145,6 +145,15 @@ public class Utilities {
         progressDialog.dismiss();
     }
 
+public static boolean isShowing()
+{
+    if(progressDialog.isShowing())
+        return true;
+    else
+        return false;
+
+}
+
     public static void hideKeyboard(Context context, View view) {
         try {
             if (view != null) {

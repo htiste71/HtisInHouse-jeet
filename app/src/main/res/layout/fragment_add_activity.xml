@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:id="@+id/llActivityNameAddActivityFragment"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:padding="15dp">
+
+        <com.htistelecom.htisinhouse.font.UbuntuBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/txtActivityName"
+            android:textColor="@color/colorLightBlackNew"
+            android:textSize="16sp" />
+
+        <RelativeLayout
+            android:id="@+id/rlSiteDialogAddTask"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/rect_light_color_black_border"
+            android:padding="8dp">
+
+            <com.htistelecom.htisinhouse.font.UbuntuEditText
+                android:id="@+id/etAddActivityFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/txtActivityName"
+                android:background="@null"
+                android:textColor="@color/colorLightBlackNew"
+                android:textColorHint="@color/colorLightBlackNew"
+                android:textSize="15sp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+    <com.htistelecom.htisinhouse.font.UbuntuButton
+        android:id="@+id/btnSubmitAddActivityFragment"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/llActivityNameAddActivityFragment"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="8dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="8dp"
+        android:text="@string/strSubmit" />
+</RelativeLayout>

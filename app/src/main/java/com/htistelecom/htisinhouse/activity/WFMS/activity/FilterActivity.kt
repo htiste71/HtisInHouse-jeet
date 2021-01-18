@@ -16,6 +16,7 @@ import com.htistelecom.htisinhouse.activity.WFMS.adapters.BranchFilterAdapter
 import com.htistelecom.htisinhouse.activity.WFMS.adapters.StatusFilterAdapter
 import com.htistelecom.htisinhouse.activity.WFMS.models.BranchListModel
 import com.htistelecom.htisinhouse.activity.WFMS.models.ThreeParameterModel
+import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.retrofit.MyInterface
 import com.htistelecom.htisinhouse.utilities.Utilities
 import kotlinx.android.synthetic.main.activity_filter.*
@@ -34,6 +35,7 @@ class FilterActivity : Activity(), MyInterface, View.OnClickListener {
 
     var mStatusId = ""
     var mBranchId = ""
+    lateinit var tinyDB:TinyDB
 
     lateinit var statusAdapter: StatusFilterAdapter
     lateinit var branchAdapter: BranchFilterAdapter
@@ -53,6 +55,7 @@ class FilterActivity : Activity(), MyInterface, View.OnClickListener {
     }
 
     private fun initViews() {
+        tinyDB= TinyDB(this)
         rvStatusFilter.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvBranchFilter.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         if (filterStatusList == null || filterStatusList.size == 0)
@@ -86,56 +89,65 @@ class FilterActivity : Activity(), MyInterface, View.OnClickListener {
         finish()
     }
 
-    override fun sendResponse(response: Any?, TYPE: Int)
-    {
+    override fun sendResponse(response: Any?, TYPE: Int) {
         if (TYPE != FILTER_TYPE_WFMS)
             Utilities.dismissDialog()
-        if (TYPE == FILTER_TYPE_WFMS)
-        {
-            val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
-            if (jsonObj.getString("Status").equals("Success")) {
-                val jsonArray = jsonObj.getJSONArray("Output")
+
+        if ((response as Response<*>).code() == 401 ||  (response as Response<*>).code() == 403) {
+            if (Utilities.isShowing())
+                Utilities.dismissDialog()
+            finish()
+            com.htistelecom.htisinhouse.utilities.ConstantKotlin.logout(this, tinyDB)
+
+        } else {
+
+
+            if (TYPE == FILTER_TYPE_WFMS) {
+                val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObj.getString("Status").equals("Success")) {
+                    val jsonArray = jsonObj.getJSONArray("Output")
 
 
 
-                for (i in 0 until jsonArray.length()) {
-                    val item = jsonArray.getJSONObject(i)
+                    for (i in 0 until jsonArray.length()) {
+                        val item = jsonArray.getJSONObject(i)
 
-                    val model = ThreeParameterModel()
-                    model.id = item.getString("StatusId")
-                    model.name = item.getString("Status")
-                    model.isChecked = false
-                    filterStatusList.add(model)
+                        val model = ThreeParameterModel()
+                        model.id = item.getString("StatusId")
+                        model.name = item.getString("Status")
+                        model.isChecked = false
+                        filterStatusList.add(model)
+
+                    }
+
+                    statusAdapter = StatusFilterAdapter(this)
+                    rvStatusFilter.adapter = statusAdapter
+
+                    hitAPI(BRANCH_LIST_WFMS, "")
+
 
                 }
 
-                statusAdapter = StatusFilterAdapter(this)
-                rvStatusFilter.adapter = statusAdapter
+            } else if (TYPE == BRANCH_LIST_WFMS) {
 
-                hitAPI(BRANCH_LIST_WFMS, "")
+                val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObj.getString("Status").equals("Success")) {
+
+                    // branchList.clear()
+                    // val jsonArray=JSONArray(jsonObj.getString("Output"))
+                    branchList = Gson().fromJson<java.util.ArrayList<BranchListModel>>(jsonObj.getJSONArray("Output").toString(), object : TypeToken<ArrayList<BranchListModel>>() {
+
+                    }.type);
+
+                    branchAdapter = BranchFilterAdapter(this)
+                    rvBranchFilter.adapter = branchAdapter
+
+                } else {
+
+                }
 
 
             }
-
-        } else if (TYPE == BRANCH_LIST_WFMS) {
-
-            val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
-            if (jsonObj.getString("Status").equals("Success")) {
-
-                // branchList.clear()
-                // val jsonArray=JSONArray(jsonObj.getString("Output"))
-                branchList = Gson().fromJson<java.util.ArrayList<BranchListModel>>(jsonObj.getJSONArray("Output").toString(), object : TypeToken<ArrayList<BranchListModel>>() {
-
-                }.type);
-
-                branchAdapter = BranchFilterAdapter(this)
-                rvBranchFilter.adapter = branchAdapter
-
-            } else {
-
-            }
-
-
         }
     }
 

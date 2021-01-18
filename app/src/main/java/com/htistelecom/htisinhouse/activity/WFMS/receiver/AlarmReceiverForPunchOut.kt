@@ -1,22 +1,17 @@
 package com.htistelecom.htisinhouse.activity.WFMS.receiver
 
 import android.app.NotificationManager
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
+import android.content.Context.JOB_SCHEDULER_SERVICE
 import android.content.Intent
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.htistelecom.htisinhouse.activity.ApiData
-import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
-import com.htistelecom.htisinhouse.activity.WFMS.Utils.UtilitiesWFMS
-import com.htistelecom.htisinhouse.activity.WFMS.service.OreoLocationService
+import com.htistelecom.htisinhouse.activity.WFMS.service.JobServiceToUplodData
 import com.htistelecom.htisinhouse.activity.WFMS.service.UploadDataServerService
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.retrofit.MyInterface
-import com.htistelecom.htisinhouse.utilities.ConstantKotlin
-import com.htistelecom.htisinhouse.utilities.DateUtils
-import com.htistelecom.htisinhouse.utilities.Utilities
-import org.json.JSONObject
-import java.util.*
 
 
 class AlarmReceiverForPunchOut : BroadcastReceiver(), MyInterface {
@@ -94,10 +89,18 @@ class AlarmReceiverForPunchOut : BroadcastReceiver(), MyInterface {
 //        } else {
 //
 //        }
-        ctx.startService(Intent(ctx, UploadDataServerService::class.java))
 
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val componentName = ComponentName(ctx, JobServiceToUplodData::class.java)
+            val job: JobInfo.Builder = JobInfo.Builder(0, componentName)
+            job.setOverrideDeadline(0)
 
+            val js: JobScheduler = ctx.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+            js.schedule(job.setRequiresCharging(false).build())
 
+        } else {
+            ctx.startService(Intent(ctx, UploadDataServerService::class.java))
+        }
 
 
     }

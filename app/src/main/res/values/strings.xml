@@ -249,7 +249,7 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
-    <string name="strCustomUrl">Custom Url here</string>
+    <string name="strCustomUrl">Custom Domain Name here</string>
     <string name="strMyTeam">My Team</string>
     <string name="strMyProfile">My Profile</string>
     <string name="strMyTask">My Task</string>
@@ -371,4 +371,28 @@
     <string name="strAttendanceDate">Attendance Date</string>
     <string name="strApplyCompOff">Apply Comp Off</string>
     <string name="strApplySmall">Apply</string>
+    <string name="strAddProject">Add Project</string>
+    <string name="txtProjectName">Project Name</string>
+    <string name="txtSiteName">Site Name</string>
+    <string name="txtSiteId">Site ID (SAP)</string>
+    <string name="txtCountry">Country</string>
+    <string name="txtCity">City</string>
+    <string name="txtLatitude">Latitude</string>
+    <string name="txtLongitude">Longitude</string>
+    <string name="errEnterProject">Enter Project Name</string>
+    <string name="errSelectCountry">Select the country</string>
+    <string name="errSelectState">"Select the state "</string>
+    <string name="errSelectCity">Select the city</string>
+    <string name="txtActivityName">Activity Name</string>
+    <string name="errSelectProject">Select the project</string>
+    <string name="errEnterSite">Enter the site name</string>
+    <string name="errEnterSiteId">Enter Site Id</string>
+    <string name="errEnterAddress">Enter the Address</string>
+    <string name="erEnterLatitude">Enter the latitude</string>
+    <string name="errEnterLongitude">Enter the longitude</string>
+    <string name="errEnterActivity">Enter the Activity</string>
+    <string name="errLocationNotFetched">"Location not fetched. "</string>
+    <string name="strTime">Time</string>
+    <string name="strFromLocation">From Location</string>
+    <string name="strToLocation">To Location</string>
 </resources>

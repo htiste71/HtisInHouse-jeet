@@ -1,8 +1,13 @@
 package com.htistelecom.htisinhouse.activity.WFMS.activity
 
 import android.annotation.SuppressLint
-import android.app.*
+import android.app.Activity
+import android.app.ActivityManager
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
 import android.content.*
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -11,6 +16,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
+import android.os.SystemClock
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
@@ -28,20 +34,22 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.FirebaseApp
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import com.htistelecom.htisinhouse.BuildConfig
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.ApiData
+import com.htistelecom.htisinhouse.activity.WFMS.MyApplication
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.PUNCH_IN_OUT_WFMS
+import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.PUNCH_STATUS_WFMS
+import com.htistelecom.htisinhouse.activity.WFMS.add_project.AddDetailsFragment
 import com.htistelecom.htisinhouse.activity.WFMS.claims.ClaimFragmentWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.document_directory.DocumentDirectoryFragmentWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.fragments.*
 import com.htistelecom.htisinhouse.activity.WFMS.leave_managment.LeaveType_OutdoorDutyFragment
 import com.htistelecom.htisinhouse.activity.WFMS.receiver.AlarmReceiverForPunchOut
+import com.htistelecom.htisinhouse.activity.WFMS.receiver.CheckPunchStatusReceiver
+import com.htistelecom.htisinhouse.activity.WFMS.service.JobServiceToUplodData
 import com.htistelecom.htisinhouse.activity.WFMS.service.OreoLocationService
 import com.htistelecom.htisinhouse.activity.WFMS.service.PreOreoLocationService
 import com.htistelecom.htisinhouse.activity.WFMS.service.UploadDataServerService
@@ -59,8 +67,10 @@ import org.json.JSONObject
 import retrofit2.Response
 import java.util.*
 
+
 class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInterface {
 
+    lateinit var receiver: BroadcastReceiver
     private lateinit var remoteConfig: FirebaseRemoteConfig
     private var mTimeStr: String = ""
     private var mDateStr: String = ""
@@ -72,11 +82,14 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
     lateinit var fragmentImage: Fragment
     lateinit var locationManager: LocationManager
 
-
     companion object {
         lateinit var obj: MainActivityNavigation
         var isBackHome = false
+        var token = ""
+
+
     }
+
 
     var CHECK_TYPE = -1
     val CHECK_IN = 1
@@ -92,11 +105,19 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
         initViews()
 
         listeneres()
-        openDefaultFragment()
+        //openDefaultFragment()
         setDefautData()
         checkForUpdate()
+        punchReminder()
+        val json = JSONObject()
+        json.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
+        hitAPI(ConstantsWFMS.PUNCH_STATUS_WFMS, json.toString())
 
-      //  initRemoteConfig()
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                IntentFilter("logout_htis"));
+
+
+        //  initRemoteConfig()
 
 
         drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
@@ -128,6 +149,38 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
     }
 
+    private fun punchReminder() {
+        try {
+
+            val calendar = Calendar.getInstance()
+            calendar[Calendar.HOUR_OF_DAY] = 10
+            calendar[Calendar.MINUTE] = 0
+            val alarmMgr = this.getSystemService(ALARM_SERVICE) as AlarmManager
+            //Create a new PendingIntent and add it to the AlarmManager
+            val intent = Intent(this, CheckPunchStatusReceiver::class.java)
+            val pendingIntent = PendingIntent.getActivity(this,
+                    12345, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+            val am = getSystemService(ALARM_SERVICE) as AlarmManager
+            am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, calendar.timeInMillis,
+                    24 * 60 * 60 * 1000, pendingIntent)
+        } catch (e: Exception) {
+        }
+    }
+
+
+    private val mMessageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent) {
+            // Get extra data included in the Intent
+
+
+            val intent = Intent(context, LoginNewActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
+        }
+    }
 
     private fun listeneres() {
         ivDrawerHeader.setOnClickListener(this)
@@ -135,6 +188,8 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
         llInnerProfileDrawer.setOnClickListener(this)
         llInnerTeamDrawer.setOnClickListener(this)
         llInnerTaskDrawer.setOnClickListener(this)
+        llInnerAddProjectDrawer.setOnClickListener(this)
+
         llInnerLeaveODDrawer.setOnClickListener(this)
         llInnerAttendanceDrawer.setOnClickListener(this)
         llInnerDocumentDirectoryDrawer.setOnClickListener(this)
@@ -159,65 +214,98 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
         val mDateTime = DateUtils.currentDate() + " " + mTime24Hrs
 
-        if (b) {
 
-            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                CHECK_TYPE = CHECK_IN
+        try {
 
-                val jsonObject = JSONObject()
-                jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
-                jsonObject.put("StartDate", DateUtils.currentDate())
-
-                jsonObject.put("StartTime", mDateTime)
-                jsonObject.put("Latitude", OreoLocationService.LATITUDE)
-                jsonObject.put("Longitude", OreoLocationService.LONGITUDE)
-                jsonObject.put("LocationAddress", mAddress.get(0).getAddressLine(0))
-                jsonObject.put("DomainId", tinyDB.getString(ConstantsWFMS.TINYDB_DOMAIN_ID))
-                jsonObject.put("PunchType", "I")
-
-                jsonObject.put("PunchCountry", mAddress.get(0).countryName)
-                jsonObject.put("PunchState", mAddress.get(0).adminArea)
-                jsonObject.put("PunchCity", mAddress.get(0).locality)
-                hitAPI(ConstantsWFMS.PUNCH_IN_OUT_WFMS, jsonObject.toString())
+            if (mAddress.get(0) == null) {
+                Utilities.showToast(this, resources.getString(R.string.errLocationNotFetched))
             } else {
 
-                btnSwitchHeader.setOnCheckedChangeListener(null)
+                tinyDB.putDouble(ConstantsWFMS.CURRENT_SAVED_LATITUDE, OreoLocationService.LATITUDE.toDouble())
+                tinyDB.putDouble(ConstantsWFMS.CURRENT_SAVED_LONGITUDE, OreoLocationService.LONGITUDE.toDouble())
 
-                btnSwitchHeader.isChecked = false
-                callSwitcherChageListener()
+                if (b) {
+
+                    if (Utilities.isNetConnected(this)) {
+                        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                            CHECK_TYPE = CHECK_IN
+
+                            val jsonObject = JSONObject()
+                            jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
+                            jsonObject.put("StartDate", DateUtils.currentDate())
+
+                            jsonObject.put("StartTime", mDateTime)
+                            jsonObject.put("Latitude", OreoLocationService.LATITUDE)
+                            jsonObject.put("Longitude", OreoLocationService.LONGITUDE)
+                            jsonObject.put("LocationAddress", mAddress.get(0).getAddressLine(0))
+                            jsonObject.put("DomainId", tinyDB.getString(ConstantsWFMS.TINYDB_DOMAIN_ID))
+                            jsonObject.put("PunchType", "I")
+
+                            jsonObject.put("PunchCountry", mAddress.get(0).countryName)
+                            jsonObject.put("PunchState", mAddress.get(0).adminArea)
+                            jsonObject.put("PunchCity", mAddress.get(0).locality)
+                            hitAPI(ConstantsWFMS.PUNCH_IN_OUT_WFMS, jsonObject.toString())
+                        } else {
+
+                            btnSwitchHeader.setOnCheckedChangeListener(null)
+
+                            btnSwitchHeader.isChecked = false
+                            callSwitcherChageListener()
 
 
+                        }
+
+                    } else {
+                        Utilities.showToast(this, resources.getString(R.string.internet_connection))
+                        btnSwitchHeader.setOnCheckedChangeListener(null)
+
+                        btnSwitchHeader.isChecked = false
+                        callSwitcherChageListener()
+                    }
+
+
+                } else {
+
+                    if (Utilities.isNetConnected(this)) {
+                        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                            CHECK_TYPE = CHECK_OUT
+                            //   btnSwitchHeader.isChecked=true
+                            val jsonObject = JSONObject()
+                            jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
+                            jsonObject.put("StartDate", DateUtils.currentDate())
+                            jsonObject.put("StartTime", mDateTime)
+                            jsonObject.put("Latitude", OreoLocationService.LATITUDE)
+                            jsonObject.put("Longitude", OreoLocationService.LONGITUDE)
+                            jsonObject.put("LocationAddress", mAddress.get(0).getAddressLine(0))
+                            jsonObject.put("DomainId", tinyDB.getString(ConstantsWFMS.TINYDB_DOMAIN_ID))
+                            jsonObject.put("PunchType", "O")
+                            jsonObject.put("PunchCountry", mAddress.get(0).countryName)
+                            jsonObject.put("PunchState", mAddress.get(0).adminArea)
+                            jsonObject.put("PunchCity", mAddress.get(0).locality)
+                            // hitAPI(ConstantsWFMS.PUNCH_IN_OUT_WFMS, jsonObject.toString())
+
+                            showAlertDialogForPunchOut(jsonObject.toString())
+                        } else {
+                            btnSwitchHeader.setOnCheckedChangeListener(null)
+
+                            btnSwitchHeader.isChecked = true
+                            callSwitcherChageListener()
+                        }
+                    } else {
+                        Utilities.showToast(this, resources.getString(R.string.internet_connection))
+                        btnSwitchHeader.setOnCheckedChangeListener(null)
+
+                        btnSwitchHeader.isChecked = true
+                        callSwitcherChageListener()
+                    }
+
+
+                }
             }
-
-
-        } else {
-            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                CHECK_TYPE = CHECK_OUT
-                //   btnSwitchHeader.isChecked=true
-                val jsonObject = JSONObject()
-                jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
-                jsonObject.put("StartDate", DateUtils.currentDate())
-                jsonObject.put("StartTime", mDateTime)
-                jsonObject.put("Latitude", OreoLocationService.LATITUDE)
-                jsonObject.put("Longitude", OreoLocationService.LONGITUDE)
-                jsonObject.put("LocationAddress", mAddress.get(0).getAddressLine(0))
-                jsonObject.put("DomainId", tinyDB.getString(ConstantsWFMS.TINYDB_DOMAIN_ID))
-                jsonObject.put("PunchType", "O")
-                jsonObject.put("PunchCountry", mAddress.get(0).countryName)
-                jsonObject.put("PunchState", mAddress.get(0).adminArea)
-                jsonObject.put("PunchCity", mAddress.get(0).locality)
-                // hitAPI(ConstantsWFMS.PUNCH_IN_OUT_WFMS, jsonObject.toString())
-
-                showAlertDialogForPunchOut(jsonObject.toString())
-            } else {
-                btnSwitchHeader.setOnCheckedChangeListener(null)
-
-                btnSwitchHeader.isChecked = true
-                callSwitcherChageListener()
-            }
-
+        } catch (e: Exception) {
 
         }
+
     }
 
     private fun callSwitcherChageListener() {
@@ -306,6 +394,30 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
 
     private fun initViews() {
+        tinyDB = TinyDB(this)
+
+        try {
+
+            if (MyApplication.socketObj.mSocket == null) {
+                MyApplication.socketObj.createSocket()
+            } else if (!MyApplication.socketObj.mSocket!!.connected()) {
+                MyApplication.socketObj.createSocket()
+
+            } else {
+                MyApplication.socketObj.mSocket!!.connect()
+
+            }
+        } catch (e: Exception) {
+            Log.e("", "")
+        }
+        if (MyApplication.mSocket!!.connected()) {
+            MyApplication.mSocket!!.emit("user_connected", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_NAME))
+        }
+
+
+
+
+
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         obj = this
@@ -313,9 +425,27 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
             val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
             StrictMode.setThreadPolicy(policy)
         }
-        tinyDB = TinyDB(this)
         registerAlarmPunchOut()
-        startService(Intent(this, UploadDataServerService::class.java))
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            try {
+                val componentName = ComponentName(this, JobServiceToUplodData::class.java)
+                val job: JobInfo.Builder = JobInfo.Builder(0, componentName)
+                job.setRequiresCharging(false)
+                job.setOverrideDeadline(0)
+                val js: JobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+
+                js.schedule(job.build())
+            } catch (e: Exception) {
+                Log.e("", "")
+            }
+
+
+        } else {
+            startService(Intent(this, UploadDataServerService::class.java))
+        }
+        token = tinyDB.getString(ConstantsWFMS.TINYDB_TOKEN)
 
 
     }
@@ -349,7 +479,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
         hideShowHeader_FragmentHeading(resources.getString(R.string.strHome), GONE, GONE)
 
 
-        changeColor(resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+        changeColor(resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
 
         supportFragmentManager.beginTransaction().replace(R.id.frameLayout, HomeFragmentNew())
@@ -359,55 +489,74 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
     private fun hitAPI(TYPE: Int, params: String) {
         if (TYPE == PUNCH_IN_OUT_WFMS) {
             ApiData.getData(params, PUNCH_IN_OUT_WFMS, this, this)
+        } else if (TYPE == PUNCH_STATUS_WFMS) {
+            ApiData.getData(params, PUNCH_STATUS_WFMS, this, this)
+
         }
     }
 
     override fun sendResponse(response: Any?, TYPE: Int) {
-        Utilities.dismissDialog()
-        if (TYPE == PUNCH_IN_OUT_WFMS) {
-            val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
-            if (jsonObject.getString("Status").equals("Success")) {
-                if (CHECK_TYPE == CHECK_IN) {
-                    mPunchInTime = "Punched In: " + mTimeStr + ", " + mDateStr
-                    tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_IN_TIME, mPunchInTime)
+        if (Utilities.isShowing())
+            Utilities.dismissDialog()
+        Log.e("dismiss", TYPE.toString())
+        if ((response as Response<*>).code() == 401 || (response as Response<*>).code() == 403) {
+            if (Utilities.isShowing())
+                Utilities.dismissDialog()
+            ConstantKotlin.logout(this, tinyDB)
+        } else {
 
-                    tvPunchedInTimeHeader.text = mPunchInTime
+            if (TYPE == PUNCH_IN_OUT_WFMS) {
+                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObject.getString("Status").equals("Success")) {
+                    if (CHECK_TYPE == CHECK_IN) {
+                        mPunchInTime = "Punched In: " + mTimeStr + ", " + mDateStr
+                        tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_IN_TIME, mPunchInTime)
+
+                        tvPunchedInTimeHeader.text = mPunchInTime
 
 
-                    //btnSwitchHeader.isChecked = true
-                    tinyDB.putBoolean(ConstantsWFMS.TINYDB_IS_PUNCH_IN, true)
-                    tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_IN_TIME, mPunchInTime)
-                    startLocationClass()
+                        //btnSwitchHeader.isChecked = true
+                        tinyDB.putBoolean(ConstantsWFMS.TINYDB_IS_PUNCH_IN, true)
+                        tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_IN_TIME, mPunchInTime)
+                        startLocationClass()
 
 
+                    } else {
+                        mPunchOutTime = "Punched Out: " + mTimeStr + ", " + mDateStr
+                        tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_OUT_TIME, mPunchOutTime)
+                        // btnSwitchHeader.isChecked = false
+
+                        tvPunchedInTimeHeader.text = mPunchOutTime
+                        tinyDB.putBoolean(ConstantsWFMS.TINYDB_IS_PUNCH_IN, false)
+                        tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_OUT_TIME, mPunchOutTime)
+
+                    }
+
+                    Utilities.showToast(this, jsonObject.getString("Message"))
                 } else {
-                    mPunchOutTime = "Punched Out: " + mTimeStr + ", " + mDateStr
-                    tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_OUT_TIME, mPunchOutTime)
-                    // btnSwitchHeader.isChecked = false
+                    if (CHECK_TYPE == CHECK_IN) {
+                        btnSwitchHeader.setOnCheckedChangeListener(null)
 
-                    tvPunchedInTimeHeader.text = mPunchOutTime
-                    tinyDB.putBoolean(ConstantsWFMS.TINYDB_IS_PUNCH_IN, false)
-                    tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_OUT_TIME, mPunchOutTime)
+                        btnSwitchHeader.isChecked = false
+                        btnSwitchHeader.setOnCheckedChangeListener(mOnCheckChangedListener)
+                        tvPunchedInTimeHeader.text = tinyDB.getString(ConstantsWFMS.TINYDB_PUNCH_OUT_TIME)
+
+                    } else {
+
+                    }
+                    Utilities.showToast(this, jsonObject.getString("Message"))
 
                 }
-
-                Utilities.showToast(this, jsonObject.getString("Message"))
-            } else {
-                if (CHECK_TYPE == CHECK_IN) {
-                    btnSwitchHeader.setOnCheckedChangeListener(null)
-
-                    btnSwitchHeader.isChecked = false
-                    btnSwitchHeader.setOnCheckedChangeListener(mOnCheckChangedListener)
-                    tvPunchedInTimeHeader.text = tinyDB.getString(ConstantsWFMS.TINYDB_PUNCH_OUT_TIME)
-
-                } else {
+            } else if (TYPE == PUNCH_STATUS_WFMS) {
+                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObject.getString("Status").equals("Success")) {
+                    val array = jsonObject.getJSONArray("Output")
+                    val obj = array.getJSONObject(0)
+                    openDefaultFragment()
 
                 }
-                Utilities.showToast(this, jsonObject.getString("Message"))
-
             }
         }
-
 
     }
 
@@ -438,7 +587,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 fragmentImage = ProfileFragmentWFMS()
                 hideShowHeader_FragmentHeading("Profile", GONE, GONE)
 
-                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
                 openFragment(fragmentImage)
 
                 drawerLayout!!.closeDrawer(Gravity.START)
@@ -447,7 +596,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
             R.id.llInnerTeamDrawer -> {
                 hideShowHeader_FragmentHeading(resources.getString(R.string.strTeam), GONE, VISIBLE)
 
-                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
                 openFragment(TeamFragmentWFMS())
 
 
@@ -462,9 +611,26 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 openFragment(TaskFragmentWFMS())
 
                 drawerLayout!!.closeDrawer(Gravity.START)
-                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
             }
+
+            R.id.llInnerAddProjectDrawer -> {
+
+
+                clearFilter()
+
+                hideShowHeader_FragmentHeading(resources.getString(R.string.strAddProject), GONE, GONE)
+
+                openFragment(AddDetailsFragment())
+
+                drawerLayout!!.closeDrawer(Gravity.START)
+                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+
+
+            }
+
+
             R.id.llInnerLeaveODDrawer -> {
                 clearFilter()
 
@@ -473,7 +639,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 openFragment(LeaveType_OutdoorDutyFragment())
 
                 drawerLayout!!.closeDrawer(Gravity.START)
-                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
             }
             R.id.llInnerAttendanceDrawer -> {
@@ -486,7 +652,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
                 drawerLayout!!.closeDrawer(Gravity.START)
 
-                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
                 "TEst"
             }
@@ -499,7 +665,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 openFragment(fragmentImage)
 
                 drawerLayout!!.closeDrawer(Gravity.START)
-                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
                 "TEst"
             }
@@ -509,7 +675,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
                 hideShowHeader_FragmentHeading(resources.getString(R.string.strSalary), GONE, GONE)
 
-                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
                 openFragment(SalaryFragmentWFMS())
 
                 drawerLayout!!.closeDrawer(Gravity.START)
@@ -520,7 +686,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
                 hideShowHeader_FragmentHeading(resources.getString(R.string.strClaims), GONE, GONE)
 
-                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
                 openFragment(ClaimFragmentWFMS())
 
@@ -534,13 +700,13 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 supportFragmentManager.beginTransaction().replace(R.id.frameLayout, ChatFragmentWFMS())
                         .commit()
                 drawerLayout!!.closeDrawer(Gravity.START)
-                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
             }
             R.id.llInnerFormDrawer -> {
                 clearFilter()
 
-                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
                 "TEst"
             }
@@ -550,7 +716,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 hideShowHeader_FragmentHeading(resources.getString(R.string.strHelp), GONE, GONE)
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://wfms.htistelecom.in/home/softwaresupport"))
                 startActivity(browserIntent)
-                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
                 "TEst"
             }
@@ -559,7 +725,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
                 hideShowHeader_FragmentHeading(resources.getString(R.string.strFeedback), GONE, GONE)
 
-                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite))
+                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite))
 
                 openFragment(FeedbackFragmentWFMS())
 
@@ -577,7 +743,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 openFragment(SettingsFragmentWFMS())
 
 
-                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange))
+                changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange))
                 drawerLayout!!.closeDrawer(Gravity.START
                 )
 
@@ -601,7 +767,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
     }
 
 
-    fun changeColor(colorHome: Int, colorProfile: Int, colorTeam: Int, colorTask: Int, colorLeave: Int, colorAttendance: Int, colorDocument: Int, colorSalary: Int, colorClaim: Int, colorChat: Int,
+    fun changeColor(colorHome: Int, colorProfile: Int, colorTeam: Int, colorTask: Int, colorAddDetail: Int, colorLeave: Int, colorAttendance: Int, colorDocument: Int, colorSalary: Int, colorClaim: Int, colorChat: Int,
                     colorForm: Int, colorHelp: Int, colorFeedback: Int, colorSetting: Int) {
         ivHomeDrawer.setColorFilter(colorHome)
         tvHomeDrawer.setTextColor(colorHome)
@@ -614,6 +780,10 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
         ivTaskDrawer.setColorFilter(colorTask)
         tvTaskDrawer.setTextColor(colorTask)
+
+
+        ivAddProjectDrawer.setColorFilter(colorAddDetail)
+        tvAddProjectDrawer.setTextColor(colorAddDetail)
 
         ivLeaveODDrawer.setColorFilter(colorLeave)
         tvLeaveODDrawer.setTextColor(colorLeave)
@@ -650,19 +820,19 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
             ivAddHeader.visibility = VISIBLE
             supportFragmentManager.beginTransaction().replace(R.id.frameLayout, LeaveType_OutdoorDutyFragment())
                     .commit()
-            changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+            changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
         } else if (intent!!.getStringExtra("fragment") != null && intent!!.getStringExtra("fragment").equals("Claim")) {
             supportFragmentManager.beginTransaction().replace(R.id.frameLayout, ClaimFragmentWFMS())
                     .commit()
             tvHeadingHeader.text = "Claims"
             ivAddHeader.visibility = GONE
-            changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+            changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
         } else if (intent!!.getStringExtra("fragment") != null && intent!!.getStringExtra("fragment").equals("Team")) {
             hideShowHeader_FragmentHeading(resources.getString(R.string.strTeam), GONE, VISIBLE)
 
-            changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+            changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
             openFragment(TeamFragmentWFMS())
 
         } else if (intent!!.getStringExtra("fragment") != null && intent!!.getStringExtra("fragment").equals("Settings")) {
@@ -671,7 +841,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
             openFragment(SettingsFragmentWFMS())
 
 
-            changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange))
+            changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange))
 
         } else if (intent!!.getStringExtra("fragment") != null && intent!!.getStringExtra("fragment").equals("Home")) {
             homeFragment()
@@ -681,7 +851,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
             openFragment(TaskFragmentWFMS())
 
-            changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+            changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
         } else if (intent!!.getStringExtra("fragment") != null && intent!!.getStringExtra("fragment").equals("Attendance")) {
             hideShowHeader_FragmentHeading(resources.getString(R.string.strAttendance), GONE, GONE)
@@ -689,7 +859,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
             openFragment(AttendanceFragmentWFMS())
 
 
-            changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
+            changeColor(resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorOrange), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite), resources.getColor(R.color.colorWhite))
 
         }
 
@@ -725,7 +895,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
     override fun onResume() {
         super.onResume()
 
-        val receiver: BroadcastReceiver = AlarmReceiverForPunchOut()
+        receiver = AlarmReceiverForPunchOut()
         val intentFilter = IntentFilter("com.htistelecom.htisinhouse.PUNCH_OUT")
         registerReceiver(receiver, intentFilter)
 
@@ -832,7 +1002,9 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
 
     override fun onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         super.onDestroy()
+
         // unregisterReceiver(broadcastReceiver);
 
     }
@@ -892,7 +1064,6 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
     }
 
 
-
     private fun checkForUpdate() {
 
         val appVersion: String = getAppVersion(this)
@@ -913,7 +1084,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                         appVersion
                 )
         ) {
-         //   onUpdateNeeded(false)
+            //   onUpdateNeeded(false)
         } else {
             moveForward()
         }
@@ -963,17 +1134,17 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                 }
 
 
-            dialogBuilder.setNegativeButton("Later") { dialog, which ->
-                moveForward()
-                dialog?.dismiss()
-            }.create()
+        dialogBuilder.setNegativeButton("Later") { dialog, which ->
+            moveForward()
+            dialog?.dismiss()
+        }.create()
 
         val dialog: AlertDialog = dialogBuilder.create()
         dialog.show()
     }
 
     private fun moveForward() {
-       // Toast.makeText(this, "Next Page Intent", Toast.LENGTH_SHORT).show()
+        // Toast.makeText(this, "Next Page Intent", Toast.LENGTH_SHORT).show()
     }
 
     fun openAppOnPlayStore(ctx: Context, package_name: String?) {
@@ -1000,8 +1171,10 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
         }
     }
 
-
-
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(receiver)
+    }
 
 }
 

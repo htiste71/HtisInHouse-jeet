@@ -43,6 +43,10 @@
         <uses-library android:name="com.google.android.maps" />
 
         <service android:name=".services.LocationServiceHtis" />
+        <service android:name=".activity.WFMS.service.JobServiceToUplodData"
+            android:permission="android.permission.BIND_JOB_SERVICE">
+
+        </service>
 
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
@@ -86,7 +90,7 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCz_YUl1l13n1V6yS_H8ShLlTu4nB__2rs" />
-<!--        android:launchMode="singleInstance"-->
+        <!--        android:launchMode="singleInstance"-->
 
         <activity
             android:name=".activity.WFMS.activity.MainActivityNavigation"
@@ -149,7 +153,7 @@
 
         <service
             android:name=".activity.WFMS.service.UploadDataServerService"
-            android:permission="android.permission.BIND_JOB_SERVICE"></service>
+          ></service>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.htisinhouse.provider"

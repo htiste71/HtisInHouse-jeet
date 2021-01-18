@@ -8,6 +8,7 @@ import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListPopupWindow
 import android.widget.RelativeLayout
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -32,6 +34,7 @@ import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.*
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.UtilitiesWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.activity.MainActivityNavigation
 import com.htistelecom.htisinhouse.activity.WFMS.dialog.SheetDialogFragmentNew
+import com.htistelecom.htisinhouse.activity.WFMS.marketing.MarketingFullScreenDialog
 import com.htistelecom.htisinhouse.activity.WFMS.models.TaskListModel
 import com.htistelecom.htisinhouse.activity.WFMS.models.TwoParameterModel
 import com.htistelecom.htisinhouse.activity.WFMS.service.OreoLocationService
@@ -43,6 +46,7 @@ import com.htistelecom.htisinhouse.fragment.BaseFragment
 import com.htistelecom.htisinhouse.interfaces.GetDateTime
 import com.htistelecom.htisinhouse.interfaces.SpinnerData
 import com.htistelecom.htisinhouse.retrofit.MyInterface
+import com.htistelecom.htisinhouse.utilities.ConstantKotlin
 import com.htistelecom.htisinhouse.utilities.DateUtils
 import com.htistelecom.htisinhouse.utilities.Utilities
 import kotlinx.android.synthetic.main.fragment_home_wfms.*
@@ -116,7 +120,7 @@ class HomeFragmentNew : BaseFragment(), OnMapReadyCallback, View.OnClickListener
         return v
     }
 
-    override fun onAttach(activity: Activity?) {
+    override fun onAttach(activity: Activity) {
         super.onAttach(activity)
         activityContext = activity as MainActivityNavigation
     }
@@ -251,13 +255,24 @@ class HomeFragmentNew : BaseFragment(), OnMapReadyCallback, View.OnClickListener
 
 
                 bottomSheetFragment.setArguments(bundle)
-                bottomSheetFragment.show(fragmentManager, "exampleBottomSheet")
+                bottomSheetFragment.show(fragmentManager!!, "exampleBottomSheet")
 
             }
             R.id.llAddNewTaskHome -> {
-                if (isPunchInMethod())
-                    openDialogAddNewTask()
-                else
+
+
+                if (isPunchInMethod()) {
+
+                    if (tinyDB.getString(ConstantsWFMS.TINYDB_USER_TYPE).equals("1")) {
+                        val ft: FragmentTransaction = fragmentManager!!.beginTransaction()
+                        val newFragment: MarketingFullScreenDialog? = MarketingFullScreenDialog.newInstance()
+                        newFragment!!.show(ft, "dialog")
+
+                    } else {
+                        openDialogAddNewTask()
+                    }
+
+                } else
                     UtilitiesWFMS.showToast(activity!!, resources.getString(R.string.errPunchIn))
             }
             R.id.llTapLocationTaskHome -> {
@@ -690,201 +705,220 @@ class HomeFragmentNew : BaseFragment(), OnMapReadyCallback, View.OnClickListener
     }
 
     override fun sendResponse(response: Any?, TYPE: Int) {
-        if (TYPE != SELECT_TYPE_TAP_LOCATION_WFMS)
-            Utilities.dismissDialog()
-        if (TYPE == PROJECT_LIST_WFMS) {
+        if (TYPE != SELECT_TYPE_TAP_LOCATION_WFMS) {
+            if (Utilities.isShowing())
+                Utilities.dismissDialog()
+            Log.e("dismiss", TYPE.toString())
 
-            projectList.clear()
-            projectArray = emptyArray()
-            val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
+        }
 
-            for (i in 0 until jsonArray.length()) {
-                val item = jsonArray.getJSONObject(i)
 
-                val model = TwoParameterModel()
-                model.id = item.getString("ProjectId")
-                model.name = item.getString("ProjectName")
-                projectList.add(model)
+        if ((response as Response<*>).code() == 401 || (response as Response<*>).code() == 403) {
+            if (Utilities.isShowing())
+                Utilities.dismissDialog()
+            ConstantKotlin.logout(activity!!, tinyDB)
+        } else {
+            if (TYPE != SELECT_TYPE_TAP_LOCATION_WFMS) {
+                if (Utilities.isShowing())
+                    Utilities.dismissDialog()
+                Log.e("dismiss", TYPE.toString())
+
             }
-            projectArray = arrayOfNulls<String>(projectList.size)
-            for (i in projectList.indices) {
-                projectArray[i] = projectList.get(i).name
-            }
+            if (TYPE == PROJECT_LIST_WFMS) {
 
-            projectListAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, projectArray)
-            // hitAPI(ACTIVITY_LIST_WFMS, "")
-        } else if (TYPE == SITE_LIST_WFMS) {
+                projectList.clear()
+                projectArray = emptyArray()
+                val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
 
+                for (i in 0 until jsonArray.length()) {
+                    val item = jsonArray.getJSONObject(i)
 
-            val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
-            siteList.clear()
-            siteArray = emptyArray()
-            for (i in 0 until jsonArray.length()) {
-                val item = jsonArray.getJSONObject(i)
-
-                val model = TwoParameterModel()
-                model.id = item.getString("SiteId")
-                model.name = item.getString("SiteName")
-                siteList.add(model)
-            }
-
-            siteArray = arrayOfNulls<String>(siteList.size)
-            for (i in siteList.indices) {
-                siteArray[i] = siteList.get(i).name
-            }
-
-            siteListAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, siteArray)
-
-        } else if (TYPE == ACTIVITY_LIST_WFMS) {
-            activityArray = emptyArray()
-            activityList.clear()
-            val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
-
-            for (i in 0 until jsonArray.length()) {
-                val item = jsonArray.getJSONObject(i)
-
-                val model = TwoParameterModel()
-                model.id = item.getString("ActivityId")
-                model.name = item.getString("ActivityName")
-                activityList.add(model)
-            }
-            activityArray = arrayOfNulls<String>(activityList.size)
-            for (i in activityList.indices) {
-                activityArray[i] = activityList.get(i).name
-            }
-
-            activityListAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, activityArray)
-        } else if (TYPE == ADD_TASK_WFMS) {
-
-            val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
-            if (jsonObj.getString("Status").equals("Success")) {
-                Utilities.showToast(activity!!, jsonObj.getString("Message"))
-                dialog.dismiss()
-
-
-                mProjectId = ""
-                mSiteId = ""
-                mActivityId = ""
-                var json = JSONObject()
-                json.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
-                json.put("FromDate", mCurrentDate)
-                json.put("ToDate", mCurrentDate)
-                json.put("SiteUploadedId", "0")
-                // Utilities.getCurrentDateInMonth()
-
-                hitAPI(ConstantsWFMS.MY_TASK_LIST_NEW_WFMS, json.toString())
-            } else {
-                Utilities.showToast(activity!!, jsonObj.getString("Message"))
-            }
-
-//            {"Status":"Success","Message":"Record Saved Successfully !!","Output":""}
-        } else if (TYPE == SELECT_TYPE_TAP_LOCATION_WFMS) {
-
-            selectListTapLocation.clear()
-            selectListTapLocationArray = emptyArray()
-            val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
-
-            for (i in 0 until jsonArray.length()) {
-                val item = jsonArray.getJSONObject(i)
-
-                val model = TwoParameterModel()
-                model.id = item.getString("TapLocationTypeId")
-                model.name = item.getString("TapLocationTypeName")
-                selectListTapLocation.add(model)
-            }
-            selectListTapLocationArray = arrayOfNulls<String>(selectListTapLocation.size)
-            for (i in selectListTapLocation.indices) {
-                selectListTapLocationArray[i] = selectListTapLocation.get(i).name
-            }
-
-            selectListTapLocationAdaopter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, selectListTapLocationArray)
-
-            hitAPI(SELECT_INDUSTRY_TAP_LOCATION_WFMS, "")
-
-        } else if (TYPE == SELECT_INDUSTRY_TAP_LOCATION_WFMS) {
-
-            selectIndustryTapLocation.clear()
-            selectIndustryTapLocationArray = emptyArray()
-            val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
-
-            for (i in 0 until jsonArray.length()) {
-                val item = jsonArray.getJSONObject(i)
-
-                val model = TwoParameterModel()
-                model.id = item.getString("CompanyNatureId")
-                model.name = item.getString("CompanyNatureName")
-                selectIndustryTapLocation.add(model)
-            }
-            selectIndustryTapLocationArray = arrayOfNulls<String>(selectIndustryTapLocation.size)
-            for (i in selectIndustryTapLocation.indices) {
-                selectIndustryTapLocationArray[i] = selectIndustryTapLocation.get(i).name
-            }
-
-            selectIndustryTapLocationAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, selectIndustryTapLocationArray)
-        } else if (TYPE == SUBMIT_TAP_LOCATION_WFMS) {
-            val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
-            if (jsonObj.getString("Status").equals("Success")) {
-                Utilities.showToast(activity!!, jsonObj.getString("Message"))
-                dialogSaveLocation.dismiss()
-                mSelectListIdTapLocation = ""
-                mSelectIndustryIdTapLocation = ""
-
-            } else {
-                Utilities.showToast(activity!!, jsonObj.getString("Message"))
-            }
-        } else if (TYPE == MEETING_STATUS_WFMS) {
-            val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
-            if (jsonObj.getString("Status").equals("Success")) {
-                Utilities.showToast(activity!!, jsonObj.getString("Message"))
-                if (mIsAvailable) {
-                    mIsAvailable = false
-                    btnFreeHomeTop.text = "Meeting"
-                    tinyDB.putBoolean(ConstantsWFMS.TINYDB_MEETING_STATUS, false)
-                } else {
-                    mIsAvailable = true
-                    btnFreeHomeTop.text = "Free"
-                    tinyDB.putBoolean(ConstantsWFMS.TINYDB_MEETING_STATUS, true)
-
+                    val model = TwoParameterModel()
+                    model.id = item.getString("ProjectId")
+                    model.name = item.getString("ProjectName")
+                    projectList.add(model)
+                }
+                projectArray = arrayOfNulls<String>(projectList.size)
+                for (i in projectList.indices) {
+                    projectArray[i] = projectList.get(i).name
                 }
 
-            } else {
-                Utilities.showToast(activity!!, jsonObj.getString("Message"))
-            }
-        } else if (TYPE == MY_TASK_LIST_NEW_WFMS) {
-            val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
-            if (jsonObj.getString("Status").equals("Success")) {
-                taskAL.clear()
-                taskNewList.clear()
-                // val jsonArray=JSONArray(jsonObj.getString("Output"))
-                taskAL = Gson().fromJson<java.util.ArrayList<TaskListModel>>(jsonObj.getJSONArray("Output").toString(), object : TypeToken<ArrayList<TaskListModel>>() {}.type);
+                projectListAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, projectArray)
+                // hitAPI(ACTIVITY_LIST_WFMS, "")
+            } else if (TYPE == SITE_LIST_WFMS) {
 
-                var lastId = ""
-                for (record in 0 until taskAL.size) {
 
-                    if (lastId.equals(taskAL.get(record).taskId)) {
+                val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
+                siteList.clear()
+                siteArray = emptyArray()
+                for (i in 0 until jsonArray.length()) {
+                    val item = jsonArray.getJSONObject(i)
+
+                    val model = TwoParameterModel()
+                    model.id = item.getString("SiteId")
+                    model.name = item.getString("SiteName")
+                    siteList.add(model)
+                }
+
+                siteArray = arrayOfNulls<String>(siteList.size)
+                for (i in siteList.indices) {
+                    siteArray[i] = siteList.get(i).name
+                }
+
+                siteListAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, siteArray)
+
+            } else if (TYPE == ACTIVITY_LIST_WFMS) {
+                activityArray = emptyArray()
+                activityList.clear()
+                val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
+
+                for (i in 0 until jsonArray.length()) {
+                    val item = jsonArray.getJSONObject(i)
+
+                    val model = TwoParameterModel()
+                    model.id = item.getString("ActivityId")
+                    model.name = item.getString("ActivityName")
+                    activityList.add(model)
+                }
+                activityArray = arrayOfNulls<String>(activityList.size)
+                for (i in activityList.indices) {
+                    activityArray[i] = activityList.get(i).name
+                }
+
+                activityListAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, activityArray)
+            } else if (TYPE == ADD_TASK_WFMS) {
+
+                val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObj.getString("Status").equals("Success")) {
+                    Utilities.showToast(activity!!, jsonObj.getString("Message"))
+                    dialog.dismiss()
+
+
+                    mProjectId = ""
+                    mSiteId = ""
+                    mActivityId = ""
+                    var json = JSONObject()
+                    json.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
+                    json.put("FromDate", mCurrentDate)
+                    json.put("ToDate", mCurrentDate)
+                    json.put("SiteUploadedId", "0")
+                    // Utilities.getCurrentDateInMonth()
+
+                    hitAPI(ConstantsWFMS.MY_TASK_LIST_NEW_WFMS, json.toString())
+                } else {
+                    Utilities.showToast(activity!!, jsonObj.getString("Message"))
+                }
+
+//            {"Status":"Success","Message":"Record Saved Successfully !!","Output":""}
+            } else if (TYPE == SELECT_TYPE_TAP_LOCATION_WFMS) {
+
+                selectListTapLocation.clear()
+                selectListTapLocationArray = emptyArray()
+                val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
+
+                for (i in 0 until jsonArray.length()) {
+                    val item = jsonArray.getJSONObject(i)
+
+                    val model = TwoParameterModel()
+                    model.id = item.getString("TapLocationTypeId")
+                    model.name = item.getString("TapLocationTypeName")
+                    selectListTapLocation.add(model)
+                }
+                selectListTapLocationArray = arrayOfNulls<String>(selectListTapLocation.size)
+                for (i in selectListTapLocation.indices) {
+                    selectListTapLocationArray[i] = selectListTapLocation.get(i).name
+                }
+
+                selectListTapLocationAdaopter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, selectListTapLocationArray)
+
+                hitAPI(SELECT_INDUSTRY_TAP_LOCATION_WFMS, "")
+
+            } else if (TYPE == SELECT_INDUSTRY_TAP_LOCATION_WFMS) {
+
+                selectIndustryTapLocation.clear()
+                selectIndustryTapLocationArray = emptyArray()
+                val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
+
+                for (i in 0 until jsonArray.length()) {
+                    val item = jsonArray.getJSONObject(i)
+
+                    val model = TwoParameterModel()
+                    model.id = item.getString("CompanyNatureId")
+                    model.name = item.getString("CompanyNatureName")
+                    selectIndustryTapLocation.add(model)
+                }
+                selectIndustryTapLocationArray = arrayOfNulls<String>(selectIndustryTapLocation.size)
+                for (i in selectIndustryTapLocation.indices) {
+                    selectIndustryTapLocationArray[i] = selectIndustryTapLocation.get(i).name
+                }
+
+                selectIndustryTapLocationAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, selectIndustryTapLocationArray)
+            } else if (TYPE == SUBMIT_TAP_LOCATION_WFMS) {
+                val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObj.getString("Status").equals("Success")) {
+                    Utilities.showToast(activity!!, jsonObj.getString("Message"))
+                    dialogSaveLocation.dismiss()
+                    mSelectListIdTapLocation = ""
+                    mSelectIndustryIdTapLocation = ""
+
+                } else {
+                    Utilities.showToast(activity!!, jsonObj.getString("Message"))
+                }
+            } else if (TYPE == MEETING_STATUS_WFMS) {
+                val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObj.getString("Status").equals("Success")) {
+                    Utilities.showToast(activity!!, jsonObj.getString("Message"))
+                    if (mIsAvailable) {
+                        mIsAvailable = false
+                        btnFreeHomeTop.text = "Meeting"
+                        tinyDB.putBoolean(ConstantsWFMS.TINYDB_MEETING_STATUS, false)
                     } else {
-                        lastId = taskAL.get(record).taskId
-                        taskNewList.add(taskAL.get(record));
+                        mIsAvailable = true
+                        btnFreeHomeTop.text = "Free"
+                        tinyDB.putBoolean(ConstantsWFMS.TINYDB_MEETING_STATUS, true)
+
+                    }
+
+                } else {
+                    Utilities.showToast(activity!!, jsonObj.getString("Message"))
+                }
+            } else if (TYPE == MY_TASK_LIST_NEW_WFMS) {
+                val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObj.getString("Status").equals("Success")) {
+                    taskAL.clear()
+                    taskNewList.clear()
+                    // val jsonArray=JSONArray(jsonObj.getString("Output"))
+                    taskAL = Gson().fromJson<java.util.ArrayList<TaskListModel>>(jsonObj.getJSONArray("Output").toString(), object : TypeToken<ArrayList<TaskListModel>>() {}.type);
+
+                    var lastId = ""
+                    for (record in 0 until taskAL.size) {
+
+                        if (lastId.equals(taskAL.get(record).taskId)) {
+                        } else {
+                            lastId = taskAL.get(record).taskId
+                            taskNewList.add(taskAL.get(record));
+
+                        }
+
 
                     }
 
 
+
+
+                    tvTasksCountHome.text = taskNewList.size.toString() + " Scheduled Tasks"
+                    mTaskCount = taskNewList.size.toString()
+
+                } else {
+                    tvTasksCountHome.text = "No Scheduled Tasks"
+
                 }
-
-
-
-
-                tvTasksCountHome.text = taskNewList.size.toString() + " Scheduled Tasks"
-                mTaskCount = taskNewList.size.toString()
-
-            } else {
-                tvTasksCountHome.text = "No Scheduled Tasks"
-
+                val mapFragment = childFragmentManager!!
+                        .findFragmentById(com.htistelecom.htisinhouse.R.id.fragment_map) as SupportMapFragment
+                mapFragment.getMapAsync(this)
             }
-            val mapFragment = childFragmentManager!!
-                    .findFragmentById(com.htistelecom.htisinhouse.R.id.fragment_map) as SupportMapFragment
-            mapFragment.getMapAsync(this)
         }
+
 
     }
 

@@ -28,13 +28,14 @@
             android:layout_height="0.5dp"
             android:background="@color/colorLightBlackNew" />
 
-        <com.htistelecom.htisinhouse.font.Ubuntu
-            android:id="@+id/tvTextChatDetailActivityWFMS"
-            android:layout_width="wrap_content"
+        <com.htistelecom.htisinhouse.font.UbuntuEditText
+            android:id="@+id/etTextChatDetailActivityWFMS"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/view"
             android:hint="Enter text here"
             android:padding="15dp"
+            android:layout_toLeftOf="@+id/ivSendChatDetailActivityWFMS"
             android:textColor="@color/colorLightBlackNew"
             android:textColorHint="@color/colorLightBlackNew"
             android:textSize="18sp" />

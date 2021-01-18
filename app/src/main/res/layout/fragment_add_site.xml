@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txtProjectName"
+                android:textColor="@color/colorLightBlackNew"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:id="@+id/rlProjectNameAddSiteFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/rect_light_color_black_border"
+                android:padding="10dp">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvProjectNameAddSiteFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/txtProjectName"
+                    android:textColor="@color/colorLightBlackNew"
+                    android:textColorHint="@color/colorLightBlackNew"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_down" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txtSiteName"
+                android:textColor="@color/colorLightBlackNew"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:id="@+id/rlSiteNameAddSiteFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:padding="10dp"
+                android:background="@drawable/rect_light_color_black_border">
+
+                <com.htistelecom.htisinhouse.font.UbuntuEditText
+                    android:id="@+id/etSiteNameAddSiteFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/txtSiteName"
+                    android:background="@null"
+
+                    android:textColor="@color/colorLightBlackNew"
+                    android:textColorHint="@color/colorLightBlackNew"
+                    android:textSize="15sp" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txtSiteId"
+                android:textColor="@color/colorLightBlackNew"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:id="@+id/rlSiteIdAddSiteFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:padding="15dp"
+                android:background="@drawable/rect_light_color_black_border"
+              >
+
+                <com.htistelecom.htisinhouse.font.UbuntuEditText
+                    android:id="@+id/etSiteIdAddSiteFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/txtSiteId"
+                    android:background="@null"
+                    android:textColor="@color/colorLightBlackNew"
+                    android:textColorHint="@color/colorLightBlackNew"
+                    android:textSize="15sp" />
+
+<!--                <ImageView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignParentRight="true"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:src="@drawable/icon_down" />-->
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txtAddress"
+                android:textColor="@color/colorLightBlackNew"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:id="@+id/rlAddressAddSiteFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/rect_light_color_black_border"
+                android:padding="15dp">
+
+                <com.htistelecom.htisinhouse.font.UbuntuEditText
+                    android:id="@+id/etAddressAddSiteFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/txtAddress"
+                    android:maxLines="1"
+                    android:background="@null"
+                    android:singleLine="true"
+                    android:textColor="@color/colorLightBlackNew"
+                    android:textColorHint="@color/colorLightBlackNew"
+                    android:textSize="15sp" />
+
+<!--                <ImageView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignParentRight="true"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:src="@drawable/icon_down" />-->
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txtCountry"
+                android:textColor="@color/colorLightBlackNew"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:id="@+id/rlCountryAddSiteFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/rect_light_color_black_border"
+                android:padding="15dp">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvCountryAddSiteFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/txtCountry"
+                    android:textColor="@color/colorLightBlackNew"
+                    android:textColorHint="@color/colorLightBlackNew"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_down" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txtState"
+                android:textColor="@color/colorLightBlackNew"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:id="@+id/rlStateAddSiteFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/rect_light_color_black_border"
+                android:padding="15dp">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvStateAddSiteFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/txtState"
+                    android:textColor="@color/colorLightBlackNew"
+                    android:textColorHint="@color/colorLightBlackNew"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_down" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txtCity"
+                android:textColor="@color/colorLightBlackNew"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:id="@+id/rlCityAddSiteFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/rect_light_color_black_border"
+                android:padding="15dp">
+
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:id="@+id/tvCityAddSiteFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/txtCity"
+                    android:textColor="@color/colorLightBlackNew"
+                    android:textColorHint="@color/colorLightBlackNew"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_down" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txtLatitude"
+                android:textColor="@color/colorLightBlackNew"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:id="@+id/rlLatitudeAddProjectFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/rect_light_color_black_border"
+                android:padding="15dp">
+
+                <com.htistelecom.htisinhouse.font.UbuntuEditText
+                    android:id="@+id/etLatitudeAddSiteFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/txtLatitude"
+                    android:background="@null"
+
+                    android:textColor="@color/colorLightBlackNew"
+                    android:textColorHint="@color/colorLightBlackNew"
+                    android:textSize="15sp" />
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txtLongitude"
+                android:textColor="@color/colorLightBlackNew"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:id="@+id/rlLongitudeAddProjectFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/rect_light_color_black_border"
+                android:padding="15dp">
+
+                <com.htistelecom.htisinhouse.font.UbuntuEditText
+                    android:id="@+id/etLongitudeAddSiteFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/txtLatitude"
+                    android:background="@null"
+
+                    android:textColor="@color/colorLightBlackNew"
+                    android:textColorHint="@color/colorLightBlackNew"
+                    android:textSize="15sp" />
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <com.htistelecom.htisinhouse.font.UbuntuButton
+            android:id="@+id/btnSubmitAddSiteFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="8dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="8dp"
+            android:text="@string/strSubmit" />
+    </LinearLayout>
+</ScrollView>

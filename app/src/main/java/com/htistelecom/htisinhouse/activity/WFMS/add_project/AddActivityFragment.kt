@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_add_activity.*
 import org.json.JSONObject
 import retrofit2.Response
 
-class AddActivityFragment:Fragment(),FragmentLifecycle, View.OnClickListener, MyInterface {
+class AddActivityFragment:Fragment(), View.OnClickListener, MyInterface {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_add_activity,null)
     }
@@ -26,17 +26,10 @@ class AddActivityFragment:Fragment(),FragmentLifecycle, View.OnClickListener, My
         btnSubmitAddActivityFragment.setOnClickListener(this)
     }
 
-    override fun onPauseFragment() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onResumeFragment() {
-        TODO("Not yet implemented")
-    }
 
     override fun onClick(v: View?) {
 
-        if(etAddActivityFragment.text.equals(""))
+        if(etAddActivityFragment.text.toString().equals(""))
         {
             UtilitiesWFMS.showToast(activity!!,activity!!.getString(R.string.errEnterActivity))
         }

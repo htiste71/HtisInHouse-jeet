@@ -22,24 +22,24 @@ class MarketingDetailActivity : Activity() {
     }
 
     private fun setData() {
-        tvCompanyName.text =" : "+ MarketingTaskAdapter.data.company_name
-        tvPersonName.text =" : "+ MarketingTaskAdapter.data.employee_name
-        tvPosition.text =" : "+ MarketingTaskAdapter.data.position_name
-        tvWebsiteLink.text =" : "+ MarketingTaskAdapter.data.web_link
-        tvReachTime.text = " : "+MarketingTaskAdapter.data.cust_reach_time
-        tvOutTime.text =" : "+ MarketingTaskAdapter.data.cust_out_time
-        tvEntityType.text =" : "+ MarketingTaskAdapter.data.entity_name
-        tvNatureOfBusiness.text =" : "+ MarketingTaskAdapter.data.business_nature
-        tvCompanyOwnerName.text =" : "+ MarketingTaskAdapter.data.company_owner
-        tvCompanyOwnerContact.text =" : "+ MarketingTaskAdapter.data.owner_contact
-        tvTurnover.text = " : "+MarketingTaskAdapter.data.annual_turnover
-        tvLeadGenerated.text =" : "+MarketingTaskAdapter.data.lead_generated
-        tvEmail.text = " : "+MarketingTaskAdapter.data.email_id
-        tvMobileNumber.text = " : "+MarketingTaskAdapter.data.phone
-        tvAddress.text =" : "+ MarketingTaskAdapter.data.address
-        tvState.text = " : "+MarketingTaskAdapter.data.state_name
-        tvCity.text = " : "+MarketingTaskAdapter.data.city_name
-        tvZipCode.text =" : "+ MarketingTaskAdapter.data.zip_code
+//        tvCompanyName.text =" : "+ MarketingTaskAdapter.data.company_name
+//        tvPersonName.text =" : "+ MarketingTaskAdapter.data.employee_name
+//        tvPosition.text =" : "+ MarketingTaskAdapter.data.position_name
+//        tvWebsiteLink.text =" : "+ MarketingTaskAdapter.data.web_link
+//        tvReachTime.text = " : "+MarketingTaskAdapter.data.cust_reach_time
+//        tvOutTime.text =" : "+ MarketingTaskAdapter.data.cust_out_time
+//        tvEntityType.text =" : "+ MarketingTaskAdapter.data.entity_name
+//        tvNatureOfBusiness.text =" : "+ MarketingTaskAdapter.data.business_nature
+//        tvCompanyOwnerName.text =" : "+ MarketingTaskAdapter.data.company_owner
+//        tvCompanyOwnerContact.text =" : "+ MarketingTaskAdapter.data.owner_contact
+//        tvTurnover.text = " : "+MarketingTaskAdapter.data.annual_turnover
+//        tvLeadGenerated.text =" : "+MarketingTaskAdapter.data.lead_generated
+//        tvEmail.text = " : "+MarketingTaskAdapter.data.email_id
+//        tvMobileNumber.text = " : "+MarketingTaskAdapter.data.phone
+//        tvAddress.text =" : "+ MarketingTaskAdapter.data.address
+//        tvState.text = " : "+MarketingTaskAdapter.data.state_name
+//        tvCity.text = " : "+MarketingTaskAdapter.data.city_name
+//        tvZipCode.text =" : "+ MarketingTaskAdapter.data.zip_code
 
 
     }

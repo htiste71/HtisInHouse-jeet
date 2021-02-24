@@ -16,7 +16,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
-import android.os.SystemClock
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
@@ -49,6 +48,7 @@ import com.htistelecom.htisinhouse.activity.WFMS.fragments.*
 import com.htistelecom.htisinhouse.activity.WFMS.leave_managment.LeaveType_OutdoorDutyFragment
 import com.htistelecom.htisinhouse.activity.WFMS.receiver.AlarmReceiverForPunchOut
 import com.htistelecom.htisinhouse.activity.WFMS.receiver.CheckPunchStatusReceiver
+import com.htistelecom.htisinhouse.activity.WFMS.receiver.PunchStatusCheckout
 import com.htistelecom.htisinhouse.activity.WFMS.service.JobServiceToUplodData
 import com.htistelecom.htisinhouse.activity.WFMS.service.OreoLocationService
 import com.htistelecom.htisinhouse.activity.WFMS.service.PreOreoLocationService
@@ -78,6 +78,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
     private var mTime24Hrs: String = ""
     private var mPunchInTime: String = ""
     private var mPunchOutTime: String = ""
+    private var mPunchInOutTime: String = ""
 
     lateinit var fragmentImage: Fragment
     lateinit var locationManager: LocationManager
@@ -108,7 +109,9 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
         //openDefaultFragment()
         setDefautData()
         checkForUpdate()
-        punchReminder()
+        punchReminderIn()
+        punchReminderOut()
+
         val json = JSONObject()
         json.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
         hitAPI(ConstantsWFMS.PUNCH_STATUS_WFMS, json.toString())
@@ -149,20 +152,35 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
     }
 
-    private fun punchReminder() {
+    private fun punchReminderIn() {
         try {
 
             val calendar = Calendar.getInstance()
             calendar[Calendar.HOUR_OF_DAY] = 10
             calendar[Calendar.MINUTE] = 0
             val alarmMgr = this.getSystemService(ALARM_SERVICE) as AlarmManager
-            //Create a new PendingIntent and add it to the AlarmManager
+
+
             val intent = Intent(this, CheckPunchStatusReceiver::class.java)
-            val pendingIntent = PendingIntent.getActivity(this,
-                    12345, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-            val am = getSystemService(ALARM_SERVICE) as AlarmManager
-            am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, calendar.timeInMillis,
-                    24 * 60 * 60 * 1000, pendingIntent)
+            val pendingIntent = PendingIntent.getBroadcast(this, 12345, intent, FLAG_UPDATE_CURRENT)
+            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, 24 * 60 * 60 * 1000, pendingIntent)
+
+        } catch (e: Exception) {
+        }
+    }
+    private fun punchReminderOut() {
+        try {
+
+            val calendar = Calendar.getInstance()
+            calendar[Calendar.HOUR_OF_DAY] = 19
+            calendar[Calendar.MINUTE] = 0
+            val alarmMgr = this.getSystemService(ALARM_SERVICE) as AlarmManager
+
+
+            val intent = Intent(this, PunchStatusCheckout::class.java)
+            val pendingIntent = PendingIntent.getBroadcast(this, 123456, intent, FLAG_UPDATE_CURRENT)
+            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, 24 * 60 * 60 * 1000, pendingIntent)
+
         } catch (e: Exception) {
         }
     }
@@ -205,106 +223,111 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
     }
 
     var mOnCheckChangedListener = CompoundButton.OnCheckedChangeListener { compoundButton, b ->
-        val mAddress = Utilities.getAddressFromLatLong(this, OreoLocationService.LATITUDE.toDouble(), OreoLocationService.LONGITUDE.toDouble())
-        val (mTime, mDate) = ConstantKotlin.getCurrentDateTime()
-        mTimeStr = mTime
-        mDateStr = mDate
+        if(compoundButton.isPressed)
+        {
+            val mAddress = Utilities.getAddressFromLatLong(this, OreoLocationService.LATITUDE.toDouble(), OreoLocationService.LONGITUDE.toDouble())
+            val (mTime, mDate) = ConstantKotlin.getCurrentDateTime()
+            mTimeStr = mTime
+            mDateStr = mDate
 
-        mTime24Hrs = ConstantKotlin.getCurrentTime24Hrs()
+            mTime24Hrs = ConstantKotlin.getCurrentTime24Hrs()
 
-        val mDateTime = DateUtils.currentDate() + " " + mTime24Hrs
+            val mDateTime = DateUtils.currentDate() + " " + mTime24Hrs
 
 
-        try {
+            try {
 
-            if (mAddress.get(0) == null) {
-                Utilities.showToast(this, resources.getString(R.string.errLocationNotFetched))
-            } else {
+                if (mAddress.get(0) == null) {
+                    Utilities.showToast(this, resources.getString(R.string.errLocationNotFetched))
+                } else {
 
-                tinyDB.putDouble(ConstantsWFMS.CURRENT_SAVED_LATITUDE, OreoLocationService.LATITUDE.toDouble())
-                tinyDB.putDouble(ConstantsWFMS.CURRENT_SAVED_LONGITUDE, OreoLocationService.LONGITUDE.toDouble())
+                    tinyDB.putDouble(ConstantsWFMS.CURRENT_SAVED_LATITUDE, OreoLocationService.LATITUDE.toDouble())
+                    tinyDB.putDouble(ConstantsWFMS.CURRENT_SAVED_LONGITUDE, OreoLocationService.LONGITUDE.toDouble())
 
-                if (b) {
+                    if (b) {
 
-                    if (Utilities.isNetConnected(this)) {
-                        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                            CHECK_TYPE = CHECK_IN
+                        if (Utilities.isNetConnected(this)) {
+                            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                                CHECK_TYPE = CHECK_IN
 
-                            val jsonObject = JSONObject()
-                            jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
-                            jsonObject.put("StartDate", DateUtils.currentDate())
+                                val jsonObject = JSONObject()
+                                jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
+                                jsonObject.put("StartDate", DateUtils.currentDate())
 
-                            jsonObject.put("StartTime", mDateTime)
-                            jsonObject.put("Latitude", OreoLocationService.LATITUDE)
-                            jsonObject.put("Longitude", OreoLocationService.LONGITUDE)
-                            jsonObject.put("LocationAddress", mAddress.get(0).getAddressLine(0))
-                            jsonObject.put("DomainId", tinyDB.getString(ConstantsWFMS.TINYDB_DOMAIN_ID))
-                            jsonObject.put("PunchType", "I")
+                                jsonObject.put("StartTime", mDateTime)
+                                jsonObject.put("Latitude", OreoLocationService.LATITUDE)
+                                jsonObject.put("Longitude", OreoLocationService.LONGITUDE)
+                                jsonObject.put("LocationAddress", mAddress.get(0).getAddressLine(0))
+                                jsonObject.put("DomainId", tinyDB.getString(ConstantsWFMS.TINYDB_DOMAIN_ID))
+                                jsonObject.put("PunchType", "I")
 
-                            jsonObject.put("PunchCountry", mAddress.get(0).countryName)
-                            jsonObject.put("PunchState", mAddress.get(0).adminArea)
-                            jsonObject.put("PunchCity", mAddress.get(0).locality)
-                            hitAPI(ConstantsWFMS.PUNCH_IN_OUT_WFMS, jsonObject.toString())
+                                jsonObject.put("PunchCountry", mAddress.get(0).countryName)
+                                jsonObject.put("PunchState", mAddress.get(0).adminArea)
+                                jsonObject.put("PunchCity", mAddress.get(0).locality)
+                                hitAPI(ConstantsWFMS.PUNCH_IN_OUT_WFMS, jsonObject.toString())
+                            } else {
+
+                                btnSwitchHeader.setOnCheckedChangeListener(null)
+
+                                btnSwitchHeader.isChecked = false
+                                callSwitcherChageListener()
+
+
+                            }
+
                         } else {
-
+                            Utilities.showToast(this, resources.getString(R.string.internet_connection))
                             btnSwitchHeader.setOnCheckedChangeListener(null)
 
                             btnSwitchHeader.isChecked = false
                             callSwitcherChageListener()
-
-
                         }
 
+
                     } else {
-                        Utilities.showToast(this, resources.getString(R.string.internet_connection))
-                        btnSwitchHeader.setOnCheckedChangeListener(null)
 
-                        btnSwitchHeader.isChecked = false
-                        callSwitcherChageListener()
-                    }
+                        if (Utilities.isNetConnected(this)) {
+                            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                                CHECK_TYPE = CHECK_OUT
+                                //   btnSwitchHeader.isChecked=true
+                                val jsonObject = JSONObject()
+                                jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
+                                jsonObject.put("StartDate", DateUtils.currentDate())
+                                jsonObject.put("StartTime", mDateTime)
+                                jsonObject.put("Latitude", OreoLocationService.LATITUDE)
+                                jsonObject.put("Longitude", OreoLocationService.LONGITUDE)
+                                jsonObject.put("LocationAddress", mAddress.get(0).getAddressLine(0))
+                                jsonObject.put("DomainId", tinyDB.getString(ConstantsWFMS.TINYDB_DOMAIN_ID))
+                                jsonObject.put("PunchType", "O")
+                                jsonObject.put("PunchCountry", mAddress.get(0).countryName)
+                                jsonObject.put("PunchState", mAddress.get(0).adminArea)
+                                jsonObject.put("PunchCity", mAddress.get(0).locality)
+                                // hitAPI(ConstantsWFMS.PUNCH_IN_OUT_WFMS, jsonObject.toString())
 
+                                showAlertDialogForPunchOut(jsonObject.toString())
+                            } else {
+                                btnSwitchHeader.setOnCheckedChangeListener(null)
 
-                } else {
-
-                    if (Utilities.isNetConnected(this)) {
-                        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                            CHECK_TYPE = CHECK_OUT
-                            //   btnSwitchHeader.isChecked=true
-                            val jsonObject = JSONObject()
-                            jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
-                            jsonObject.put("StartDate", DateUtils.currentDate())
-                            jsonObject.put("StartTime", mDateTime)
-                            jsonObject.put("Latitude", OreoLocationService.LATITUDE)
-                            jsonObject.put("Longitude", OreoLocationService.LONGITUDE)
-                            jsonObject.put("LocationAddress", mAddress.get(0).getAddressLine(0))
-                            jsonObject.put("DomainId", tinyDB.getString(ConstantsWFMS.TINYDB_DOMAIN_ID))
-                            jsonObject.put("PunchType", "O")
-                            jsonObject.put("PunchCountry", mAddress.get(0).countryName)
-                            jsonObject.put("PunchState", mAddress.get(0).adminArea)
-                            jsonObject.put("PunchCity", mAddress.get(0).locality)
-                            // hitAPI(ConstantsWFMS.PUNCH_IN_OUT_WFMS, jsonObject.toString())
-
-                            showAlertDialogForPunchOut(jsonObject.toString())
+                                btnSwitchHeader.isChecked = true
+                                callSwitcherChageListener()
+                            }
                         } else {
+                            Utilities.showToast(this, resources.getString(R.string.internet_connection))
                             btnSwitchHeader.setOnCheckedChangeListener(null)
 
                             btnSwitchHeader.isChecked = true
                             callSwitcherChageListener()
                         }
-                    } else {
-                        Utilities.showToast(this, resources.getString(R.string.internet_connection))
-                        btnSwitchHeader.setOnCheckedChangeListener(null)
 
-                        btnSwitchHeader.isChecked = true
-                        callSwitcherChageListener()
+
                     }
-
-
                 }
-            }
-        } catch (e: Exception) {
+            } catch (e: Exception) {
 
+            }
         }
+
+
 
     }
 
@@ -358,18 +381,19 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
             btnSwitchHeader.isChecked = true
             btnSwitchHeader.setOnCheckedChangeListener(mOnCheckChangedListener)
 
-            tvPunchedInTimeHeader.text = tinyDB.getString(ConstantsWFMS.TINYDB_PUNCH_IN_TIME)
-        } else {
+            tvPunchedInTimeHeader.text = tinyDB.getString(ConstantsWFMS.TINYDB_PUNCH_IN_OUT_TIME)
+        } else if(!isPunchInMethod())
+        {
             btnSwitchHeader.setOnCheckedChangeListener(null)
 
             btnSwitchHeader.isChecked = false
             btnSwitchHeader.setOnCheckedChangeListener(mOnCheckChangedListener)
 
 
-            if (tinyDB.getString(ConstantsWFMS.TINYDB_PUNCH_OUT_TIME).equals("")) {
+            if (tinyDB.getString(ConstantsWFMS.TINYDB_PUNCH_IN_OUT_TIME).equals("")) {
                 tvPunchedInTimeHeader.text = "Not Logged In"
             } else {
-                tvPunchedInTimeHeader.text = tinyDB.getString(ConstantsWFMS.TINYDB_PUNCH_OUT_TIME)
+                tvPunchedInTimeHeader.text = tinyDB.getString(ConstantsWFMS.TINYDB_PUNCH_IN_OUT_TIME)
 
             }
 
@@ -395,7 +419,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
     private fun initViews() {
         tinyDB = TinyDB(this)
-
+        token = tinyDB.getString(ConstantsWFMS.TINYDB_TOKEN)
         try {
 
             if (MyApplication.socketObj.mSocket == null) {
@@ -445,7 +469,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
         } else {
             startService(Intent(this, UploadDataServerService::class.java))
         }
-        token = tinyDB.getString(ConstantsWFMS.TINYDB_TOKEN)
+
 
 
     }
@@ -507,28 +531,29 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
             if (TYPE == PUNCH_IN_OUT_WFMS) {
                 val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
-                if (jsonObject.getString("Status").equals("Success")) {
+                if (jsonObject.getString("Status").equals("Success"))
+                {
                     if (CHECK_TYPE == CHECK_IN) {
                         mPunchInTime = "Punched In: " + mTimeStr + ", " + mDateStr
-                        tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_IN_TIME, mPunchInTime)
+                     //  tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_IN_TIME, mPunchInTime)
 
                         tvPunchedInTimeHeader.text = mPunchInTime
 
 
                         //btnSwitchHeader.isChecked = true
                         tinyDB.putBoolean(ConstantsWFMS.TINYDB_IS_PUNCH_IN, true)
-                        tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_IN_TIME, mPunchInTime)
+                        tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_IN_OUT_TIME, mPunchInTime)
                         startLocationClass()
 
 
                     } else {
                         mPunchOutTime = "Punched Out: " + mTimeStr + ", " + mDateStr
-                        tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_OUT_TIME, mPunchOutTime)
+                      //  tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_OUT_TIME, mPunchOutTime)
                         // btnSwitchHeader.isChecked = false
 
                         tvPunchedInTimeHeader.text = mPunchOutTime
                         tinyDB.putBoolean(ConstantsWFMS.TINYDB_IS_PUNCH_IN, false)
-                        tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_OUT_TIME, mPunchOutTime)
+                        tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_IN_OUT_TIME, mPunchOutTime)
 
                     }
 
@@ -539,7 +564,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
                         btnSwitchHeader.isChecked = false
                         btnSwitchHeader.setOnCheckedChangeListener(mOnCheckChangedListener)
-                        tvPunchedInTimeHeader.text = tinyDB.getString(ConstantsWFMS.TINYDB_PUNCH_OUT_TIME)
+                        tvPunchedInTimeHeader.text = tinyDB.getString(ConstantsWFMS.TINYDB_PUNCH_IN_OUT_TIME)
 
                     } else {
 
@@ -547,15 +572,51 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
                     Utilities.showToast(this, jsonObject.getString("Message"))
 
                 }
-            } else if (TYPE == PUNCH_STATUS_WFMS) {
+            } else if (TYPE == PUNCH_STATUS_WFMS)
+            {
                 val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
-                if (jsonObject.getString("Status").equals("Success")) {
+                if (jsonObject.getString("Status").equals("Success"))
+                {
                     val array = jsonObject.getJSONArray("Output")
                     val obj = array.getJSONObject(0)
-                    openDefaultFragment()
+
+                    val (mDate,mTime) = ConstantKotlin.getDateTimeServer(obj.getString("PunchDate"),obj.getString("PunchTime"))
+
+
+                    if(obj.getString("PunchType").equals("I",true))
+                    {
+                        mPunchInOutTime = "Punched In: " + mTime + ", " + mDate
+                        tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_IN_OUT_TIME, mPunchOutTime)
+                        tinyDB.putBoolean(ConstantsWFMS.TINYDB_IS_PUNCH_IN, true)
+                        btnSwitchHeader.isChecked = true
+                        btnSwitchHeader.setOnCheckedChangeListener(mOnCheckChangedListener)
+
+                    }
+                    else{
+                        btnSwitchHeader.isChecked = false
+                        btnSwitchHeader.setOnCheckedChangeListener(mOnCheckChangedListener)
+                        mPunchInOutTime = "Punched Out: " + mTime + ", " + mDate
+                        tinyDB.putBoolean(ConstantsWFMS.TINYDB_IS_PUNCH_IN, false)
+
+                        tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_IN_OUT_TIME, mPunchOutTime)
+
+                    }
+
+                    tvPunchedInTimeHeader.text = mPunchInOutTime
+
+
+
 
                 }
+                else
+                {
+                    tvPunchedInTimeHeader.text = "Not Logged In"
+                    tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_IN_OUT_TIME,"")
+                    btnSwitchHeader.isChecked = false
+                    btnSwitchHeader.setOnCheckedChangeListener(mOnCheckChangedListener)
+                }
             }
+            openDefaultFragment()
         }
 
     }
@@ -816,7 +877,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (intent!!.getStringExtra("fragment") != null && intent!!.getStringExtra("fragment").equals("OD")) {
-            tvHeadingHeader.text = "Leave & OD"
+            tvHeadingHeader.text = "Leave & OD & Comp Off"
             ivAddHeader.visibility = VISIBLE
             supportFragmentManager.beginTransaction().replace(R.id.frameLayout, LeaveType_OutdoorDutyFragment())
                     .commit()
@@ -911,7 +972,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
                     if (isCheckOut) {
                         tvPunchedInTimeHeader.text = mPunchOutTime
-                        tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_OUT_TIME, mPunchOutTime)
+                        tinyDB.putString(ConstantsWFMS.TINYDB_PUNCH_IN_OUT_TIME, mPunchOutTime)
 
                     }
                 }
@@ -1054,7 +1115,9 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
 
     private fun startLocationClass() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startService(Intent(this, OreoLocationService::class.java))
+           // startService(Intent(this, OreoLocationService::class.java))
+            val it = Intent(this,OreoLocationService::class.java)
+            OreoLocationService.enqueueWork(this, it);
 
         } else {
             startService(Intent(this, PreOreoLocationService::class.java))

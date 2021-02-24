@@ -62,9 +62,9 @@ class LoginNewActivity : Activity(), MyInterface, View.OnClickListener {
             var email = etUserName.text.toString()
             // email="kuldeep.singh@horizontelecom.in"
 
-            email="shobinjindal91@gmail.com"
+         //   email="munish.kumar@horizontelecom.in"
             passWord = etPassword.text.toString()
-              passWord="Test@123"
+           //   passWord="Test@123"
             if (TextUtils.isEmpty(email)) {
                 Utilities.showToast(this, "Please enter email address")
 

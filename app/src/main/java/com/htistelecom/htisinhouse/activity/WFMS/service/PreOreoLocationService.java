@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -88,17 +89,18 @@ public class PreOreoLocationService extends Service {
         }
 
         boolean checkDistance(double lat1, double long1, double lat2, double long2) {
-            Location locationA = new Location("point A");
-            locationA.setLatitude(lat1);
-            locationA.setLongitude(long1);
-            Location locationB = new Location("point B");
-            locationB.setLatitude(lat2);
-            locationB.setLongitude(long2);
-            double distance = locationA.distanceTo(locationB);
-            if (distance > 25)
-                return true;
-            else
-                return false;
+//            Location locationA = new Location("point A");
+//            locationA.setLatitude(lat1);
+//            locationA.setLongitude(long1);
+//            Location locationB = new Location("point B");
+//            locationB.setLatitude(lat2);
+//            locationB.setLongitude(long2);
+//            double distance = locationA.distanceTo(locationB);
+//            if (distance > 25)
+//                return true;
+//            else
+//                return false;
+            return true;
         }
 
         @Override
@@ -133,10 +135,10 @@ public class PreOreoLocationService extends Service {
     @Override
     public void onCreate() {
         tinyDB = new TinyDB(PreOreoLocationService.this);
-        file = new File(Environment.getExternalStorageDirectory(), "MyFiles");
-        if (!file.exists()) {
-            file.mkdirs();
-        }
+//        file = new File(Environment.getExternalStorageDirectory(), "MyDataFile");
+//        if (!file.exists()) {
+//            file.mkdirs();
+//        }
         currentDateTime();
 
         try {
@@ -274,6 +276,17 @@ public class PreOreoLocationService extends Service {
     }
 
     private void addDataToFile(String latitude, String longitude) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            String fileName= mUserId + "_" + mDate + ".txt";
+            myFile=new File(getExternalFilesDir("MyFilesPath"),fileName);
+        }
+        else
+        {
+            file = new File(Environment.getExternalStorageDirectory(), "MyDataFile");
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+        }
         FileWriter fr = null;
         try {
             BufferedWriter br = null;

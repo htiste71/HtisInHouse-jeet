@@ -25,7 +25,7 @@ class JobServiceToUplodData : JobService() {
     lateinit var db: TinyDB
 
     override fun onStartJob(params: JobParameters?): Boolean {
-        hitAPI()
+           hitAPI()
         return true
     }
 

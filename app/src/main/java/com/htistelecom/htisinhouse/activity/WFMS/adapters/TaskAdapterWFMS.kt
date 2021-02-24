@@ -33,7 +33,7 @@ class TaskAdapterWFMS (private val mContext: Context?, val taskALNew: ArrayList<
             itemView.tvTaskNameRowTaskAdapterWFMS!!.text = model.activityName
             itemView.tvDateRowTaskAdapterWFMS!!.text = model.workDate
 
-            if (model.status.equals("Completed")) {
+            if (model.status.equals("Completed") || model.status.equals("Approved")) {
                 itemView.ivArrowRowTaskAdapterWFMS.visibility = View.GONE
             } else {
                 itemView.ivArrowRowTaskAdapterWFMS.visibility = View.VISIBLE

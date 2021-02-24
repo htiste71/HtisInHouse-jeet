@@ -233,7 +233,7 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
                 if (isPunchInMethod()) {
                     if (tinyDB.getString(ConstantsWFMS.TINYDB_USER_TYPE).equals("1")) {
                         val ft: FragmentTransaction = fragmentManager!!.beginTransaction()
-                        val newFragment: MarketingFullScreenDialog? = MarketingFullScreenDialog.newInstance()
+                        val newFragment: MarketingFullScreenDialog? = MarketingFullScreenDialog.newInstance(tinyDB.getString(TINYDB_EMP_ID),true)
                         newFragment!!.show(ft, "dialog")
 
                     } else {

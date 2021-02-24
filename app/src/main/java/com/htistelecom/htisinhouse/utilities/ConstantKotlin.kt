@@ -24,6 +24,25 @@ class ConstantKotlin {
             return Pair(currentTime, currentDate)
         }
 
+        fun getDateTimeServer(date:String,time:String):Pair<String, String>
+        {
+
+            val sdfDateSource = SimpleDateFormat("dd-MMM-yyyy")
+            val sdfTimeSource = SimpleDateFormat("hh:mm:ss")
+            val sdfDateTarget = SimpleDateFormat("dd MMM yyyy")
+            val sdfTimeTarget = SimpleDateFormat("hh:mm aa")
+
+            val mDateOldFormat=sdfDateSource.parse(date)
+            val mDateTargetFormat=sdfDateTarget.format(mDateOldFormat)
+
+            val mTimeOldFormat=sdfTimeSource.parse(time)
+            val mTimeTargetFormat=sdfTimeTarget.format(mTimeOldFormat)
+            return Pair(mDateTargetFormat, mTimeTargetFormat)
+
+        }
+
+
+
         fun getCurrentTime24Hrs(): String {
             val sdfTime = SimpleDateFormat("HH:mm")
 

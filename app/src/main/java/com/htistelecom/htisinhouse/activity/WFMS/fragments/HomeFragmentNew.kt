@@ -35,6 +35,7 @@ import com.htistelecom.htisinhouse.activity.WFMS.Utils.UtilitiesWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.activity.MainActivityNavigation
 import com.htistelecom.htisinhouse.activity.WFMS.dialog.SheetDialogFragmentNew
 import com.htistelecom.htisinhouse.activity.WFMS.marketing.MarketingFullScreenDialog
+import com.htistelecom.htisinhouse.activity.WFMS.marketing.model.TaskModel
 import com.htistelecom.htisinhouse.activity.WFMS.models.TaskListModel
 import com.htistelecom.htisinhouse.activity.WFMS.models.TwoParameterModel
 import com.htistelecom.htisinhouse.activity.WFMS.service.OreoLocationService
@@ -63,6 +64,7 @@ class HomeFragmentNew : BaseFragment(), OnMapReadyCallback, View.OnClickListener
     companion object {
         var mTaskCount = "0"
     }
+    private var taskList = java.util.ArrayList<TaskModel>()
 
     lateinit var activityContext: MainActivityNavigation
     private var lastTaskId: String = ""
@@ -166,7 +168,8 @@ class HomeFragmentNew : BaseFragment(), OnMapReadyCallback, View.OnClickListener
             maps.uiSettings.setZoomControlsEnabled(true);
 
 
-            if (taskNewList.size > 0) {
+            if (taskNewList.size > 0)
+            {
                 for (i in 0 until taskNewList.size) {
 
                     val model = taskNewList.get(i)
@@ -198,6 +201,11 @@ class HomeFragmentNew : BaseFragment(), OnMapReadyCallback, View.OnClickListener
             maps.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lati, longLat)))
             maps.animateCamera(CameraUpdateFactory.zoomTo(17f))
         } catch (e: java.lang.Exception) {
+
+
+
+
+
             e.printStackTrace()
         }
 
@@ -252,7 +260,7 @@ class HomeFragmentNew : BaseFragment(), OnMapReadyCallback, View.OnClickListener
                 val bundle = Bundle()
                 bundle.putSerializable("data", taskAL)
                 bundle.putSerializable("data_filter", taskNewList)
-
+                bundle.putSerializable("marketing_list", taskList)
 
                 bottomSheetFragment.setArguments(bundle)
                 bottomSheetFragment.show(fragmentManager!!, "exampleBottomSheet")
@@ -265,7 +273,7 @@ class HomeFragmentNew : BaseFragment(), OnMapReadyCallback, View.OnClickListener
 
                     if (tinyDB.getString(ConstantsWFMS.TINYDB_USER_TYPE).equals("1")) {
                         val ft: FragmentTransaction = fragmentManager!!.beginTransaction()
-                        val newFragment: MarketingFullScreenDialog? = MarketingFullScreenDialog.newInstance()
+                        val newFragment: MarketingFullScreenDialog? = MarketingFullScreenDialog.newInstance(tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID),true)
                         newFragment!!.show(ft, "dialog")
 
                     } else {
@@ -678,6 +686,10 @@ class HomeFragmentNew : BaseFragment(), OnMapReadyCallback, View.OnClickListener
             ApiData.getData(params.toString(), ConstantsWFMS.MEETING_STATUS_WFMS, this, activity!!)
 
         }
+        else if (type == MARKETING_TASK_LIST_WFMS) {
+            ApiData.getData(params.toString(), ConstantsWFMS.MARKETING_TASK_LIST_WFMS, this, activity!!)
+
+        }
     }
 
     override fun onDestroy() {
@@ -694,14 +706,9 @@ class HomeFragmentNew : BaseFragment(), OnMapReadyCallback, View.OnClickListener
 
     override fun onResume() {
         super.onResume()
-        var json = JSONObject()
-        json.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
-        json.put("FromDate", mCurrentDate)
-        json.put("ToDate", mCurrentDate)
-        json.put("SiteUploadedId", "0")
+        callTaskList()
 
 
-        hitAPI(ConstantsWFMS.MY_TASK_LIST_NEW_WFMS, json.toString())
     }
 
     override fun sendResponse(response: Any?, TYPE: Int) {
@@ -797,14 +804,9 @@ class HomeFragmentNew : BaseFragment(), OnMapReadyCallback, View.OnClickListener
                     mProjectId = ""
                     mSiteId = ""
                     mActivityId = ""
-                    var json = JSONObject()
-                    json.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
-                    json.put("FromDate", mCurrentDate)
-                    json.put("ToDate", mCurrentDate)
-                    json.put("SiteUploadedId", "0")
-                    // Utilities.getCurrentDateInMonth()
 
-                    hitAPI(ConstantsWFMS.MY_TASK_LIST_NEW_WFMS, json.toString())
+                    callTaskList()
+
                 } else {
                     Utilities.showToast(activity!!, jsonObj.getString("Message"))
                 }
@@ -882,7 +884,8 @@ class HomeFragmentNew : BaseFragment(), OnMapReadyCallback, View.OnClickListener
                 } else {
                     Utilities.showToast(activity!!, jsonObj.getString("Message"))
                 }
-            } else if (TYPE == MY_TASK_LIST_NEW_WFMS) {
+            } else if (TYPE == MY_TASK_LIST_NEW_WFMS)
+            {
                 val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
                 if (jsonObj.getString("Status").equals("Success")) {
                     taskAL.clear()
@@ -917,9 +920,55 @@ class HomeFragmentNew : BaseFragment(), OnMapReadyCallback, View.OnClickListener
                         .findFragmentById(com.htistelecom.htisinhouse.R.id.fragment_map) as SupportMapFragment
                 mapFragment.getMapAsync(this)
             }
+            else if (TYPE == MARKETING_TASK_LIST_WFMS)
+            {
+                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObject.getString("Status").equals("Success")) {
+                    taskList.clear()
+                    taskList = Gson().fromJson<java.util.ArrayList<TaskModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<TaskModel>>() {
+
+                    }.type)
+
+                    tvTasksCountHome.text = taskList.size.toString() + " Scheduled Tasks"
+                    mTaskCount = taskList.size.toString()
+
+
+
+
+                }
+                else
+                {
+                    tvTasksCountHome.text = "No Scheduled Tasks"
+
+                }
+                val mapFragment = childFragmentManager!!
+                        .findFragmentById(com.htistelecom.htisinhouse.R.id.fragment_map) as SupportMapFragment
+                mapFragment.getMapAsync(this)
+            }
+
         }
 
 
+    }
+
+    private fun callTaskList() {
+        if (tinyDB.getString(ConstantsWFMS.TINYDB_USER_TYPE).equals("1")) {
+            val date = ConstantKotlin.getCurrentDate()
+            val jsonObject = JSONObject()
+
+            jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
+            jsonObject.put("TaskDate", date)
+            hitAPI(ConstantsWFMS.MARKETING_TASK_LIST_WFMS, jsonObject.toString())
+        } else {
+            var json = JSONObject()
+            json.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
+            json.put("FromDate", mCurrentDate)
+            json.put("ToDate", mCurrentDate)
+            json.put("SiteUploadedId", "0")
+            // Utilities.getCurrentDateInMonth()
+
+            hitAPI(ConstantsWFMS.MY_TASK_LIST_NEW_WFMS, json.toString())
+        }
     }
 
 

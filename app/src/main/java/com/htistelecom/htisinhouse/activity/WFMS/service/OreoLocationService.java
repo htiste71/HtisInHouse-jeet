@@ -92,21 +92,20 @@ public class OreoLocationService extends JobIntentService {
     }
 
     private void initViews() {
+
+
         tinyDB = new TinyDB(this);
-        file = new File(Environment.getExternalStorageDirectory(), "MyFiles");
-        if (!file.exists()) {
-            file.mkdirs();
-        }
+//        file = new File(Environment.getExternalStorageDirectory(), "MyDataFile");
+//        if (!file.exists()) {
+//            file.mkdirs();
+//        }
         currentDateTime();
 
         mUserId = tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID);
     }
 
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+
 
     private class LocationListener implements android.location.LocationListener {
         private Location lastLocation = null;
@@ -264,7 +263,7 @@ public class OreoLocationService extends JobIntentService {
 
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
-
+Log.e("","");
     }
 
     final Handler mHandler = new Handler();
@@ -330,7 +329,7 @@ public class OreoLocationService extends JobIntentService {
             notificationManager.createNotificationChannel(channel);
             builder = new Notification.Builder(getApplicationContext(), "channel_01")
                     .setAutoCancel(false)
-                    .setSmallIcon(R.drawable.ic_icon_call)
+                    .setSmallIcon(R.drawable.ic_launcher)
                     .setVibrate(new long[]{1000, 1000})
                     .setSubText("Do not close this app!")
                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
@@ -338,7 +337,7 @@ public class OreoLocationService extends JobIntentService {
 
         } else {
             builder = new Notification.Builder(this)
-                    .setSmallIcon(R.drawable.ic_icon_call)
+                    .setSmallIcon(R.drawable.ic_launcher)
                     .setContentText("Do not close this app")
                     .setContentTitle("WFMS")
                     .setAutoCancel(false);
@@ -427,6 +426,22 @@ public class OreoLocationService extends JobIntentService {
     private void addDataToFile(String latitude, String longitude) {
 
 
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            String fileName= mUserId + "_" + mDate + ".txt";
+            myFile=new File(getExternalFilesDir("MyFilesPath"),fileName);
+        }
+        else
+        {
+            file = new File(Environment.getExternalStorageDirectory(), "MyFilesPath");
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            myFile = new File(file, "" + mUserId + "_" + mDate + ".txt");
+
+
+
+        }
         FileWriter fr = null;
         try {
             BufferedWriter br = null;
@@ -446,7 +461,7 @@ public class OreoLocationService extends JobIntentService {
                     }
                 }
                 currentDateTime();
-                myFile = new File(file, "" + mUserId + "_" + mDate + ".txt");
+
 
                 if (isAvailable) {
                     fr = new FileWriter(myFile, true);
@@ -462,7 +477,7 @@ public class OreoLocationService extends JobIntentService {
 
                 } else {
 
-                    myFile.createNewFile();
+                   // myFile.createNewFile();
                     fr = new FileWriter(myFile, true);
                     br = new BufferedWriter(fr);
                     br.write(latitude + "#" + longitude + "#" + mDateTime + ",");
@@ -507,17 +522,18 @@ public class OreoLocationService extends JobIntentService {
 
 
     boolean checkDistance(double lat1, double long1, double lat2, double long2) {
-        Location locationA = new Location("point A");
-        locationA.setLatitude(lat1);
-        locationA.setLongitude(long1);
-        Location locationB = new Location("point B");
-        locationB.setLatitude(lat2);
-        locationB.setLongitude(long2);
-        double distance = locationA.distanceTo(locationB);
-        if (distance > 25)
-            return true;
-        else
-            return false;
+        return true;
+//        Location locationA = new Location("point A");
+//        locationA.setLatitude(lat1);
+//        locationA.setLongitude(long1);
+//        Location locationB = new Location("point B");
+//        locationB.setLatitude(lat2);
+//        locationB.setLongitude(long2);
+//        double distance = locationA.distanceTo(locationB);
+//        if (distance > 25)
+//            return true;
+//        else
+//            return false;
     }
 
 }

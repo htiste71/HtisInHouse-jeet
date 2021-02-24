@@ -30,6 +30,7 @@ import retrofit2.Response
 import java.lang.String
 
 class OfficeFragment : Fragment(), MyInterface, View.OnClickListener {
+    var fromStart=true
     private var officeList= ArrayList<OfficeModel>()
     var tinyDB: TinyDB? = null
     lateinit var adapter:OfficeAdapter
@@ -83,17 +84,33 @@ class OfficeFragment : Fragment(), MyInterface, View.OnClickListener {
 
     fun hitAPI(TYPE: Int, params: kotlin.String) {
         if (TYPE == OFFICE_SUBMIT_WFMS) {
-            ApiData.getData(params, ConstantsWFMS.OFFICE_SUBMIT_WFMS, this, activity)
+            ApiData.officeData(params, ConstantsWFMS.OFFICE_SUBMIT_WFMS, this, activity,true)
 
         } else {
-            ApiData.getData(params, ConstantsWFMS.OFFICE_LIST_WFMS, this, activity)
+            if(fromStart)
+            ApiData.officeData(params, ConstantsWFMS.OFFICE_LIST_WFMS, this, activity,true)
+            else
+                ApiData.officeData(params, ConstantsWFMS.OFFICE_LIST_WFMS, this, activity,false)
 
         }
     }
 
 
     override fun sendResponse(response: Any, TYPE: Int) {
-        Utilities.dismissDialog()
+        if(fromStart && TYPE==OFFICE_LIST_WFMS)
+        {
+            Utilities.dismissDialog()
+        }
+        else if(!fromStart && TYPE==OFFICE_LIST_WFMS)
+        {
+            Utilities.dismissDialog()
+
+        }
+        else
+        {
+
+        }
+
 
 
         if (TYPE == OFFICE_SUBMIT_WFMS) {
@@ -106,6 +123,7 @@ class OfficeFragment : Fragment(), MyInterface, View.OnClickListener {
 
                     jsonObject.put("Empid", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
                     jsonObject.put("TaskDate", date)
+                    fromStart=false
                     hitAPI(OFFICE_LIST_WFMS, jsonObject.toString())
                 } else {
                     Utilities.showToast(activity, jsonObject.getString("Message"))

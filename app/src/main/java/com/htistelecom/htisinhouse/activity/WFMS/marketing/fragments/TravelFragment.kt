@@ -1,3 +1,6 @@
+
+
+
 package com.htistelecom.htisinhouse.activity.WFMS.marketing.fragments
 
 import android.app.Dialog
@@ -37,6 +40,7 @@ class TravelFragment : Fragment(), MyInterface, View.OnClickListener {
     private var travelList = ArrayList<TravelModel>()
     var tinyDB: TinyDB? = null
     lateinit var dialog: Dialog
+    var fromStart=true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -55,7 +59,19 @@ class TravelFragment : Fragment(), MyInterface, View.OnClickListener {
 
 
     override fun sendResponse(response: Any, TYPE: Int) {
-        Utilities.dismissDialog()
+        if(fromStart && TYPE== ConstantsWFMS.TRAVEL_LIST_WFMS)
+        {
+            Utilities.dismissDialog()
+        }
+        else if(!fromStart && TYPE== ConstantsWFMS.TRAVEL_LIST_WFMS)
+        {
+            Utilities.dismissDialog()
+
+        }
+        else
+        {
+
+        }
 
 
         if (TYPE == ConstantsWFMS.TRAVEL_SUBMIT_WFMS) {
@@ -67,6 +83,8 @@ class TravelFragment : Fragment(), MyInterface, View.OnClickListener {
                     Utilities.showToast(activity, jsonObject.getString("Message"))
                     jsonObject.put("Empid", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
                     jsonObject.put("TaskDate", date)
+                    fromStart=false
+
                     hitAPI(ConstantsWFMS.TRAVEL_LIST_WFMS, jsonObject.toString())
                     dialog.dismiss()
                 } else {
@@ -167,10 +185,14 @@ class TravelFragment : Fragment(), MyInterface, View.OnClickListener {
 
     fun hitAPI(TYPE: Int, params: kotlin.String) {
         if (TYPE == ConstantsWFMS.TRAVEL_SUBMIT_WFMS) {
-            ApiData.getData(params, ConstantsWFMS.TRAVEL_SUBMIT_WFMS, this, activity)
+            ApiData.travelData(params, ConstantsWFMS.TRAVEL_SUBMIT_WFMS, this, activity,true)
 
         } else {
-            ApiData.getData(params, ConstantsWFMS.TRAVEL_LIST_WFMS, this, activity)
+            if(fromStart)
+                ApiData.travelData(params, ConstantsWFMS.TRAVEL_LIST_WFMS, this, activity,true)
+            else
+                ApiData.travelData(params, ConstantsWFMS.TRAVEL_LIST_WFMS, this, activity,false  )
+
 
         }
     }

@@ -225,6 +225,7 @@ class AttendanceFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener
             jsonObject.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
             jsonObject.put("FromDate", startDate)
             jsonObject.put("ToDate", endDate)
+            jsonObject.put("Type", "a")
             ApiData.getData(jsonObject.toString(), ATTENDANCE_LIST_WFMS, this, activity)
         } catch (e: Exception) {
             Log.e("Error", e.message)

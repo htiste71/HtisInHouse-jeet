@@ -25,7 +25,9 @@ import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.*
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.UtilitiesWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.adapters.TaskAdapterWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.marketing.MarketingFullScreenDialog
+import com.htistelecom.htisinhouse.activity.WFMS.marketing.model.TaskModel
 import com.htistelecom.htisinhouse.activity.WFMS.models.TaskListModel
+import com.htistelecom.htisinhouse.adapter.MarketingTaskAdapter
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.font.Ubuntu
 import com.htistelecom.htisinhouse.font.UbuntuEditText
@@ -54,6 +56,9 @@ class TaskFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
     var mProjectId = ""
     var mSiteId = ""
     var mActivityId = ""
+    private var taskList = java.util.ArrayList<TaskModel>()
+    lateinit var adapter: MarketingTaskAdapter
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_task_wfms, null)
     }
@@ -89,15 +94,29 @@ class TaskFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
     }
 
     private fun callTaskList() {
-        var json = JSONObject()
-        json.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
-        json.put("FromDate", mCurrentDate)
-        json.put("ToDate", mCurrentDate)
-        json.put("SiteUploadedId", "0")
+        if(tinyDB.getString(ConstantsWFMS.TINYDB_USER_TYPE).equals("1"))
+        {
+            val date = ConstantKotlin.getCurrentDate()
+            val jsonObject = JSONObject()
+
+            jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
+            jsonObject.put("TaskDate", date)
+            hitAPI(ConstantsWFMS.MARKETING_TASK_LIST_WFMS, jsonObject.toString())
+        }
+        else
+        {
+            var json = JSONObject()
+            json.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
+            json.put("FromDate", mCurrentDate)
+            json.put("ToDate", mCurrentDate)
+            json.put("SiteUploadedId", "0")
+            hitAPI(MY_TASK_LIST_NEW_WFMS, json.toString())
+
+        }
 
 
 
-        hitAPI(MY_TASK_LIST_NEW_WFMS, json.toString())
+
     }
 
 
@@ -293,6 +312,10 @@ class TaskFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
             ApiData.getData(params.toString(), ConstantsWFMS.ADD_TASK_WFMS, this, activity!!)
 
         }
+        else if (type == MARKETING_TASK_LIST_WFMS) {
+            ApiData.getData(params.toString(), ConstantsWFMS.MARKETING_TASK_LIST_WFMS, this, activity!!)
+
+        }
     }
 
     override fun sendResponse(response: Any?, TYPE: Int) {
@@ -349,7 +372,32 @@ class TaskFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
             } else if (TYPE == ACTIVITY_LIST_WFMS) {
                 AddTask.commonMethod(response, ACTIVITY_LIST_WFMS)
 
-            } else if (TYPE == ADD_TASK_WFMS) {
+            }
+            else if (TYPE == MARKETING_TASK_LIST_WFMS) {
+                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObject.getString("Status").equals("Success")) {
+                    taskList.clear()
+                    taskList = Gson().fromJson<java.util.ArrayList<TaskModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<TaskModel>>() {
+
+                    }.type)
+
+                    rvTaskFragmentWFMS.visibility = View.VISIBLE
+                    tvNoTaskFragmentWFMS.visibility = View.GONE
+                    adapter = MarketingTaskAdapter(activity!!, taskList)
+                    rvTaskFragmentWFMS.adapter = adapter
+
+
+
+                }
+                else
+                {
+                    rvTaskFragmentWFMS.visibility = View.GONE
+                    tvNoTaskFragmentWFMS.visibility = View.VISIBLE
+                }
+
+            }
+
+            else if (TYPE == ADD_TASK_WFMS) {
 
                 val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
                 if (jsonObj.getString("Status").equals("Success")) {
@@ -375,7 +423,7 @@ class TaskFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
 
                 if (tinyDB.getString(ConstantsWFMS.TINYDB_USER_TYPE).equals("1")) {
                     val ft: FragmentTransaction = fragmentManager!!.beginTransaction()
-                    val newFragment: MarketingFullScreenDialog? = MarketingFullScreenDialog.newInstance()
+                    val newFragment: MarketingFullScreenDialog? = MarketingFullScreenDialog.newInstance(tinyDB.getString(TINYDB_EMP_ID),false)
                     newFragment!!.show(ft, "dialog")
 
                 } else {

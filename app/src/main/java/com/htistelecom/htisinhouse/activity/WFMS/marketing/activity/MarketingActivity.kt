@@ -1,6 +1,7 @@
 package com.htistelecom.htisinhouse.activity.WFMS.marketing.activity
 
 import android.app.TimePickerDialog
+import android.location.Address
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -9,15 +10,20 @@ import androidx.appcompat.app.AppCompatActivity
 import butterknife.ButterKnife
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.ApiData
+import com.htistelecom.htisinhouse.activity.WFMS.AddTask
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
-import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.MARKETING_ENTITY_WFMS
+import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.*
 import com.htistelecom.htisinhouse.activity.WFMS.marketing.MarketingSingleModel
+import com.htistelecom.htisinhouse.activity.WFMS.marketing.fragments.TaskFragment
+import com.htistelecom.htisinhouse.activity.WFMS.models.TwoParameterModel
+import com.htistelecom.htisinhouse.activity.WFMS.service.OreoLocationService
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.interfaces.SpinnerData
 import com.htistelecom.htisinhouse.retrofit.MyInterface
-import com.htistelecom.htisinhouse.utilities.Constants
-import com.htistelecom.htisinhouse.utilities.Utilities
+import com.htistelecom.htisinhouse.utilities.*
 import kotlinx.android.synthetic.main.activity_marketing.*
+import kotlinx.android.synthetic.main.fragment_add_project.*
+import kotlinx.android.synthetic.main.toolbar.*
 import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Response
@@ -28,14 +34,33 @@ import kotlin.collections.ArrayList
 
 class MarketingActivity : AppCompatActivity(), View.OnClickListener, MyInterface {
 
+    private var mAddress: MutableList<Address>? = null
+    private val entityList = ArrayList<TwoParameterModel>()
+    lateinit var entityArray: Array<String?>
+
+    private val turnoverList = ArrayList<TwoParameterModel>()
+    lateinit var turnoverArray: Array<String?>
+
+
+    private val natureList = ArrayList<TwoParameterModel>()
+    lateinit var natureArray: Array<String?>
+
+
+    private val positionList = ArrayList<TwoParameterModel>()
+    lateinit var positionArray: Array<String?>
+
+    private var mCountryId: String = ""
+    lateinit var tinyDB: TinyDB
+
+
     private var sZip: String = ""
     private var sAddress: String = ""
     private var sPhone: String = ""
     private var sEmail: String = ""
     private var sRemarks: String = ""
-    private var sCompanyOwnerDetails: String = ""
-    private var sCompanyOwnerName: String = ""
-    private var sWebstite: String = ""
+ //   private var sCompanyOwnerDetails: String = ""
+  //  private var sCompanyOwnerName: String = ""
+ //   private var sWebstite: String = ""
     private var sPersonName: String = ""
     private var sCompanyName: String = ""
     private var mLead: String = "Y"
@@ -62,13 +87,7 @@ class MarketingActivity : AppCompatActivity(), View.OnClickListener, MyInterface
     var sStartTime = ""
     var sEndTime = ""
 
-    var alPosition = ArrayList<MarketingSingleModel>()
-    var alEntityType = ArrayList<MarketingSingleModel>()
-    var alBusiness = ArrayList<MarketingSingleModel>()
-    var alTurnover = ArrayList<MarketingSingleModel>()
-    var alState = ArrayList<MarketingSingleModel>()
-    var alCity = ArrayList<MarketingSingleModel>()
-    var projects: Array<String>? = null
+
     lateinit var listPopupWindow: ListPopupWindow
 
 
@@ -77,31 +96,36 @@ class MarketingActivity : AppCompatActivity(), View.OnClickListener, MyInterface
         setContentView(R.layout.activity_marketing)
         initViews()
         listeners()
-        callAPI(ConstantsWFMS.MARKETING_ENTITY_WFMS,"");
+        callAPI(ConstantsWFMS.MARKETING_POSITION_WFMS, "");
     }
 
     private fun initViews() {
-//        tv_title!!.text = "Task Details"
-//        ivDrawer!!.visibility = View.GONE
-        rlPosition.getViewTreeObserver().addOnGlobalLayoutListener({ mWidthPosition = rlPosition.getMeasuredWidth() })
-        rlTurnover.getViewTreeObserver().addOnGlobalLayoutListener({ mWidthTurnover = rlTurnover.getMeasuredWidth() })
-
+        tv_title!!.text = "Task Details"
+        ivDrawer!!.visibility = View.GONE
+        tinyDB = TinyDB(this)
+        rlPositionMarketingActivity.getViewTreeObserver().addOnGlobalLayoutListener({ mWidthPosition = rlPositionMarketingActivity.getMeasuredWidth() })
+        rlTurnoverMarketingActivity.getViewTreeObserver().addOnGlobalLayoutListener({ mWidthTurnover = rlTurnoverMarketingActivity.getMeasuredWidth() })
+        mAddress = Utilities.getAddressFromLatLong(this, OreoLocationService.LATITUDE.toDouble(), OreoLocationService.LONGITUDE.toDouble())
+        sAddress = mAddress!!.get(0).getAddressLine(0).toString()
+        etAddressMarketingActivity.setText(sAddress)
     }
 
 
     private fun listeners() {
-        rlStartTime.setOnClickListener(this)
-        rlEndTime.setOnClickListener(this)
-        submit_btn.setOnClickListener(this)
-        rlPosition.setOnClickListener(this)
-        ivEntityType.setOnClickListener(this)
-        ivNatureBusiness.setOnClickListener(this)
-        rlTurnover.setOnClickListener(this)
-        ivState.setOnClickListener(this)
-        ivCity.setOnClickListener(this)
-        cancel_btn.setOnClickListener(this)
-
-        rgLead.setOnCheckedChangeListener { group, checkedId ->
+        rlStartTimeMarketingActivity.setOnClickListener(this)
+        rlEndTimeMarketingActivity.setOnClickListener(this)
+        btnSubmitMarketingActivity.setOnClickListener(this)
+        rlPositionMarketingActivity.setOnClickListener(this)
+        ivEntityTypeMarketingActivity.setOnClickListener(this)
+        ivNatureBusinessMarketingActivity.setOnClickListener(this)
+        rlTurnoverMarketingActivity.setOnClickListener(this)
+        ivStateMarketingActivity.setOnClickListener(this)
+        ivCityMarketingActivity.setOnClickListener(this)
+        ivCountryMarketingActivity.setOnClickListener(this)
+        btnCancelMarketingActivity.setOnClickListener(this)
+        ivBack.setOnClickListener { finish()
+        }
+        rgLeadMarketingActivity.setOnCheckedChangeListener { group, checkedId ->
             val radio: RadioButton = findViewById(checkedId)
 
             if (radio.text.equals("Yes,true")) {
@@ -118,118 +142,173 @@ class MarketingActivity : AppCompatActivity(), View.OnClickListener, MyInterface
     }
 
     private fun addTask() {
-        sCompanyName = etCompanyName!!.text.toString()
-        sPersonName = etpersonName!!.text.toString()
-        sWebstite = etWebstite!!.text.toString()
-        sCompanyOwnerName = etCompanyOwnerName!!.text.toString()
-        sCompanyOwnerDetails = etCompanyOwnerDetails!!.text.toString()
-        sRemarks = etRemarks!!.text.toString()
-        sEmail = etEmail!!.text.toString()
-        sPhone = etPhone!!.text.toString()
-        sAddress = etAddress!!.text.toString()
-        sZip = etZip!!.text.toString()
-        sEndTime = tvOutTime.text.toString()
-        if (Utilities.isNetConnected(this@MarketingActivity)) {
-            if (TextUtils.isEmpty(sCompanyName)) {
-                Utilities.showToast(this@MarketingActivity, "Please enter  company name")
-                return
-            } else if (TextUtils.isEmpty(sPersonName)) {
-                Utilities.showToast(this@MarketingActivity, "Please enter  person Name")
-                return
-            } else if (mPositionId.equals("")) {
-                Utilities.showToast(this@MarketingActivity, "Please enter  position")
-                return
-            } else if (TextUtils.isEmpty(sWebstite)) {
-                Utilities.showToast(this@MarketingActivity, "Please enter your website ")
-                return
-            } else if (sStartTime.equals("")) {
-                Utilities.showToast(this@MarketingActivity, "Please enter In Time ")
-                return
-            } else if (sEndTime.equals("")) {
-                Utilities.showToast(this@MarketingActivity, "Please enter Out Time ")
-                return
-            } else if (mEntityId.equals("")) {
-                Utilities.showToast(this@MarketingActivity, "Please select Entity Type")
-                return
-            } else if (mBusinessId.equals("")) {
-                Utilities.showToast(this@MarketingActivity, "Please select Nature of Business")
-                return
-            } else if (TextUtils.isEmpty(sCompanyOwnerName)) {
-                Utilities.showToast(this@MarketingActivity, "Please enter  company owner name ")
-                return
-            } else if (TextUtils.isEmpty(sCompanyOwnerDetails)) {
-                Utilities.showToast(this@MarketingActivity, "Please enter  company owner contact details ")
-                return
-            } else if (mTurnoverId.equals("", true)) {
-                Utilities.showToast(this@MarketingActivity, "Please select annual turnover")
-                return
-            } else if (TextUtils.isEmpty(sRemarks)) {
-                Utilities.showToast(this@MarketingActivity, "Please enter your remarks ")
-                return
-            } else if (TextUtils.isEmpty(sEmail)) {
-                Utilities.showToast(this@MarketingActivity, "Please enter your email")
-                return
-            } else if (!Utilities.emailPatterns(sEmail)) {
-                Utilities.showToast(this@MarketingActivity, "Email Id is not valid")
-                return
-            } else if (TextUtils.isEmpty(sPhone)) {
-                Utilities.showToast(this@MarketingActivity, "Please enter your phone")
-                return
-            } else if (sPhone.length < 10) {
-                Utilities.showToast(this@MarketingActivity, "Phone number must be 10 digit")
-                return
-            } else if (TextUtils.isEmpty(sAddress)) {
-                Utilities.showToast(this@MarketingActivity, "Please enter your address")
-                return
-            } else if (mStateId.equals("")) {
-                Utilities.showToast(this@MarketingActivity, "Please select the state")
-                return
-            } else if (mCityId.equals("")) {
-                Utilities.showToast(this@MarketingActivity, "Please select the city")
-                return
-            } else if (TextUtils.isEmpty(sZip)) {
-                Utilities.showToast(this@MarketingActivity, "Please enter your zip")
-                return
-            } else {
-                callAPI("post")// hit the Api
-            }
-        } else {
-            Utilities.showToast(this@MarketingActivity, resources.getString(R.string.internet_connection))
-        }
+        sCompanyName = etCompanyNameMarketingActivity!!.text.toString()
+        sPersonName = etPersonNameMarketingActivity!!.text.toString()
+//        sWebstite = etWebstiteMarketingActivity!!.text.toString()
+//        sCompanyOwnerName = etCompanyOwnerNameMarketingActivity!!.text.toString()
+//        sCompanyOwnerDetails = etCompanyOwnerDetailsMarketingActivity!!.text.toString()
+        sRemarks = etRemarksMarketingActivity!!.text.toString()
+        sEmail = etEmailMarketingActivity!!.text.toString()
+        sPhone = etPhoneMarketingActivity!!.text.toString()
+        sAddress = etAddressMarketingActivity!!.text.toString()
+        sZip = etZipMarketingActivity!!.text.toString()
+        sEndTime = tvOutTimeMarketingActivity.text.toString()
+        sStartTime = tvReachTimeMarketingActivity.text.toString();
+
+//        sCompanyName="test"
+//        sPersonName="test"
+//        sWebstite="test"
+//        sCompanyOwnerName="test"
+//        sCompanyOwnerDetails="1234567890"
+//        sRemarks="test"
+//        sEmail="test@gmail.com"
+//        sPhone="1234567890"
+//        sAddress="test"
+//        sPersonName="test"
+//        sZip="123456"
+//        sEndTime="12:00"
+//        sStartTime="11:00"
+//        mTurnoverId="1"
+//        mBusinessId="1"
+//        mStateId="1"
+//        mCityId="1"
+//        mEntityId="1"
+//        mPositionId="1"
+
+//        if (Utilities.isNetConnected(this@MarketingActivity)) {
+//            if (TextUtils.isEmpty(sCompanyName)) {
+//                Utilities.showToast(this@MarketingActivity, "Please enter  company name")
+//                return
+//            } else if (TextUtils.isEmpty(sPersonName)) {
+//                Utilities.showToast(this@MarketingActivity, "Please enter  person Name")
+//                return
+//            } else if (mPositionId.equals("")) {
+//                Utilities.showToast(this@MarketingActivity, "Please enter  position")
+//                return
+//            } else if (TextUtils.isEmpty(sWebstite)) {
+//                Utilities.showToast(this@MarketingActivity, "Please enter your website ")
+//                return
+//            } else if (sStartTime.equals("")) {
+//                Utilities.showToast(this@MarketingActivity, "Please enter In Time ")
+//                return
+//            } else if (sEndTime.equals("")) {
+//                Utilities.showToast(this@MarketingActivity, "Please enter Out Time ")
+//                return
+//            } else if (mEntityId.equals("")) {
+//                Utilities.showToast(this@MarketingActivity, "Please select Entity Type")
+//                return
+//            } else if (mBusinessId.equals("")) {
+//                Utilities.showToast(this@MarketingActivity, "Please select Nature of Business")
+//                return
+//            } else if (TextUtils.isEmpty(sCompanyOwnerName)) {
+//                Utilities.showToast(this@MarketingActivity, "Please enter  company owner name ")
+//                return
+//            } else if (TextUtils.isEmpty(sCompanyOwnerDetails)) {
+//                Utilities.showToast(this@MarketingActivity, "Please enter  company owner contact details ")
+//                return
+//            } else if (mTurnoverId.equals("", true)) {
+//                Utilities.showToast(this@MarketingActivity, "Please select annual turnover")
+//                return
+//            } else if (TextUtils.isEmpty(sRemarks)) {
+//                Utilities.showToast(this@MarketingActivity, "Please enter your remarks ")
+//                return
+//            } else if (TextUtils.isEmpty(sEmail)) {
+//                Utilities.showToast(this@MarketingActivity, "Please enter your email")
+//                return
+//            } else if (!Utilities.emailPatterns(sEmail)) {
+//                Utilities.showToast(this@MarketingActivity, "Email Id is not valid")
+//                return
+//            } else if (TextUtils.isEmpty(sPhone)) {
+//                Utilities.showToast(this@MarketingActivity, "Please enter your phone")
+//                return
+//            } else if (sPhone.length < 10) {
+//                Utilities.showToast(this@MarketingActivity, "Phone number must be 10 digit")
+//                return
+//            } else if (TextUtils.isEmpty(sAddress)) {
+//                Utilities.showToast(this@MarketingActivity, "Please enter your address")
+//                return
+//            } else if (mCountryId.equals("")) {
+//                Utilities.showToast(this@MarketingActivity, resources.getString(R.string.errSelectCountry))
+//                return
+//            } else if (mStateId.equals("")) {
+//                Utilities.showToast(this@MarketingActivity, "Please select the state")
+//                return
+//            } else if (mCityId.equals("")) {
+//                Utilities.showToast(this@MarketingActivity, "Please select the city")
+//                return
+//            } else if (TextUtils.isEmpty(sZip)) {
+//                Utilities.showToast(this@MarketingActivity, "Please enter your zip")
+//                return
+//            } else {
+//                val date = ConstantKotlin.getCurrentDate()
+//                val json = JSONObject()
+//                json.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
+//                json.put("TaskDate", date)
+//                json.put("CompanyName", sCompanyName)
+//                json.put("CustReachTime", sStartTime)
+//                json.put("CustOutTime", sEndTime)
+//                json.put("EmployeeName", sPersonName)
+//                json.put("Position", mPositionId)
+//
+//                json.put("WebLink", sWebstite)
+//                json.put("EntityID", mEntityId)
+//                json.put("BusinessID", mBusinessId)
+//                json.put("CompanyOwner", sCompanyOwnerName)
+//
+//                json.put("CompanyOwnerContact", sCompanyOwnerDetails)
+//                json.put("AnnualTurnoverID", mTurnoverId)
+//                json.put("BusinessID", mBusinessId)
+//                json.put("Remarks", sRemarks)
+//
+//                json.put("LeadGenerated", sWebstite)
+//                json.put("EmailID", sEmail)
+//                json.put("StateID", mStateId)
+//                json.put("CityId", mCityId)
+//
+//                //  json.put("CountryId",mCountryId)
+//                json.put("Address", sAddress)
+//                json.put("Phone", sPhone)
+//                json.put("ZipCode", sZip)
+//                json.put("Latitude", OreoLocationService.LATITUDE)
+//                json.put("longitude", OreoLocationService.LONGITUDE)
+//                json.put("TasktypeID", "3")
+//                callAPI(MARKETING_TASK_SUBMIT_WFMS, json.toString())
+//
+//
+//            }
+//        } else {
+//            Utilities.showToast(this@MarketingActivity, resources.getString(R.string.internet_connection))
+//        }
     }
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.rlStartTime -> {
+            R.id.rlStartTimeMarketingActivity -> {
                 val c: Calendar = Calendar.getInstance()
                 val mHour = c.get(Calendar.HOUR_OF_DAY)
                 val mMinute = c.get(Calendar.MINUTE)
 
-                // Launch Time Picker Dialog
-                // Launch Time Picker Dialog
 
                 val timePickerDialog = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
                     val tvStartTime = cal.format(cal.parse(hour.toString() + ":" + minute.toString()))
-                    tvReachTime.text = tvStartTime
+                    tvReachTimeMarketingActivity.text = tvStartTime
                 }, mHour, mMinute, false)
 
 
                 timePickerDialog.show()
 
             }
-            R.id.rlEndTime -> {
+            R.id.rlEndTimeMarketingActivity -> {
 
-                sStartTime = tvReachTime.text.toString();
+                sStartTime = tvReachTimeMarketingActivity.text.toString();
                 if (sStartTime.equals("")) {
                     Utilities.showToast(this, "Please enter Reach time")
                 } else {
-                    mStartTime = cal.parse(tvReachTime.text.toString())
+                    mStartTime = cal.parse(tvReachTimeMarketingActivity.text.toString())
                     val c: Calendar = Calendar.getInstance()
                     val mHour = c.get(Calendar.HOUR_OF_DAY)
                     val mMinute = c.get(Calendar.MINUTE)
 
-                    // Launch Time Picker Dialog
-                    // Launch Time Picker Dialog
 
                     val timePickerDialog = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
 
@@ -238,7 +317,7 @@ class MarketingActivity : AppCompatActivity(), View.OnClickListener, MyInterface
                             Utilities.showToast(this, "Out date must be after reach date")
                         } else {
                             val tvEndTime = cal.format(cal.parse(hour.toString() + ":" + minute.toString()))
-                            tvOutTime.text = tvEndTime
+                            tvOutTimeMarketingActivity.text = tvEndTime
                         }
 
                     }, mHour, mMinute, false)
@@ -249,164 +328,245 @@ class MarketingActivity : AppCompatActivity(), View.OnClickListener, MyInterface
 
             }
 
-            R.id.rlPosition -> {
+            R.id.rlPositionMarketingActivity -> {
 
-                var list = ArrayList<String>()
-                // var items: Array<String> = arrayOf()
 
-                for ((index, value) in alPosition.withIndex()) {
-                    list.add(alPosition.get(index).name)
-                }
-                val positionArray = arrayOfNulls<String>(list.size)
-                list.toArray(positionArray)
-                showDropdown(positionArray, tvPosition, object : SpinnerData {
+                showDropdown(positionArray, tvPositionMarketingActivity, object : SpinnerData {
                     override fun getData(mId: String, mName: String) {
                         mPositionName = mName
                         mPositionId = mId
-                        tvPosition.text = mPositionName
+                        tvPositionMarketingActivity.text = mPositionName
                     }
                 }, mWidthPosition)
             }
-            R.id.ivEntityType -> {
-                var list = ArrayList<String>()
-                // var items: Array<String> = arrayOf()
+            R.id.ivEntityTypeMarketingActivity -> {
 
-                for ((index, value) in alEntityType.withIndex()) {
-                    list.add(alEntityType.get(index).name)
-                }
-                val entityArray = arrayOfNulls<String>(list.size)
-                list.toArray(entityArray)
-                showDropdown(entityArray, tvEntity, object : SpinnerData {
+                showDropdown(entityArray, tvEntityMarketingActivity, object : SpinnerData {
                     override fun getData(mId: String, mName: String) {
                         mEntityName = mName
                         mEntityId = mId
-                        tvEntity.text = mEntityName
+                        tvEntityMarketingActivity.text = mEntityName
                     }
                 }, mWidthPosition)
             }
-            R.id.ivNatureBusiness -> {
-                var list = ArrayList<String>()
-                // var items: Array<String> = arrayOf()
+            R.id.ivNatureBusinessMarketingActivity -> {
 
-                for ((index, value) in alBusiness.withIndex()) {
-                    list.add(alBusiness.get(index).name)
-                }
-                val businessArray = arrayOfNulls<String>(list.size)
-                list.toArray(businessArray)
-                showDropdown(businessArray, tvNatureBusiness, object : SpinnerData {
+                showDropdown(natureArray, tvNatureBusinessMarketingActivity, object : SpinnerData {
                     override fun getData(mId: String, mName: String) {
                         mBusinessName = mName
                         mBusinessId = mId
-                        tvNatureBusiness.text = mBusinessName
+                        tvNatureBusinessMarketingActivity.text = mBusinessName
                     }
                 }, mWidthPosition)
 
             }
-            R.id.ivState -> {
-                var list = ArrayList<String>()
-                // var items: Array<String> = arrayOf()
 
-                for ((index, value) in alState.withIndex()) {
-                    list.add(alState.get(index).name)
-                }
-                val stateArray = arrayOfNulls<String>(list.size)
-                list.toArray(stateArray)
-                showDropdown(stateArray, tvState, object : SpinnerData {
+
+            R.id.ivCountryMarketingActivity -> {
+                showDropdown(CountriesClass.countryArray, tvCountryMarketingActivity, object : SpinnerData {
                     override fun getData(mId: String, mName: String) {
-                        mStateName = mName
-                        mStateId = mId
-                        tvState.text = mStateName
-                        alCity.clear()
+                        mCountryId = mId
+
+                        mStateId = ""
                         mCityId = ""
-                        mCityName = ""
-                        tvCity.text = "City"
-                        callAPI("get_city")
+                        tvStateMarketingActivity.text = "State"
+                        tvCityMarketingActivity.text = "City"
+
+
+                        val jsonObject = JSONObject()
+                        jsonObject.put("CountryId", mCountryId)
+                        callAPI(STATE_LIST_WFMS, jsonObject.toString())
+
+
                     }
                 }, mWidthPosition)
             }
-            R.id.ivCity -> {
-                var list = ArrayList<String>()
-                // var items: Array<String> = arrayOf()
 
-                for ((index, value) in alCity.withIndex()) {
-                    list.add(alCity.get(index).name)
+            R.id.ivStateMarketingActivity -> {
+
+                if (mCountryId.equals("")) {
+                    Utilities.showToast(this, resources.getString(R.string.errSelectCountry))
+                } else {
+                    showDropdown(CountriesClass.stateArray, tvStateMarketingActivity, object : SpinnerData {
+                        override fun getData(mId: String, mName: String) {
+                            mStateId = mId
+
+                            mCityId = ""
+                            tvCityMarketingActivity.text = "City"
+                            val json = JSONObject()
+                            json.put("StateId", mStateId)
+                            callAPI(CITY_LIST_WFMS, json.toString())
+                        }
+                    }, mWidthPosition)
                 }
-                val cityArray = arrayOfNulls<String>(list.size)
-                list.toArray(cityArray)
-                showDropdown(cityArray, tvCity, object : SpinnerData {
-                    override fun getData(mId: String, mName: String) {
-                        mCityName = mName
-                        mCityId = mId
-                        tvCity.text = mCityName
-                    }
-                }, mWidthPosition)
 
             }
-            R.id.rlTurnover -> {
-                var list = ArrayList<String>()
-                // var items: Array<String> = arrayOf()
+            R.id.ivCityMarketingActivity -> {
+                if (mStateId.equals("")) {
+                    Utilities.showToast(this, resources.getString(R.string.errSelectState))
+                } else {
+                    showDropdown(CountriesClass.cityArray, tvCityMarketingActivity, object : SpinnerData {
+                        override fun getData(mId: String, mName: String) {
 
-                for ((index, value) in alTurnover.withIndex()) {
-                    list.add(alTurnover.get(index).name)
+                            mCityId = mId
+                        }
+                    }, mWidthPosition)
                 }
-                val turnoverArray = arrayOfNulls<String>(list.size)
-                list.toArray(turnoverArray)
-                showDropdown(turnoverArray, tvTurnover, object : SpinnerData {
+
+            }
+            R.id.rlTurnoverMarketingActivity -> {
+
+                showDropdown(turnoverArray, tvTurnoverMarketingActivity, object : SpinnerData {
                     override fun getData(mId: String, mName: String) {
                         mTurnoverName = mName
                         mTurnoverId = mId
-                        tvTurnover.text = mTurnoverName
+                        tvTurnoverMarketingActivity.text = mTurnoverName
                     }
                 }, mWidthTurnover)
             }
 
 
-            R.id.submit_btn -> {
+            R.id.btnSubmitMarketingActivity -> {
                 addTask()
 
             }
-            R.id.cancel_btn -> {
+            R.id.btnCancelMarketingActivity -> {
                 finish()
             }
         }
     }
 
-    fun callAPI(TYPE: Int,params:String) {
-        if (TYPE==MARKETING_ENTITY_WFMS) {
-            ApiData.getMarketingData(MARKETING_ENTITY_WFMS, this)
-        } else {
-            if (type.equals("get_city")) {
-                val jsonObject = JSONObject()
-                jsonObject.put("fiStateId", mStateId)
-                ApiData.getData(jsonObject.toString(), Constants.FOR_CITY_LIST, this, this)
-            } else {
-                val jsonObject = JSONObject()
-                val db = TinyDB(this)
-                jsonObject.put("fvEmplyeeId", db.getString("EmpId"))
-                jsonObject.put("fvCompanyName", sCompanyName)
-                jsonObject.put("fvEmployeeName", sPersonName)
-                jsonObject.put("fiPosition", mPositionId)
-                jsonObject.put("fdCustReachTime", sStartTime)
-                jsonObject.put("fdCustOutTime", sEndTime)
-                jsonObject.put("fiEntityID", mEntityId)
-                jsonObject.put("fiBusinessID", mBusinessId)
-                jsonObject.put("fvCompanyOwner", sCompanyOwnerName)
-                jsonObject.put("fvCompanyOwnerContact", sCompanyOwnerDetails)
-                jsonObject.put("fiAnnualTurnoverID", mTurnoverId)
-                jsonObject.put("fvRemarks", sRemarks)
-                jsonObject.put("fvLeadGenerated", mLead)
-                jsonObject.put("fvemailid", sEmail)
-                jsonObject.put("fvPhone", sPhone)
-                jsonObject.put("fvAddress", sAddress)
-                jsonObject.put("fiStateID", mStateId)
-                jsonObject.put("fiCityId", mCityId)
-                jsonObject.put("fvZipCode", sZip)
-                ApiData.getData(jsonObject.toString(), Constants.FOR_MARKETIN_TASK, this, this)
+    fun callAPI(TYPE: Int, params: String) {
+
+
+        if (TYPE == MARKETING_POSITION_WFMS) {
+            ApiData.getMarketingData(MARKETING_POSITION_WFMS, this, this)
+
+        } else if (TYPE == MARKETING_ENTITY_WFMS) {
+            ApiData.getMarketingData(MARKETING_ENTITY_WFMS, this, this)
+        } else if (TYPE == MARKETING_NATURE_WFMS) {
+            ApiData.getMarketingData(MARKETING_NATURE_WFMS, this, this)
+
+        } else if (TYPE == MARKETING_TURNOVER_WFMS) {
+            ApiData.getMarketingData(MARKETING_TURNOVER_WFMS, this, this)
+
+        } else if (TYPE == COUNTRY_LIST_WFMS) {
+            ApiData.getMarketingData(COUNTRY_LIST_WFMS, this, this)
+
+        } else if (TYPE == STATE_LIST_WFMS) {
+            ApiData.getData(params, STATE_LIST_WFMS, this, this)
+
+        } else if (TYPE == CITY_LIST_WFMS) {
+            ApiData.getData(params, CITY_LIST_WFMS, this, this)
+
+        } else if (TYPE == MARKETING_TASK_SUBMIT_WFMS) {
+            ApiData.getData(params, MARKETING_TASK_SUBMIT_WFMS, this, this)
+
+        }
+    }
+
+
+    override fun sendResponse(response: Any?, TYPE: Int) {
+        if (TYPE == COUNTRY_LIST_WFMS || TYPE == STATE_LIST_WFMS || TYPE == CITY_LIST_WFMS || TYPE == MARKETING_TASK_SUBMIT_WFMS)
+            Utilities.dismissDialog()
+        if (TYPE == MARKETING_ENTITY_WFMS) {
+            val json = JSONObject((response as Response<*>).body()!!.toString())
+            if (json.getString("Status").equals("Success")) {
+                val array = json.getJSONArray("Output")
+                for (i in 0 until array.length()) {
+                    val jsonObjectInner = array.getJSONObject(i)
+                    val model = TwoParameterModel()
+                    model.id = jsonObjectInner.getString("ID")
+                    model.name = jsonObjectInner.getString("EntityName")
+                    entityList.add(model)
+                }
+                entityArray = arrayOfNulls<String>(entityList.size)
+                for (i in entityList.indices) {
+                    entityArray[i] = entityList.get(i).name
+                }
+
+
+            }
+            callAPI(MARKETING_NATURE_WFMS, "")
+        } else if (TYPE == ConstantsWFMS.MARKETING_POSITION_WFMS) {
+            val json = JSONObject((response as Response<*>).body()!!.toString())
+            if (json.getString("Status").equals("Success")) {
+                val array = json.getJSONArray("Output")
+                for (i in 0 until array.length()) {
+                    val jsonObjectInner = array.getJSONObject(i)
+                    val model = TwoParameterModel()
+                    model.id = jsonObjectInner.getString("ID")
+                    model.name = jsonObjectInner.getString("PositionName")
+                    positionList.add(model)
+                }
+                positionArray = arrayOfNulls<String>(positionList.size)
+                for (i in positionList.indices) {
+                    positionArray[i] = positionList.get(i).name
+                }
+            }
+            callAPI(MARKETING_ENTITY_WFMS, "")
+
+
+        } else if (TYPE == ConstantsWFMS.MARKETING_NATURE_WFMS) {
+            val json = JSONObject((response as Response<*>).body()!!.toString())
+            if (json.getString("Status").equals("Success")) {
+                val array = json.getJSONArray("Output")
+                for (i in 0 until array.length()) {
+                    val jsonObjectInner = array.getJSONObject(i)
+                    val model = TwoParameterModel()
+                    model.id = jsonObjectInner.getString("ID")
+                    model.name = jsonObjectInner.getString("NatureName")
+                    natureList.add(model)
+                }
+                natureArray = arrayOfNulls<String>(natureList.size)
+                for (i in natureList.indices) {
+                    natureArray[i] = natureList.get(i).name
+                }
+            }
+            callAPI(MARKETING_TURNOVER_WFMS, "")
+
+
+        } else if (TYPE == ConstantsWFMS.MARKETING_TURNOVER_WFMS) {
+            val json = JSONObject((response as Response<*>).body()!!.toString())
+            if (json.getString("Status").equals("Success")) {
+                val array = json.getJSONArray("Output")
+                for (i in 0 until array.length()) {
+                    val jsonObjectInner = array.getJSONObject(i)
+                    val model = TwoParameterModel()
+                    model.id = jsonObjectInner.getString("ID")
+                    model.name = jsonObjectInner.getString("AnnualTurnover")
+                    turnoverList.add(model)
+                }
+                turnoverArray = arrayOfNulls<String>(turnoverList.size)
+                for (i in turnoverList.indices) {
+                    turnoverArray[i] = turnoverList.get(i).name
+                }
+            }
+
+
+            callAPI(ConstantsWFMS.COUNTRY_LIST_WFMS, "")
+
+
+        } else if (TYPE == COUNTRY_LIST_WFMS) {
+            CountriesClass.commonMethod(response, ConstantsWFMS.COUNTRY_LIST_WFMS)
+        } else if (TYPE == STATE_LIST_WFMS) {
+            CountriesClass.commonMethod(response, ConstantsWFMS.STATE_LIST_WFMS)
+
+        } else if (TYPE == CITY_LIST_WFMS) {
+            CountriesClass.commonMethod(response, ConstantsWFMS.CITY_LIST_WFMS)
+
+        } else if (TYPE == MARKETING_TASK_SUBMIT_WFMS) {
+            val json = JSONObject((response as Response<*>).body()!!.toString())
+            if (json.getString("Status").equals("Success")) {
+                Utilities.showToast(this, json.getString("Message"))
+                finish()
             }
         }
     }
 
+
     fun showDropdown(array: Array<String?>, textView: TextView, spinnerData: SpinnerData, width: Int) {
+        var name = ""
         listPopupWindow = ListPopupWindow(this)
         listPopupWindow.setAdapter(ArrayAdapter(
                 this,
@@ -416,68 +576,41 @@ class MarketingActivity : AppCompatActivity(), View.OnClickListener, MyInterface
         listPopupWindow.setHeight(400)
         listPopupWindow.setModal(true)
         listPopupWindow.setOnItemClickListener({ parent, view, position, id ->
-            if (textView.id == R.id.tvPosition) {
-                spinnerData.getData(alPosition.get(position).id, alPosition.get(position).name)
-            } else if (textView.id == R.id.tvEntity) {
-                spinnerData.getData(alEntityType.get(position).id, alEntityType.get(position).name)
+            if (textView.id == R.id.tvPositionMarketingActivity) {
+                name = positionList.get(position).name
+                spinnerData.getData(positionList.get(position).id, positionList.get(position).name)
 
-            } else if (textView.id == R.id.tvNatureBusiness) {
-                spinnerData.getData(alBusiness.get(position).id, alBusiness.get(position).name)
+            } else if (textView.id == R.id.tvEntityMarketingActivity) {
+                name = entityList.get(position).name
 
-            } else if (textView.id == R.id.tvState) {
-                spinnerData.getData(alState.get(position).id, alState.get(position).name)
+                spinnerData.getData(entityList.get(position).id, entityList.get(position).name)
 
-            } else if (textView.id == R.id.tvCity) {
-                spinnerData.getData(alCity.get(position).id, alCity.get(position).name)
+            } else if (textView.id == R.id.tvNatureBusinessMarketingActivity) {
+                spinnerData.getData(natureList.get(position).id, natureList.get(position).name)
+                name = natureList.get(position).name
+            } else if (textView.id == R.id.tvCountryMarketingActivity) {
+                name = CountriesClass.countryList.get(position).name
+                spinnerData.getData(CountriesClass.countryList.get(position).id, CountriesClass.countryList.get(position).name)
 
-            } else if (textView.id == R.id.tvTurnover) {
-                spinnerData.getData(alTurnover.get(position).id, alTurnover.get(position).name)
+            } else if (textView.id == R.id.tvStateMarketingActivity) {
+                name = CountriesClass.stateList.get(position).name
+                spinnerData.getData(CountriesClass.stateList.get(position).id, CountriesClass.stateList.get(position).name)
+
+            } else if (textView.id == R.id.tvCityMarketingActivity) {
+                name = CountriesClass.cityList.get(position).name
+                spinnerData.getData(CountriesClass.cityList.get(position).id, CountriesClass.cityList.get(position).name)
+
+            } else if (textView.id == R.id.tvTurnoverMarketingActivity) {
+                name = turnoverList.get(position).name
+                spinnerData.getData(turnoverList.get(position).id, turnoverList.get(position).name)
 
             }
+            textView.text = name
 
             listPopupWindow.dismiss()
         })
         listPopupWindow.show()
     }
-
-    override fun sendResponse(response: Any?, TYPE: Int) {
-        try {
-            Utilities.dismissDialog()
-            if (TYPE == MARKETING_ENTITY_WFMS) {
-                val json = JSONObject((response as Response<*>).body()!!.toString())
-                if (json.getString("Status").equals("Success")) {
-                    val array=json.getJSONArray("Output")
-                    for(i in 0 until array.length())
-                    {
-                        
-                    }
-
-
-                }
-            } else if (TYPE == Constants.FOR_CITY_LIST) {
-                val result: String = (response as Response<*>).body().toString()
-                val array = JSONArray(result)
-                for (data in 0 until array.length()) {
-                    val item = array.getJSONObject(data)
-                    val modelCity = MarketingSingleModel(item.getString("fiCityId"), item.getString("fvCityName"))
-                    alCity.add(modelCity)
-                }
-
-            } else if (TYPE == Constants.FOR_MARKETIN_TASK) {
-                val result: String = (response as Response<*>).body().toString()
-                val json = JSONObject(result)
-                if (json.getString("Status").equals("Success", true)) {
-                    Utilities.showToast(this@MarketingActivity, json.getString("Message"))
-                    finish()
-                }
-            }
-
-        } catch (e: Exception) {
-            e.stackTrace
-        }
-    }
-
-
 
 
 }

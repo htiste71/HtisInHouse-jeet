@@ -15,6 +15,7 @@ import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.COMP
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.COUNTRY_LIST_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.DEPARTMENT_LIST_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.LEAVE_TYPE_WFMS;
+import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.MARKETING_POSITION_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.PROJECT_LIST_WFMS;
 import static com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.SELECT_INDUSTRY_TAP_LOCATION_WFMS;
 
@@ -40,6 +41,34 @@ public class ApiData {
 
     }
 
+    public static void officeData(String params, int Type, MyInterface myInterface, Context context,boolean isShow) {
+        if (Utilities.isNetConnected(context)) {
+            if (isShow) {
+                Utilities.showDialog(context);
+
+            }  else {
+
+            }
+            RetrofitAPI.callAPI(params, Type, myInterface);
+        } else {
+            Utilities.showToast(context, "Internet is not connected");
+        }
+    }
+
+
+    public static void travelData(String params, int Type, MyInterface myInterface, Context context,boolean isShow) {
+        if (Utilities.isNetConnected(context)) {
+            if (isShow) {
+                Utilities.showDialog(context);
+
+            }  else {
+
+            }
+            RetrofitAPI.callAPI(params, Type, myInterface);
+        } else {
+            Utilities.showToast(context, "Internet is not connected");
+        }
+    }
 
 
     public static void getDataNoAuth(String params, int Type, MyInterface myInterface, Context context) {
@@ -77,7 +106,7 @@ public class ApiData {
         if (Utilities.isNetConnected(context)) {
             if (Type == COUNTRY_LIST_WFMS) {
 
-            }  else
+            } else
                 Utilities.showDialog(context);
 
             RetrofitAPI.callGetAPI(Type, myInterface);
@@ -86,7 +115,6 @@ public class ApiData {
         }
 
     }
-
 
 
     public static void forImageData(MultipartBody.Part fileToUpload, String mData, int Type, MyInterface myInterface, Context context) {
@@ -99,10 +127,10 @@ public class ApiData {
 
     }
 
-    public static void forTaskImage(MultipartBody.Part fileToUpload, String mData, int Type, MyInterface myInterface, Context context,boolean isShow) {
+    public static void forTaskImage(MultipartBody.Part fileToUpload, String mData, int Type, MyInterface myInterface, Context context, boolean isShow) {
         if (Utilities.isNetConnected(context)) {
-            if(isShow)
-            Utilities.showDialog(context);
+            if (isShow)
+                Utilities.showDialog(context);
             RetrofitAPI.imageUpload(fileToUpload, mData, Type, myInterface);
         } else {
             Utilities.showToast(context, "Internet is not connected");
@@ -120,13 +148,14 @@ public class ApiData {
 
     }
 
-    public static void getMarketingData(int TYPE, MyInterface myInterface) {
+    public static void getMarketingData(int TYPE, MyInterface myInterface,Context context) {
+
+        if (TYPE == MARKETING_POSITION_WFMS) {
+            Utilities.showDialog(context);
+        }
 
 
-
-
-
-        RetrofitAPI.callGetAPI(TYPE,myInterface);
+        RetrofitAPI.callGetAPI(TYPE, myInterface);
 
 
     }

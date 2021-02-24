@@ -180,8 +180,7 @@ public class ConstantsWFMS {
 
     public static final String TINYDB_IMEI_NUMBER = " TINYDB_IMEI_NUMBER";
     public static final String TINYDB_IS_PUNCH_IN = " TINYDB_IS_PUNCH_IN";
-    public static final String TINYDB_PUNCH_IN_TIME = " TINYDB_PUNCH_IN_TIME";
-    public static final String TINYDB_PUNCH_OUT_TIME = " TINYDB_PUNCH_OUT_TIME";
+    public static final String TINYDB_PUNCH_IN_OUT_TIME = " TINYDB_PUNCH_IN_OUT_TIME";
     public static final String TINYDB_EMP_PROFILE_IMAGE = "TINYDB_EMP_PROFILE_IMAGE";
     public static final String TINYDB_MEETING_STATUS = "TINYDB_MEETING_STATUS";
     public static final String TINYDB_MYFILE = "TINYDB_MYFILE";

@@ -13,7 +13,7 @@
         android:id="@+id/llTask"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/ivAddTask"
+        android:layout_above="@id/ivAddTaskFragment"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"

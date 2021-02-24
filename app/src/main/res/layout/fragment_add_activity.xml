@@ -39,12 +39,15 @@
     </LinearLayout>
     <com.htistelecom.htisinhouse.font.UbuntuButton
         android:id="@+id/btnSubmitAddActivityFragment"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_below="@+id/llActivityNameAddActivityFragment"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:paddingLeft="15dp"
+        android:background="@drawable/rect_background_border_orange_radius_13"
+        android:textColor="@color/white"
+        android:layout_margin="15dp"
         android:paddingTop="8dp"
         android:paddingRight="15dp"
         android:paddingBottom="8dp"

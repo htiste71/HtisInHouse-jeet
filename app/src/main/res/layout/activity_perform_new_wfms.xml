@@ -258,7 +258,7 @@
                     android:textStyle="normal" />
 
 
-                <androidx.appcompat.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvActivity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

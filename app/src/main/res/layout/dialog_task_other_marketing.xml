@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical">
+
+    <include
+        android:layout_width="match_parent"
+        android:id="@+id/layout"
+        android:layout_height="?attr/actionBarSize"
+        layout="@layout/toolbar" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTaskFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+
+    <ImageView
+        android:id="@+id/ivAddTaskFragment"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="15dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:src="@drawable/icon_add" />
+
+    <com.htistelecom.htisinhouse.font.UbuntuBold
+        android:id="@+id/tvNoTaskFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No Task Found"
+        android:textSize="18sp"
+        android:visibility="gone" />
+        </RelativeLayout>
+</LinearLayout>

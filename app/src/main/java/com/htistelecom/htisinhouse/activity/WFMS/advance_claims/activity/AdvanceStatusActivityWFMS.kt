@@ -26,6 +26,7 @@ import com.htistelecom.htisinhouse.font.Ubuntu
 import com.htistelecom.htisinhouse.font.UbuntuEditText
 import com.htistelecom.htisinhouse.interfaces.SpinnerData
 import com.htistelecom.htisinhouse.retrofit.MyInterface
+import com.htistelecom.htisinhouse.utilities.ConstantKotlin
 import com.htistelecom.htisinhouse.utilities.Utilities
 import kotlinx.android.synthetic.main.activity_advance_status_wfms.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -50,17 +51,13 @@ class AdvanceStatusActivityWFMS : Activity(), View.OnClickListener, MyInterface 
     // var mSendToId = ""
 
 
-
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_advance_status_wfms)
         initViews()
         listeners()
-        ivBack.setOnClickListener {
-            view ->backToHome()
+        ivBack.setOnClickListener { view ->
+            backToHome()
         }
         ivDrawer.setOnClickListener { view ->
 
@@ -245,43 +242,51 @@ class AdvanceStatusActivityWFMS : Activity(), View.OnClickListener, MyInterface 
 
     override fun sendResponse(response: Any?, TYPE: Int) {
         Utilities.dismissDialog()
-        if (TYPE == REQUEST_ADVANCE_WFMS) {
-            val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
-            if (jsonObject.getString("Status").equals("Success")) {
-                Utilities.showToast(this, jsonObject.getString("Message"))
-                dialog.dismiss()
-                changeTextColor()
-            } else {
-                Utilities.showToast(this, jsonObject.getString("Message"))
+        if ((response as Response<*>).code() == 401 ||  (response as Response<*>).code() == 403) {
+            if (Utilities.isShowing())
+                Utilities.dismissDialog()
+            finish()
+            ConstantKotlin.logout(this, tinyDB)
+        } else {
 
-            }
 
-        } else if (TYPE == SHOW_ADVANCE_DETAIL_WFMS) {
-            advanceClaimList.clear()
-            val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
-            if (jsonObject.getString("Status").equals("Success")) {
-                recyclerViewWFMS.visibility = View.VISIBLE
-                tvNoRecordAdvanceStatusActivityWFMS.visibility = View.GONE
-                advanceClaimList = Gson().fromJson<java.util.ArrayList<AdvanceClaimListModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<AdvanceClaimListModel>>() {
-
-                }.type)
-
-                if (FOR_TYPE == FOR_PENDING) {
-                    recyclerViewWFMS.adapter = AdvanceStatusAdapterWFMS(this, 0, advanceClaimList)
-                } else if (FOR_TYPE == FOR_APPROVED) {
-                    recyclerViewWFMS.adapter = AdvanceStatusAdapterWFMS(this, 1, advanceClaimList)
-
+            if (TYPE == REQUEST_ADVANCE_WFMS) {
+                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObject.getString("Status").equals("Success")) {
+                    Utilities.showToast(this, jsonObject.getString("Message"))
+                    dialog.dismiss()
+                    changeTextColor()
                 } else {
-                    recyclerViewWFMS.adapter = AdvanceStatusAdapterWFMS(this, 2, advanceClaimList)
+                    Utilities.showToast(this, jsonObject.getString("Message"))
 
                 }
 
+            } else if (TYPE == SHOW_ADVANCE_DETAIL_WFMS) {
+                advanceClaimList.clear()
+                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObject.getString("Status").equals("Success")) {
+                    recyclerViewWFMS.visibility = View.VISIBLE
+                    tvNoRecordAdvanceStatusActivityWFMS.visibility = View.GONE
+                    advanceClaimList = Gson().fromJson<java.util.ArrayList<AdvanceClaimListModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<AdvanceClaimListModel>>() {
 
-            } else {
-                recyclerViewWFMS.visibility = View.GONE
-                tvNoRecordAdvanceStatusActivityWFMS.visibility = View.VISIBLE
+                    }.type)
+
+                    if (FOR_TYPE == FOR_PENDING) {
+                        recyclerViewWFMS.adapter = AdvanceStatusAdapterWFMS(this, 0, advanceClaimList)
+                    } else if (FOR_TYPE == FOR_APPROVED) {
+                        recyclerViewWFMS.adapter = AdvanceStatusAdapterWFMS(this, 1, advanceClaimList)
+
+                    } else {
+                        recyclerViewWFMS.adapter = AdvanceStatusAdapterWFMS(this, 2, advanceClaimList)
+
+                    }
+
+
+                } else {
+                    recyclerViewWFMS.visibility = View.GONE
+                    tvNoRecordAdvanceStatusActivityWFMS.visibility = View.VISIBLE
+                }
             }
-        }
 //        else if (TYPE == ConstantsWFMS.DOCUMENT_SEND_TO_WFMS) {
 //            val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
 //            if (jsonObject.getString("Status").equals("Success")) {
@@ -293,6 +298,7 @@ class AdvanceStatusActivityWFMS : Activity(), View.OnClickListener, MyInterface 
 //                }
 //            }
 //        }
+        }
     }
 
     fun showDropdown(array: Array<String?>, spinnerData: SpinnerData, textView: Ubuntu, width: Int) {

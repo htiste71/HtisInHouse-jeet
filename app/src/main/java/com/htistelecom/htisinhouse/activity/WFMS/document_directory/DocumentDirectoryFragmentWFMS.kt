@@ -606,7 +606,7 @@ class DocumentDirectoryFragmentWFMS : Fragment(), View.OnClickListener, MyInterf
                     DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
                     .setAllowedOverRoaming(false)
                     .setTitle("Downloading")
-                    .setDestinationInExternalPublicDir("/MyDocuments", "$imgPath.jpg")
+                    .setDestinationInExternalFilesDir(activity!!,"/MyDocuments", "$imgPath.jpg")
             mImagePathString=imgPath.absolutePath
 
             mManager.enqueue(request)

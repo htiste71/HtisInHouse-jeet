@@ -1,118 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
     android:orientation="vertical"
     android:padding="@dimen/_12sdp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:padding="@dimen/_10sdp">
+   <androidx.recyclerview.widget.RecyclerView
+       android:id="@+id/rvTravelFragment"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"/>
+   <ImageView
+       android:id="@+id/ivAddTravelFragment"
+       android:layout_width="@dimen/_50sdp"
+       android:layout_height="@dimen/_50sdp"
+       android:src="@drawable/icon_add"
+       android:layout_alignParentRight="true"
+       android:layout_alignParentBottom="true"
+       android:layout_gravity="bottom|end"
+       android:layout_marginTop="@dimen/_5sdp" />
 
-        <com.htistelecom.htisinhouse.font.Ubuntu
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:text="Please enter your travel details"
-            android:textColor="@color/grey_text2"
-            android:textSize="@dimen/_12sdp" />
-
-        <com.htistelecom.htisinhouse.font.UbuntuBold
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:text="From"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12sdp" />
-
-        <com.htistelecom.htisinhouse.font.UbuntuEditText
-            android:id="@+id/etFromTravels"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:background="@drawable/bg_edittext"
-            android:hint="Enter your location"
-            android:maxLines="3"
-            android:padding="@dimen/_10sdp"
-            android:textSize="14sp" />
-
-        <com.htistelecom.htisinhouse.font.UbuntuBold
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:text="To"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12sdp" />
-
-        <com.htistelecom.htisinhouse.font.UbuntuEditText
-            android:id="@+id/etToTravel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:background="@drawable/bg_edittext"
-            android:hint="Enter destination"
-            android:maxLines="3"
-            android:padding="@dimen/_10sdp"
-            android:textSize="14sp" />
-
-        <com.htistelecom.htisinhouse.font.UbuntuBold
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:text="Remarks"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12sdp" />
-
-        <com.htistelecom.htisinhouse.font.UbuntuEditText
-            android:id="@+id/etRemarksTravel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:background="@drawable/bg_edittext"
-            android:hint="Enter details"
-            android:maxLines="3"
-            android:padding="@dimen/_10sdp"
-            android:textSize="14sp" />
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/submit_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".5"
-                android:background="@drawable/login_button"
-                android:gravity="center"
-                android:text="@string/submit"
-                android:textAllCaps="false"
-                android:textColor="@color/white" />
-
-
-            <Button
-                android:id="@+id/clear_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_weight=".5"
-                android:background="@drawable/cancel_button"
-                android:gravity="center"
-                android:text="Clear"
-                android:textAllCaps="false"
-                android:textColor="@color/black" />
-
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-</LinearLayout>
+   <com.htistelecom.htisinhouse.font.UbuntuBold
+       android:id="@+id/tvNoTravelFragment"
+       android:layout_width="wrap_content"
+       android:text="No Travel History Found"
+       android:visibility="gone"
+       android:layout_centerInParent="true"
+       android:layout_height="wrap_content"/>
+</RelativeLayout>

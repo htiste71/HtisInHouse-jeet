@@ -99,6 +99,12 @@ public class MyTeamModel implements Serializable {
     @Expose
     private String longitude;
 
+    @SerializedName("WeeklyTasks")
+    @Expose
+    private String weeklyTasks;
+
+
+
     public String getLatitude() {
         return latitude;
     }
@@ -125,6 +131,14 @@ public class MyTeamModel implements Serializable {
 
     public String getEmpCode() {
         return empCode;
+    }
+
+    public String getWeeklyTasks() {
+        return weeklyTasks;
+    }
+
+    public void setWeeklyTasks(String weeklyTasks) {
+        this.weeklyTasks = weeklyTasks;
     }
 
     public void setEmpCode(String empCode) {

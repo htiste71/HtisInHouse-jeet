@@ -14,7 +14,7 @@ class UtilitiesWFMS {
 
         fun leaveDate(leaveFromTo: String?): Pair<String, String> {
             val originalFormat: DateFormat = SimpleDateFormat("dd/MMM/yyyy", Locale.ENGLISH)
-            val targetFormat: DateFormat = SimpleDateFormat("dd-MMM-yyyy")
+            val targetFormat: DateFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
             val mFromDate=leaveFromTo!!.split("-")[0]
             val mToDate=leaveFromTo!!.split("-")[1]
 
@@ -27,7 +27,7 @@ class UtilitiesWFMS {
         }
         fun dateToString(date: Date):String {
 
-            val targetFormat: DateFormat = SimpleDateFormat("dd-MMM-yyyy")
+            val targetFormat: DateFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
 
             val mDate: String = targetFormat.format(date)
             return mDate

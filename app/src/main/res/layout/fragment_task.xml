@@ -5,36 +5,43 @@
     android:layout_height="match_parent"
     android:background="@color/background_color"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/_15sdp"
     android:paddingLeft="@dimen/_15sdp"
     android:paddingRight="@dimen/_15sdp"
-    tools:context=".fragment.TaskFragment">
+    android:paddingBottom="@dimen/_15sdp">
 
     <LinearLayout
         android:id="@+id/llTask"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/ivAddTask"
+        android:layout_above="@id/ivAddTaskFragment"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvMarketingTask"
+            android:id="@+id/rvTaskFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/ivAddTask"
+        android:id="@+id/ivAddTaskFragment"
         android:layout_width="@dimen/_50sdp"
         android:layout_height="@dimen/_50sdp"
-        android:src="@drawable/icon_add"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
-        android:layout_marginTop="@dimen/_5sdp" />
+        android:layout_marginTop="@dimen/_5sdp"
+        android:src="@drawable/icon_add" />
 
+    <com.htistelecom.htisinhouse.font.UbuntuBold
+        android:id="@+id/tvNoTaskFragment"
+        android:text="No Task Found"
+        android:textSize="18sp"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

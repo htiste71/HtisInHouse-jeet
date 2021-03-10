@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rlOuterRowBranchFilterAdapter"
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/cbBranchRowBranchFilterAdapter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="Office"
+            android:textColor="@color/colorLightBlack"
+            android:textSize="14sp" />
+
+        <!--        <ImageView-->
+        <!--            android:id="@+id/ivDownRowTerritoryFilterAdapter"-->
+        <!--            android:layout_width="20dp"-->
+        <!--            android:layout_height="10dp"-->
+        <!--            android:layout_alignParentRight="true"-->
+        <!--            android:layout_centerVertical="true"-->
+        <!--            android:layout_marginRight="10dp"-->
+        <!--            android:background="@drawable/icon_arrow_down_filter"-->
+        <!--            android:visibility="gone" />-->
+
+        <!--        <ImageView-->
+        <!--            android:id="@+id/ivUpRowTerritoryFilterAdapter"-->
+        <!--            android:layout_width="20dp"-->
+        <!--            android:layout_height="10dp"-->
+        <!--            android:layout_alignParentRight="true"-->
+        <!--            android:layout_centerVertical="true"-->
+        <!--            android:layout_marginRight="10dp"-->
+        <!--            android:background="@drawable/icon_arrow_up_filter" />-->
+    </RelativeLayout>
+
+    <CheckBox
+        android:id="@+id/cbAddressBranchFilterAdapter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:text="E-94,First Floor,Phase 8 Industrial Area,Mohali"
+        android:textColor="@color/colorLightBlack"
+        android:textSize="14sp" />
+    <!--    <LinearLayout-->
+    <!--        android:id="@+id/llAddressRowTerritoryFilterAdapter"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_below="@+id/rlOuterRowTerritoryFilterAdapter"-->
+    <!--        android:layout_marginLeft="30dp"-->
+    <!--        android:layout_marginTop="15dp"-->
+    <!--        android:orientation="vertical" />-->
+
+
+</LinearLayout>

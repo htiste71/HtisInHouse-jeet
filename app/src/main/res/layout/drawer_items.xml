@@ -207,6 +207,51 @@
 
 
             <LinearLayout
+
+                android:id="@+id/llAddProjectDrawer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:id="@+id/llInnerAddProjectDrawer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="12dp">
+
+                    <ImageView
+                        android:id="@+id/ivAddProjectDrawer"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/icon_profile_drawer" />
+
+
+                    <com.htistelecom.htisinhouse.font.Ubuntu
+                        android:id="@+id/tvAddProjectDrawer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/strAddProject"
+
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+
+                        />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorLightBlack" />
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:id="@+id/llLeaveODDrawer"
 
                 android:layout_width="match_parent"
@@ -422,7 +467,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <LinearLayout
                     android:id="@+id/llInnerChatDrawer"
@@ -480,8 +525,8 @@
                 android:id="@+id/llFormDrawer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/llInnerFormDrawer"

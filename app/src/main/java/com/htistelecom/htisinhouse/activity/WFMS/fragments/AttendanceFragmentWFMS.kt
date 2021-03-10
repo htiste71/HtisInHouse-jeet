@@ -22,6 +22,7 @@ import com.htistelecom.htisinhouse.activity.WFMS.models.MyAttendanceModel
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.fragment.BaseFragment
 import com.htistelecom.htisinhouse.retrofit.MyInterface
+import com.htistelecom.htisinhouse.utilities.ConstantKotlin
 import com.htistelecom.htisinhouse.utilities.Utilities
 import com.roomorama.caldroid.CaldroidFragment
 import com.roomorama.caldroid.CaldroidListener
@@ -79,7 +80,7 @@ class AttendanceFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener
         calc.set(year, month - 1, 1)
         endDate = calc.getActualMaximum(Calendar.DAY_OF_MONTH).toString() + "-" + Utilities.getMonthFormat(month) + "-" + year
         startDate = "01-" + Utilities.getMonthFormat(month) + "-" + year
-        formatter = SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault())
+        formatter = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
         caldroidFragment = CaldroidFragment()
     }
 
@@ -224,6 +225,7 @@ class AttendanceFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener
             jsonObject.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
             jsonObject.put("FromDate", startDate)
             jsonObject.put("ToDate", endDate)
+            jsonObject.put("Type", "a")
             ApiData.getData(jsonObject.toString(), ATTENDANCE_LIST_WFMS, this, activity)
         } catch (e: Exception) {
             Log.e("Error", e.message)
@@ -262,26 +264,33 @@ class AttendanceFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener
 
     override fun sendResponse(response: Any, TYPE: Int) {
         Utilities.dismissDialog()
-        if (TYPE == ATTENDANCE_LIST_WFMS) {
-            try {
-                val jsonObject = JSONObject((response as Response<*>).body().toString())
-                if (jsonObject.getString("Status").equals("Success")) {
-                    val attendanceListData = Gson().fromJson<java.util.ArrayList<MyAttendanceModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<ArrayList<MyAttendanceModel>>() {}.type)
-                    attendanceList(attendanceListData)
-                } else {
-                    Utilities.showToast(activity, "No Details found.")
-                    tvPresentAttendanceCountWFMS.setText("" + present)
-                    tvAbsentAttendanceCountWFMS.setText("" + absent)
-                    tvLeaveAttendanceCountWFMS.setText("" + leave)
-                    tvPendingAttendanceCountWFMS.setText("" + pendingApproval)
-                    tvRejectionAttendanceCountWFMS.setText("" + rejection)
-                    tvHolidayAttendanceCountWFMS.setText("" + holiday)
+
+
+        if ((response as Response<*>).code() == 401 ||  (response as Response<*>).code() == 403) {
+            if (Utilities.isShowing())
+                Utilities.dismissDialog()
+            ConstantKotlin.logout(activity!!, tinyDB)
+        } else {
+            if (TYPE == ATTENDANCE_LIST_WFMS) {
+                try {
+                    val jsonObject = JSONObject((response as Response<*>).body().toString())
+                    if (jsonObject.getString("Status").equals("Success")) {
+                        val attendanceListData = Gson().fromJson<java.util.ArrayList<MyAttendanceModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<ArrayList<MyAttendanceModel>>() {}.type)
+                        attendanceList(attendanceListData)
+                    } else {
+                        Utilities.showToast(activity, "No Details found.")
+                        tvPresentAttendanceCountWFMS.setText("" + present)
+                        tvAbsentAttendanceCountWFMS.setText("" + absent)
+                        tvLeaveAttendanceCountWFMS.setText("" + leave)
+                        tvPendingAttendanceCountWFMS.setText("" + pendingApproval)
+                        tvRejectionAttendanceCountWFMS.setText("" + rejection)
+                        tvHolidayAttendanceCountWFMS.setText("" + holiday)
+                    }
+                } catch (e: java.lang.Exception) {
+                    Log.e("Error", e.message)
                 }
-            } catch (e: java.lang.Exception) {
-                Log.e("Error", e.message)
             }
         }
-
     }
 
     override fun onClick(v: View) {

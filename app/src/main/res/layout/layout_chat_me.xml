@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <com.htistelecom.htisinhouse.font.Ubuntu
-        android:id="@+id/tvMessageChatDetailAdapterWFMS"
+        android:id="@+id/tvMessageMeChatDetailAdapterWFMS"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

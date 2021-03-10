@@ -15,9 +15,11 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.JobIntentService;
+
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -27,6 +29,7 @@ import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS;
 import com.htistelecom.htisinhouse.activity.WFMS.activity.SplashActivityWFMS;
 import com.htistelecom.htisinhouse.activity.WFMS.models.FileModel;
 import com.htistelecom.htisinhouse.config.TinyDB;
+import com.htistelecom.htisinhouse.utilities.Utilities;
 
 
 import java.io.BufferedWriter;
@@ -37,6 +40,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
+
 public class OreoLocationService extends JobIntentService {
 
     private final String TAG = "SrvTrackingHtis";
@@ -50,7 +55,7 @@ public class OreoLocationService extends JobIntentService {
 
     static final int JOB_ID = 1000;
     public Context context = this;
-  //  public Handler handler = null;
+    //  public Handler handler = null;
     public static Runnable runnable = null;
     Boolean isTrackingOn = false;
 
@@ -59,13 +64,13 @@ public class OreoLocationService extends JobIntentService {
     private File myFile;
     private String mDate;
     private String mDateTime;
-    private String mUserId="";
+    private String mUserId = "";
     public static String LATITUDE = "", LONGITUDE = "";
 
 
     @Override
     public void onCreate() {
-       initViews();
+        initViews();
 
         Log.e(TAG, "onCreate");
         try {
@@ -88,21 +93,20 @@ public class OreoLocationService extends JobIntentService {
     }
 
     private void initViews() {
+
+
         tinyDB = new TinyDB(this);
-        file = new File(Environment.getExternalStorageDirectory(), "MyFiles");
-        if (!file.exists()) {
-            file.mkdirs();
-        }
+//        file = new File(Environment.getExternalStorageDirectory(), "MyDataFile");
+//        if (!file.exists()) {
+//            file.mkdirs();
+//        }
         currentDateTime();
 
         mUserId = tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID);
     }
 
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+
 
     private class LocationListener implements android.location.LocationListener {
         private Location lastLocation = null;
@@ -118,11 +122,18 @@ public class OreoLocationService extends JobIntentService {
             mLastLocation = location;
             LATITUDE = location.getLatitude() + "";
             LONGITUDE = location.getLongitude() + "";
-          //  Utilities.showToast(OreoLocationService.this,LATITUDE+" Oreo");
+            // Utilities.showToast(OreoLocationService.this,LATITUDE+" Oreo");
             mUserId = tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID);
 
-            if(!mUserId.equalsIgnoreCase(""))
-            addDataToFile(LATITUDE, LONGITUDE);
+            if (checkDistance(Double.valueOf(LATITUDE), Double.valueOf(LONGITUDE), tinyDB.getDouble(ConstantsWFMS.CURRENT_SAVED_LATITUDE, 0.0), tinyDB.getDouble(ConstantsWFMS.CURRENT_SAVED_LONGITUDE, 0.0))) {
+                if (!mUserId.equalsIgnoreCase(""))
+                {
+                    tinyDB.putDouble(ConstantsWFMS.CURRENT_SAVED_LATITUDE,Double.valueOf(LATITUDE));
+                    tinyDB.putDouble(ConstantsWFMS.CURRENT_SAVED_LONGITUDE,Double.valueOf(LONGITUDE));
+
+                    addDataToFile(LATITUDE, LONGITUDE);
+
+                }
 
 //                if (distanceBetweenLatLng(0, 0, location.getLatitude(), location.getLongitude()) >= 0) {
 //                    FileWriter fr = null;
@@ -188,7 +199,6 @@ public class OreoLocationService extends JobIntentService {
 //                }
 
 
-
 //            Log.i(TAG, "LocationChanged: " + location);
 //            Toast.makeText(SrvTrackingHtis.this, "" + location.getLatitude() + location.getLongitude(), Toast.LENGTH_SHORT).show();
 //
@@ -206,16 +216,15 @@ public class OreoLocationService extends JobIntentService {
 //            }
 
 
-            // Toast.makeText(SrvTrackingHtis.this, "Lat:"+location.getLatitude()+", Lng:"+location.getLongitude(), Toast.LENGTH_SHORT).show();
-            // toast("Lat:"+location.getLatitude()+", Lng:"+location.getLongitude());
+                // Toast.makeText(SrvTrackingHtis.this, "Lat:"+location.getLatitude()+", Lng:"+location.getLongitude(), Toast.LENGTH_SHORT).show();
+                // toast("Lat:"+location.getLatitude()+", Lng:"+location.getLongitude());
 //            if (distanceBetweenLatLng(0, 0, location.getLatitude(), location.getLongitude()) >= 2) {
 //                saveLatLng(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
 //                PreOreoLocationService();
 //            }
 
-
+            }
         }
-
 
 
         @Override
@@ -255,7 +264,7 @@ public class OreoLocationService extends JobIntentService {
 
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
-
+Log.e("","");
     }
 
     final Handler mHandler = new Handler();
@@ -265,7 +274,7 @@ public class OreoLocationService extends JobIntentService {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-              //  Toast.makeText(OreoLocationService.this, text, Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(OreoLocationService.this, text, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -321,7 +330,7 @@ public class OreoLocationService extends JobIntentService {
             notificationManager.createNotificationChannel(channel);
             builder = new Notification.Builder(getApplicationContext(), "channel_01")
                     .setAutoCancel(false)
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setSmallIcon(R.drawable.ic_launcher)
                     .setVibrate(new long[]{1000, 1000})
                     .setSubText("Do not close this app!")
                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
@@ -329,7 +338,7 @@ public class OreoLocationService extends JobIntentService {
 
         } else {
             builder = new Notification.Builder(this)
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setSmallIcon(R.drawable.ic_launcher)
                     .setContentText("Do not close this app")
                     .setContentTitle("WFMS")
                     .setAutoCancel(false);
@@ -352,7 +361,6 @@ public class OreoLocationService extends JobIntentService {
             notificationManager.notify(NOTIF_ID, builder.build());
         }
     }
-
 
 
     private String getDateTime(String format) {
@@ -410,13 +418,31 @@ public class OreoLocationService extends JobIntentService {
 
     private void currentDateTime() {
         Date date = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-        SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
+        SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss",Locale.ENGLISH);
         mDateTime = simpleDateTimeFormat.format(date);
         mDate = simpleDateFormat.format(date);
     }
 
     private void addDataToFile(String latitude, String longitude) {
+
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            String fileName= mUserId + "_" + mDate + ".txt";
+            myFile=new File(getExternalFilesDir("MyFilesPath"),fileName);
+        }
+        else
+        {
+            file = new File(Environment.getExternalStorageDirectory(), "MyFilesPath");
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            myFile = new File(file, "" + mUserId + "_" + mDate + ".txt");
+
+
+
+        }
         FileWriter fr = null;
         try {
             BufferedWriter br = null;
@@ -436,7 +462,7 @@ public class OreoLocationService extends JobIntentService {
                     }
                 }
                 currentDateTime();
-                myFile = new File(file, "" + mUserId + "_" + mDate + ".txt");
+
 
                 if (isAvailable) {
                     fr = new FileWriter(myFile, true);
@@ -452,7 +478,7 @@ public class OreoLocationService extends JobIntentService {
 
                 } else {
 
-                    myFile.createNewFile();
+                   // myFile.createNewFile();
                     fr = new FileWriter(myFile, true);
                     br = new BufferedWriter(fr);
                     br.write(latitude + "#" + longitude + "#" + mDateTime + ",");
@@ -493,6 +519,22 @@ public class OreoLocationService extends JobIntentService {
         }
 //                saveLatLng(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
 //                PreOreoLocationService();
+    }
+
+
+    boolean checkDistance(double lat1, double long1, double lat2, double long2) {
+        return true;
+//        Location locationA = new Location("point A");
+//        locationA.setLatitude(lat1);
+//        locationA.setLongitude(long1);
+//        Location locationB = new Location("point B");
+//        locationB.setLatitude(lat2);
+//        locationB.setLongitude(long2);
+//        double distance = locationA.distanceTo(locationB);
+//        if (distance > 25)
+//            return true;
+//        else
+//            return false;
     }
 
 }

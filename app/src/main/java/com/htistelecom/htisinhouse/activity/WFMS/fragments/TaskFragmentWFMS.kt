@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -23,7 +24,10 @@ import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.*
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.UtilitiesWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.adapters.TaskAdapterWFMS
+import com.htistelecom.htisinhouse.activity.WFMS.marketing.MarketingFullScreenDialog
+import com.htistelecom.htisinhouse.activity.WFMS.marketing.model.TaskModel
 import com.htistelecom.htisinhouse.activity.WFMS.models.TaskListModel
+import com.htistelecom.htisinhouse.adapter.MarketingTaskAdapter
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.font.Ubuntu
 import com.htistelecom.htisinhouse.font.UbuntuEditText
@@ -31,6 +35,7 @@ import com.htistelecom.htisinhouse.fragment.BaseFragment
 import com.htistelecom.htisinhouse.interfaces.GetDateTime
 import com.htistelecom.htisinhouse.interfaces.SpinnerData
 import com.htistelecom.htisinhouse.retrofit.MyInterface
+import com.htistelecom.htisinhouse.utilities.ConstantKotlin
 import com.htistelecom.htisinhouse.utilities.DateUtils
 import com.htistelecom.htisinhouse.utilities.Utilities
 import kotlinx.android.synthetic.main.fragment_task_wfms.*
@@ -44,11 +49,16 @@ class TaskFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
     private var mCurrentDate: String? = ""
     lateinit var tinyDB: TinyDB
     private var taskAL = ArrayList<TaskListModel>()
+    private var taskNewList = ArrayList<TaskListModel>()
+
     lateinit var dialog: Dialog
     lateinit var listPopupWindow: ListPopupWindow
     var mProjectId = ""
     var mSiteId = ""
     var mActivityId = ""
+    private var taskList = java.util.ArrayList<TaskModel>()
+    lateinit var adapter: MarketingTaskAdapter
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_task_wfms, null)
     }
@@ -84,15 +94,29 @@ class TaskFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
     }
 
     private fun callTaskList() {
-        var json = JSONObject()
-        json.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
-        json.put("FromDate", mCurrentDate)
-        json.put("ToDate", mCurrentDate)
-        json.put("SiteUploadedId", "0")
+        if(tinyDB.getString(ConstantsWFMS.TINYDB_USER_TYPE).equals("1"))
+        {
+            val date = ConstantKotlin.getCurrentDate()
+            val jsonObject = JSONObject()
+
+            jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
+            jsonObject.put("TaskDate", date)
+            hitAPI(ConstantsWFMS.MARKETING_TASK_LIST_WFMS, jsonObject.toString())
+        }
+        else
+        {
+            var json = JSONObject()
+            json.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
+            json.put("FromDate", mCurrentDate)
+            json.put("ToDate", mCurrentDate)
+            json.put("SiteUploadedId", "0")
+            hitAPI(MY_TASK_LIST_NEW_WFMS, json.toString())
+
+        }
 
 
 
-        hitAPI(MY_TASK_LIST_WFMS, json.toString())
+
     }
 
 
@@ -189,7 +213,7 @@ class TaskFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
             val year = calc.get(Calendar.YEAR)
             val month = calc.get(Calendar.MONTH)
             val day = calc.get(Calendar.DAY_OF_MONTH)
-            Utilities.getDate(activity!!,year, month, day, calc.getTimeInMillis(), object : GetDateTime {
+            Utilities.getDate(activity!!, year, month, day, calc.getTimeInMillis(), object : GetDateTime {
                 override fun getDateTime(strDate: String, strTime: String) {
 
                     tvFromDateDialogAddTask.text = strDate
@@ -271,10 +295,9 @@ class TaskFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
     }
 
 
-
     fun hitAPI(type: Int, params: String) {
-        if (type == MY_TASK_LIST_WFMS) {
-            ApiData.getData(params.toString(), ConstantsWFMS.MY_TASK_LIST_WFMS, this, activity!!)
+        if (type == MY_TASK_LIST_NEW_WFMS) {
+            ApiData.getData(params.toString(), ConstantsWFMS.MY_TASK_LIST_NEW_WFMS, this, activity!!)
 
         } else if (type == PROJECT_LIST_WFMS) {
             ApiData.getGetData(PROJECT_LIST_WFMS, this, activity)
@@ -289,62 +312,128 @@ class TaskFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
             ApiData.getData(params.toString(), ConstantsWFMS.ADD_TASK_WFMS, this, activity!!)
 
         }
+        else if (type == MARKETING_TASK_LIST_WFMS) {
+            ApiData.getData(params.toString(), ConstantsWFMS.MARKETING_TASK_LIST_WFMS, this, activity!!)
+
+        }
     }
 
     override fun sendResponse(response: Any?, TYPE: Int) {
         Utilities.dismissDialog()
-        if (TYPE == MY_TASK_LIST_WFMS) {
-            val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
-            if (jsonObj.getString("Status").equals("Success")) {
-                rvTaskFragmentWFMS.visibility = View.VISIBLE
-                tvNoTaskFragmentWFMS.visibility = View.GONE
-                taskAL.clear()
-                // val jsonArray=JSONArray(jsonObj.getString("Output"))
-                taskAL = Gson().fromJson<java.util.ArrayList<TaskListModel>>(jsonObj.getJSONArray("Output").toString(), object : TypeToken<ArrayList<TaskListModel>>() {
+        if ((response as Response<*>).code() == 401 || (response as Response<*>).code() == 403) {
+            if (Utilities.isShowing())
+                Utilities.dismissDialog()
+            ConstantKotlin.logout(activity!!, tinyDB)
+        } else {
 
-                }.type);
-                rvTaskFragmentWFMS.adapter = TaskAdapterWFMS(activity, taskAL)
-                HomeFragmentWFMS.mTaskCount = taskAL.size.toString()
-            } else {
-                rvTaskFragmentWFMS.visibility = View.GONE
-                tvNoTaskFragmentWFMS.visibility = View.VISIBLE
+            if (TYPE == MY_TASK_LIST_NEW_WFMS) {
+                val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObj.getString("Status").equals("Success")) {
+                    rvTaskFragmentWFMS.visibility = View.VISIBLE
+                    tvNoTaskFragmentWFMS.visibility = View.GONE
+//                    taskAL.clear()
+//                    // val jsonArray=JSONArray(jsonObj.getString("Output"))
+//                    taskAL = Gson().fromJson<java.util.ArrayList<TaskListModel>>(jsonObj.getJSONArray("Output").toString(), object : TypeToken<ArrayList<TaskListModel>>() {
+//
+//                    }.type);
+
+
+                    taskAL.clear()
+                    taskNewList.clear()
+                    // val jsonArray=JSONArray(jsonObj.getString("Output"))
+                    taskAL = Gson().fromJson<java.util.ArrayList<TaskListModel>>(jsonObj.getJSONArray("Output").toString(), object : TypeToken<ArrayList<TaskListModel>>() {}.type);
+
+                    var lastId = ""
+                    for (record in 0 until taskAL.size) {
+
+                        if (lastId.equals(taskAL.get(record).taskId)) {
+                        } else {
+                            lastId = taskAL.get(record).taskId
+                            taskNewList.add(taskAL.get(record));
+
+                        }
+
+
+                    }
+
+                    rvTaskFragmentWFMS.adapter = TaskAdapterWFMS(activity, taskNewList, taskAL)
+                    HomeFragmentNew.mTaskCount = taskNewList.size.toString()
+                } else {
+                    rvTaskFragmentWFMS.visibility = View.GONE
+                    tvNoTaskFragmentWFMS.visibility = View.VISIBLE
+                }
+            } else if (TYPE == PROJECT_LIST_WFMS) {
+                AddTask.commonMethod(response, PROJECT_LIST_WFMS)
+
+
+            } else if (TYPE == SITE_LIST_WFMS) {
+                AddTask.commonMethod(response, SITE_LIST_WFMS)
+
+            } else if (TYPE == ACTIVITY_LIST_WFMS) {
+                AddTask.commonMethod(response, ACTIVITY_LIST_WFMS)
+
             }
-        } else if (TYPE == PROJECT_LIST_WFMS) {
-            AddTask.commonMethod(response, PROJECT_LIST_WFMS)
+            else if (TYPE == MARKETING_TASK_LIST_WFMS) {
+                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObject.getString("Status").equals("Success")) {
+                    taskList.clear()
+                    taskList = Gson().fromJson<java.util.ArrayList<TaskModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<TaskModel>>() {
+
+                    }.type)
+
+                    rvTaskFragmentWFMS.visibility = View.VISIBLE
+                    tvNoTaskFragmentWFMS.visibility = View.GONE
+                    adapter = MarketingTaskAdapter(activity!!, taskList)
+                    rvTaskFragmentWFMS.adapter = adapter
 
 
-        } else if (TYPE == SITE_LIST_WFMS) {
-            AddTask.commonMethod(response, SITE_LIST_WFMS)
 
-        } else if (TYPE == ACTIVITY_LIST_WFMS) {
-            AddTask.commonMethod(response, ACTIVITY_LIST_WFMS)
+                }
+                else
+                {
+                    rvTaskFragmentWFMS.visibility = View.GONE
+                    tvNoTaskFragmentWFMS.visibility = View.VISIBLE
+                }
 
-        } else if (TYPE == ADD_TASK_WFMS) {
-
-            val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
-            if (jsonObj.getString("Status").equals("Success")) {
-                Utilities.showToast(activity!!, jsonObj.getString("Message"))
-                dialog.dismiss()
-                mProjectId=""
-                mSiteId=""
-                mActivityId=""
-                callTaskList()
-
-            } else {
-                Utilities.showToast(activity!!, jsonObj.getString("Message"))
             }
 
+            else if (TYPE == ADD_TASK_WFMS) {
+
+                val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObj.getString("Status").equals("Success")) {
+                    Utilities.showToast(activity!!, jsonObj.getString("Message"))
+                    dialog.dismiss()
+                    mProjectId = ""
+                    mSiteId = ""
+                    mActivityId = ""
+                    callTaskList()
+
+                } else {
+                    Utilities.showToast(activity!!, jsonObj.getString("Message"))
+                }
+
+            }
         }
-
 
     }
 
     override fun onClick(v: View) {
         if (v.id == R.id.ivAddHeader) {
-            if (isPunchedInMethod())
-                openDialogAddNewTask()
-            else
+            if (isPunchedInMethod()) {
+
+                if (tinyDB.getString(ConstantsWFMS.TINYDB_USER_TYPE).equals("1")) {
+                    val ft: FragmentTransaction = fragmentManager!!.beginTransaction()
+                    val newFragment: MarketingFullScreenDialog? = MarketingFullScreenDialog.newInstance(tinyDB.getString(TINYDB_EMP_ID),false)
+                    newFragment!!.show(ft, "dialog")
+
+                } else {
+                    openDialogAddNewTask()
+
+                }
+            } else {
                 UtilitiesWFMS.showToast(activity!!, resources.getString(R.string.errPunchIn))
+
+            }
         }
     }
 

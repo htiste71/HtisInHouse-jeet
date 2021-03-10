@@ -11,6 +11,7 @@ import com.htistelecom.htisinhouse.activity.WFMS.Utils.UtilitiesWFMS
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.fragment.BaseFragment
 import com.htistelecom.htisinhouse.retrofit.MyInterface
+import com.htistelecom.htisinhouse.utilities.ConstantKotlin
 import com.htistelecom.htisinhouse.utilities.Utilities
 import kotlinx.android.synthetic.main.fragment_feedback_wfms.*
 import org.json.JSONObject
@@ -45,11 +46,18 @@ class FeedbackFragmentWFMS : BaseFragment(), MyInterface {
 
     override fun sendResponse(response: Any?, TYPE: Int) {
         Utilities.dismissDialog()
-        val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
-        if (jsonObj.getString("Status").equals("Success")) {
-            UtilitiesWFMS.showToast(activity!!,jsonObj.getString("Message"))
-            etFeedbackFragmentFeedbackWFMS.setText("")
 
+        if ((response as Response<*>).code() == 401 ||  (response as Response<*>).code() == 403) {
+            if (Utilities.isShowing())
+                Utilities.dismissDialog()
+            ConstantKotlin.logout(activity!!, tinyDB)
+        } else {
+            val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
+            if (jsonObj.getString("Status").equals("Success")) {
+                UtilitiesWFMS.showToast(activity!!, jsonObj.getString("Message"))
+                etFeedbackFragmentFeedbackWFMS.setText("")
+
+            }
         }
     }
 }

@@ -11,7 +11,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.ApiData
-import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantKotlin
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.models.LeaveTypeModel
 import com.htistelecom.htisinhouse.config.TinyDB
@@ -61,41 +60,51 @@ class LeaveDetailActivityWFMS : AppCompatActivity(), MyInterface, View.OnClickLi
 
     override fun sendResponse(response: Any?, TYPE: Int) {
         Utilities.dismissDialog()
-        if (TYPE == ConstantsWFMS.LEAVE_TYPE_WFMS) {
-            val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
-            if (jsonObject.getString("Status").equals("Success")) {
-                leaveTypeList = Gson().fromJson<java.util.ArrayList<LeaveTypeModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<LeaveTypeModel>>() {
 
-                }.type)
-                leaveTypeArray = arrayOfNulls<String>(leaveTypeList.size)
-                for (i in leaveTypeList.indices) {
-                    //Storing names to string array
-                    leaveTypeArray[i] = leaveTypeList.get(i).leaveTypeName
+        if ((response as Response<*>).code() == 401 ||  (response as Response<*>).code() == 403) {
+            if (Utilities.isShowing())
+                Utilities.dismissDialog()
+            finish()
+            com.htistelecom.htisinhouse.utilities.ConstantKotlin.logout(this, tinyDB)
+
+
+        } else {
+
+            if (TYPE == ConstantsWFMS.LEAVE_TYPE_WFMS) {
+                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObject.getString("Status").equals("Success")) {
+                    leaveTypeList = Gson().fromJson<java.util.ArrayList<LeaveTypeModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<LeaveTypeModel>>() {
+
+                    }.type)
+                    leaveTypeArray = arrayOfNulls<String>(leaveTypeList.size)
+                    for (i in leaveTypeList.indices) {
+                        //Storing names to string array
+                        leaveTypeArray[i] = leaveTypeList.get(i).leaveTypeName
+                    }
+                } else {
+                    Utilities.showToast(this, "No Details found.")
                 }
-            } else {
-                Utilities.showToast(this, "No Details found.")
+                leaveTypeAdapter = ArrayAdapter<String?>(this, R.layout.spinner_item, leaveTypeArray)
+                spnrLeaveTypeLeaveDetail.setAdapter(leaveTypeAdapter)
+
+
+                spnrLeaveTypeLeaveDetail!!.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                        val model = leaveTypeList.get(position)
+                        tvBalanceLeaveDetail.text = model.totalBalance
+                        tvUnderApprovalLeaveDetail.text = model.unApproved
+                        tvAvailedLeaveDetail.text = model.availed
+                        tvCurrentBalanceLeaveDetail.text = model.currentBalance
+
+
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>) {}
+                })
+
+
             }
-            leaveTypeAdapter = ArrayAdapter<String?>(this, R.layout.spinner_item, leaveTypeArray)
-            spnrLeaveTypeLeaveDetail.setAdapter(leaveTypeAdapter)
-
-
-            spnrLeaveTypeLeaveDetail!!.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                    val model = leaveTypeList.get(position)
-                    tvBalanceLeaveDetail.text = model.totalBalance
-                    tvUnderApprovalLeaveDetail.text = model.unApproved
-                    tvAvailedLeaveDetail.text = model.availed
-                    tvCurrentBalanceLeaveDetail.text = model.currentBalance
-
-
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>) {}
-            })
-
-
         }
-
     }
 
     override fun onClick(v: View) {

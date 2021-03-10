@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -20,7 +21,6 @@ import com.google.gson.reflect.TypeToken;
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS;
 import com.htistelecom.htisinhouse.activity.WFMS.models.FileModel;
 import com.htistelecom.htisinhouse.config.TinyDB;
-import com.htistelecom.htisinhouse.utilities.Utilities;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -30,7 +30,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
+import java.util.Locale;
 
 
 public class PreOreoLocationService extends Service {
@@ -39,7 +39,7 @@ public class PreOreoLocationService extends Service {
     public Context context = this;
     public Handler handler = null;
     public static Runnable runnable = null;
-    private  LocationListener mLocationListener;
+    private LocationListener mLocationListener;
     private LocationManager mLocationManager;
 
     private final int LOCATION_INTERVAL = 5000;
@@ -51,7 +51,7 @@ public class PreOreoLocationService extends Service {
     private File myFile;
     private String mDate;
     private String mDateTime;
-    private String mUserId="";
+    private String mUserId = "";
 
    /* public PreOreoLocationService(Context applicationContext) {
         super();
@@ -74,17 +74,35 @@ public class PreOreoLocationService extends Service {
             mLastLocation = location;
             OreoLocationService.LATITUDE = location.getLatitude() + "";
             OreoLocationService.LONGITUDE = location.getLongitude() + "";
-           // Utilities.showToast(PreOreoLocationService.this,OreoLocationService.LATITUDE+" Pre");
+            // Utilities.showToast(PreOreoLocationService.this,OreoLocationService.LATITUDE+" Pre");
             mUserId = tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID);
+            if (checkDistance(Double.valueOf(OreoLocationService.LATITUDE), Double.valueOf(OreoLocationService.LONGITUDE), tinyDB.getDouble(ConstantsWFMS.CURRENT_SAVED_LATITUDE, 0.0), tinyDB.getDouble(ConstantsWFMS.CURRENT_SAVED_LONGITUDE, 0.0))) {
+                if (!mUserId.equalsIgnoreCase(""))
+                {
+                    tinyDB.putDouble(ConstantsWFMS.CURRENT_SAVED_LATITUDE,Double.valueOf(OreoLocationService.LATITUDE));
+                    tinyDB.putDouble(ConstantsWFMS.CURRENT_SAVED_LONGITUDE,Double.valueOf(OreoLocationService.LONGITUDE));
+                    addDataToFile(OreoLocationService.LATITUDE, OreoLocationService.LONGITUDE);
 
-            if(!mUserId.equalsIgnoreCase(""))
-                addDataToFile(OreoLocationService.LATITUDE,OreoLocationService.LONGITUDE);
-
+                }
+            }
 
 
         }
 
-
+        boolean checkDistance(double lat1, double long1, double lat2, double long2) {
+//            Location locationA = new Location("point A");
+//            locationA.setLatitude(lat1);
+//            locationA.setLongitude(long1);
+//            Location locationB = new Location("point B");
+//            locationB.setLatitude(lat2);
+//            locationB.setLongitude(long2);
+//            double distance = locationA.distanceTo(locationB);
+//            if (distance > 25)
+//                return true;
+//            else
+//                return false;
+            return true;
+        }
 
         @Override
         public void onProviderDisabled(String provider) {
@@ -101,14 +119,13 @@ public class PreOreoLocationService extends Service {
             try {
                 // Log.e(TAG, "LocationChanged: " + mLastLocation);
                 Log.e(TAG, "onStatusChanged: " + status);
-               // loadTrackingData();
+                // loadTrackingData();
             } catch (Exception ex) {
                 Log.e(TAG, ex.getMessage());
             }
         }
     }
 
-  
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -119,10 +136,10 @@ public class PreOreoLocationService extends Service {
     @Override
     public void onCreate() {
         tinyDB = new TinyDB(PreOreoLocationService.this);
-        file = new File(Environment.getExternalStorageDirectory(), "MyFiles");
-        if (!file.exists()) {
-            file.mkdirs();
-        }
+//        file = new File(Environment.getExternalStorageDirectory(), "MyDataFile");
+//        if (!file.exists()) {
+//            file.mkdirs();
+//        }
         currentDateTime();
 
         try {
@@ -208,7 +225,6 @@ public class PreOreoLocationService extends Service {
     }
 
 
-
     private String getDateTime(String format) {
         DateFormat dateFormat = new SimpleDateFormat(format);//"yyyyMMddHHmmssSS");
         Date date = new Date();
@@ -251,15 +267,27 @@ public class PreOreoLocationService extends Service {
         super.onLowMemory();
         Log.e(TAG, "onLowMemory()");
     }
+
     private void currentDateTime() {
         Date date = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-        SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
+        SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss",Locale.ENGLISH);
         mDateTime = simpleDateTimeFormat.format(date);
         mDate = simpleDateFormat.format(date);
     }
 
     private void addDataToFile(String latitude, String longitude) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            String fileName= mUserId + "_" + mDate + ".txt";
+            myFile=new File(getExternalFilesDir("MyFilesPath"),fileName);
+        }
+        else
+        {
+            file = new File(Environment.getExternalStorageDirectory(), "MyDataFile");
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+        }
         FileWriter fr = null;
         try {
             BufferedWriter br = null;

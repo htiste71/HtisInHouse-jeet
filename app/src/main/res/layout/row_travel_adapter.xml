@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardUseCompatPadding="true">
+
+
+    <LinearLayout
+        android:id="@+id/llTravelAdapter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_weight="100">
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/txtCompanyName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="50"
+                android:text="@string/strDate"
+                android:textColor="@color/grey_text2"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/tvDateTravelAdapter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:textColor="@color/grey_text2"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+
+            android:layout_weight="100">
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="50"
+                android:text="@string/strFromLocation"
+                android:textColor="@color/grey_text2"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/tvFromLocTravelAdapter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:textColor="@color/grey_text2"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+
+            android:layout_weight="100">
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="50"
+                android:text="@string/strToLocation"
+                android:textColor="@color/grey_text2"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/tvToLocTravelAdapter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:textColor="@color/grey_text2"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+
+            android:layout_weight="100">
+
+            <com.htistelecom.htisinhouse.font.Ubuntu
+                android:id="@+id/txtEmail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="50"
+                android:text="@string/strRemarks"
+                android:textColor="@color/grey_text2"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <com.htistelecom.htisinhouse.font.UbuntuBold
+                android:id="@+id/tvRemarksTravelAdapter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:textColor="@color/grey_text2"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

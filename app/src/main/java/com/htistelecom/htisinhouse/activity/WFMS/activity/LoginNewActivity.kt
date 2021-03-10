@@ -1,5 +1,6 @@
 package com.htistelecom.htisinhouse.activity.WFMS.activity
 
+
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
@@ -12,6 +13,7 @@ import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.ApiData
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
@@ -24,8 +26,16 @@ import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Response
 
-
 class LoginNewActivity : Activity(), MyInterface, View.OnClickListener {
+
+
+
+
+
+
+
+
+
 
 
     private var passWord: String = ""
@@ -36,6 +46,11 @@ class LoginNewActivity : Activity(), MyInterface, View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_wfms)
         tinyDB = TinyDB(this)
+       // SingletonClass.connect()
+
+
+
+
         listeners()
 
         btnCustomDomain.setOnClickListener { view ->
@@ -45,17 +60,24 @@ class LoginNewActivity : Activity(), MyInterface, View.OnClickListener {
         tvForgotPasswordLoginNewActivity.setOnClickListener { view -> dialogForgotPassword() }
         btnLogin.setOnClickListener { view ->
             var email = etUserName.text.toString()
-            //email="shobinjindal91@gmail.com"
+            // email="kuldeep.singh@horizontelecom.in"
 
-            // email="shobinkumar25@gmail.com"
+         //   email="munish.kumar@horizontelecom.in"
             passWord = etPassword.text.toString()
+           //   passWord="Test@123"
             if (TextUtils.isEmpty(email)) {
                 Utilities.showToast(this, "Please enter email address")
 
             } else if (!Utilities.emailPatterns(email)) {
-                Utilities.showToast(this, "Please enter vaild email address")
+                Utilities.showToast(this, "Please enter valid email address")
 
-            } else if (passWord.length < 8) {
+            }
+            else if (passWord.equals("")) {
+                Utilities.showToast(this, "Password enter the password")
+
+            }
+
+            else if (passWord.length < 8) {
                 Utilities.showToast(this, "Password length should be minimum 8 digits")
 
             }
@@ -65,14 +87,14 @@ class LoginNewActivity : Activity(), MyInterface, View.OnClickListener {
 //            }
             else {
 
-           // email="shobinjindal91@gmail.com"
+                // email="shobinjindal91@gmail.com"
                 var json = JSONObject()
                 json.put("EmpEmail", email)
                 json.put("EmpPassword", passWord)
                 json.put("DeviceIMEI", tinyDB.getString(ConstantsWFMS.TINYDB_IMEI_NUMBER))
                 json.put("DeviceToken", "")
 
-                hitAPI(json.toString(),LOGIN_WFMS)
+                hitAPI(json.toString(), LOGIN_WFMS)
 
 
             }
@@ -80,9 +102,8 @@ class LoginNewActivity : Activity(), MyInterface, View.OnClickListener {
     }
 
     private fun hitAPI(params: String, TYPE: Int) {
-        if(TYPE==LOGIN_WFMS)
-        {
-            ApiData.getData(params, ConstantsWFMS.LOGIN_WFMS, this, this)
+        if (TYPE == LOGIN_WFMS) {
+            ApiData.getDataNoAuth(params, ConstantsWFMS.LOGIN_WFMS, this, this)
 
         }
 
@@ -97,6 +118,9 @@ class LoginNewActivity : Activity(), MyInterface, View.OnClickListener {
 
 
         Utilities.dismissDialog()
+
+
+
         if (TYPE == ConstantsWFMS.LOGIN_WFMS) {
             var jsonObj = JSONObject((response as Response<*>).body()!!.toString())
             if (jsonObj.getString("Status").equals("Success")) {
@@ -111,6 +135,9 @@ class LoginNewActivity : Activity(), MyInterface, View.OnClickListener {
                 tinyDB.putString(ConstantsWFMS.TINYDB_EMP_MOBILE, jsonObj.getString("EmpMobileNo"))
                 tinyDB.putString(ConstantsWFMS.TINYDB_EMAIL, jsonObj.getString("EmpEmail"))
                 tinyDB.putString(ConstantsWFMS.TINYDB_PASSWORD, passWord)
+                tinyDB.putString(ConstantsWFMS.TINYDB_TOKEN, jsonObj.getString("Token"))
+                tinyDB.putString(ConstantsWFMS.TINYDB_USER_TYPE,jsonObj.getString("EmpLoginCategory"))
+
                 if (!jsonObj.getString("EmpImg").equals(""))
                     tinyDB.putString(ConstantsWFMS.TINYDB_EMP_PROFILE_IMAGE, jsonObj.getString("EmpImgPath") + jsonObj.getString("EmpImg"))
                 else
@@ -134,6 +161,7 @@ class LoginNewActivity : Activity(), MyInterface, View.OnClickListener {
 
             }
         }
+
     }
 
     fun dialogForgotPassword() {
@@ -176,23 +204,22 @@ class LoginNewActivity : Activity(), MyInterface, View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        if(v!!.id==R.id.ivShowPasswordLoginNewActivity)
-        {
+        if (v!!.id == R.id.ivShowPasswordLoginNewActivity) {
             etPassword.setTransformationMethod(null)
-            ivShowPasswordLoginNewActivity.visibility=View.GONE
-            ivHidePasswordLoginNewActivity.visibility=VISIBLE
+            ivShowPasswordLoginNewActivity.visibility = View.GONE
+            ivHidePasswordLoginNewActivity.visibility = VISIBLE
             etPassword.setSelection(etPassword.text.length)
 
-        }
-      else  if(v!!.id==R.id.ivHidePasswordLoginNewActivity)
-        {
+        } else if (v!!.id == R.id.ivHidePasswordLoginNewActivity) {
             etPassword.setTransformationMethod(PasswordTransformationMethod())
-            ivShowPasswordLoginNewActivity.visibility=View.VISIBLE
-            ivHidePasswordLoginNewActivity.visibility=GONE
+            ivShowPasswordLoginNewActivity.visibility = View.VISIBLE
+            ivHidePasswordLoginNewActivity.visibility = GONE
             etPassword.setSelection(etPassword.text.length)
-
 
 
         }
     }
+
+
+
 }

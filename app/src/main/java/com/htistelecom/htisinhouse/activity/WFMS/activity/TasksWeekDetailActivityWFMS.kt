@@ -1,6 +1,6 @@
 package com.htistelecom.htisinhouse.activity.WFMS.activity
 
-import android.app.Activity
+
 import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
@@ -9,36 +9,61 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.Window
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.ListPopupWindow
-import android.widget.RelativeLayout
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.XAxis.XAxisPosition
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.ApiData
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.ADD_TASK_WFMS
+import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.MARKETING_TASK_LIST_WFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.UtilitiesWFMS
+import com.htistelecom.htisinhouse.activity.WFMS.adapters.TaskAdapterWFMS
+import com.htistelecom.htisinhouse.activity.WFMS.dialogOpen.TaskOtherMarketingdialogOpen
+import com.htistelecom.htisinhouse.activity.WFMS.fragments.HomeFragmentNew
+import com.htistelecom.htisinhouse.activity.WFMS.marketing.MarketingFullScreenDialog
+import com.htistelecom.htisinhouse.activity.WFMS.marketing.model.TaskModel
 import com.htistelecom.htisinhouse.activity.WFMS.models.MyTeamModel
+import com.htistelecom.htisinhouse.activity.WFMS.models.TaskListModel
 import com.htistelecom.htisinhouse.activity.WFMS.models.TwoParameterModel
+import com.htistelecom.htisinhouse.adapter.MarketingTaskAdapter
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.font.Ubuntu
 import com.htistelecom.htisinhouse.font.UbuntuEditText
 import com.htistelecom.htisinhouse.interfaces.GetDateTime
 import com.htistelecom.htisinhouse.interfaces.SpinnerData
 import com.htistelecom.htisinhouse.retrofit.MyInterface
+import com.htistelecom.htisinhouse.utilities.ConstantKotlin
 import com.htistelecom.htisinhouse.utilities.DateUtils
 import com.htistelecom.htisinhouse.utilities.Utilities
 import kotlinx.android.synthetic.main.activity_tasks_week_detail_wfms.*
+import kotlinx.android.synthetic.main.fragment_task_wfms.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Response
 import java.util.*
+import kotlin.collections.ArrayList
 
-class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterface {
+class TasksWeekDetailActivityWFMS : AppCompatActivity(), View.OnClickListener, MyInterface {
     private var mCurrentDate: String = ""
     lateinit var dialog: Dialog
+    lateinit var dialogTasks: Dialog
+    private var taskList = java.util.ArrayList<TaskModel>()
+
     lateinit var listPopupWindow: ListPopupWindow
     lateinit var model: MyTeamModel
     lateinit var projectListAdapter: ArrayAdapter<String?>
@@ -57,6 +82,21 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
     private var activityList = ArrayList<TwoParameterModel>()
     lateinit var activityArray: Array<String?>
     var mActivityId = ""
+
+    var tvtitlePop: TextView? = null
+    var ivDrawerPop: ImageView? = null
+    var ivBackPop: ImageView? = null
+
+    var rvTaskFragment: RecyclerView? = null
+    lateinit var adapter: MarketingTaskAdapter
+    private var taskAL = ArrayList<TaskListModel>()
+    private var taskNewList = ArrayList<TaskListModel>()
+    var isMyProfile = false
+
+    companion object {
+        var taskCount = 0
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tasks_week_detail_wfms)
@@ -67,12 +107,12 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
 
     private fun initViews() {
         tinyDB = TinyDB(this)
-
-        if (intent.getBooleanExtra("UserProfile", false))
+        isMyProfile = intent.getBooleanExtra("UserProfile", false)
+        if (isMyProfile)
 
             tv_title.text = "Profile Detail"
         else
-            tv_title.text = "Member Detail"
+            tv_title.text = "Member Details"
 
 
         ivDrawer.visibility = View.GONE
@@ -113,6 +153,79 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
             llMessageTasksWeekDetailActivityWFMS.visibility = VISIBLE
         }
 
+
+        val array: Array<String> = model.weeklyTasks.split(",").toTypedArray()
+
+        callBarChart(array[0], array[1], array[2], array[3], array[4], array[5], array[6])
+
+
+    }
+
+    private fun callBarChart(s: String, s1: String, s2: String, s3: String, s4: String, s5: String, s6: String) {
+        val xAxisLabel = java.util.ArrayList<String>()
+        xAxisLabel.add("Mon")
+        xAxisLabel.add("Tue")
+        xAxisLabel.add("Wed")
+        xAxisLabel.add("Thu")
+        xAxisLabel.add("Fri")
+        xAxisLabel.add("Sat")
+        xAxisLabel.add("Sun")
+
+        val weekdays = arrayOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun") // Your List / array with String Values For X-axis Labels
+
+
+        val xAxis: XAxis = chart.getXAxis()
+        xAxis.position = XAxisPosition.BOTTOM
+        xAxis.setValueFormatter(IndexAxisValueFormatter(weekdays));
+
+        //xAxis.setValueFormatter(IAxisValueFormatter { value, axis -> xAxisLabel[value.toInt()] })
+        // xAxis.valueFormatter = IAxisValueFormatter { value, axis -> xAxisLabel[value.toInt()] }
+
+
+        chart.setTouchEnabled(false)
+        val fMon = s.toFloat()
+        val fTue = s1.toFloat()
+        val fWed = s2.toFloat()
+        val fThu = s3.toFloat()
+        val fFri = s4.toFloat()
+        val fSat = s5.toFloat()
+        val fSun = s6.toFloat()
+
+
+        val entries: MutableList<BarEntry> = java.util.ArrayList()
+        entries.add(BarEntry(0f, fMon))
+        entries.add(BarEntry(1f, fTue))
+        entries.add(BarEntry(2f, fWed))
+        entries.add(BarEntry(3f, fThu))
+        entries.add(BarEntry(4f, fFri))
+        // gap of 2f
+        // gap of 2f
+        entries.add(BarEntry(5f, fSat))
+        entries.add(BarEntry(6f, fSun))
+        chart.getDescription().setEnabled(false)
+
+        val leg: Legend = chart.getLegend()
+        leg.isEnabled = false
+        chart.getAxisLeft().setDrawGridLines(false)
+        chart.getXAxis().setDrawGridLines(false)
+        val rightYAxis: YAxis = chart.getAxisRight()
+        val y: YAxis = chart.getAxisLeft()
+        y.setAxisMaxValue(7f)
+        y.setAxisMinValue(0f)
+
+
+
+        rightYAxis.isEnabled = false
+        val set = BarDataSet(entries, "BarDataSet")
+        val data = BarData(set)
+        data.setDrawValues(false)
+
+        data.barWidth = 0.9f // set custom bar width
+
+        chart.setData(data)
+        chart.setFitBars(true) // make the x-axis fit exactly all bars
+
+        chart.invalidate()
     }
 
     private fun listeners() {
@@ -120,28 +233,87 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
         ivBack.setOnClickListener(this)
         llCallTasksWeekDetailActivityWFMS.setOnClickListener(this)
         llMessageTasksWeekDetailActivityWFMS.setOnClickListener(this)
+        tvTasksWeekDetailActivityWFMS.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
         if (v.id == R.id.ivAddTasksWeekDetailActivityWFMS) {
-            if (!isPunchInMethod()) {
-                Utilities.showToast(this, resources.getString(R.string.errPunchIn))
+            if (isPunchInMethod()) {
+
+                if (tinyDB.getString(ConstantsWFMS.TINYDB_USER_TYPE).equals("1")) {
+
+
+                    val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+                    val newFragment: TaskOtherMarketingdialogOpen? = TaskOtherMarketingdialogOpen.newInstance(model.empId)
+                    newFragment!!.show(ft, "dialog")
+
+                } else {
+                    openDialogAddNewTask()
+
+                }
             } else {
-                openDialogAddNewTask()
+                UtilitiesWFMS.showToast(this, resources.getString(R.string.errPunchIn))
+
             }
+
+
         } else if (v.id == R.id.ivBack) {
             backToHome()
         } else if (v.id == R.id.llCallTasksWeekDetailActivityWFMS) {
-            val mPhoneNumber=model.empMobileNo
+            val mPhoneNumber = model.empMobileNo
             val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mPhoneNumber))
             startActivity(intent)
         } else if (v.id == R.id.llMessageTasksWeekDetailActivityWFMS) {
-            val mPhoneNumber=model.empMobileNo
+            val mPhoneNumber = model.empMobileNo
 
-            val sms_uri = Uri.parse("smsto:"+mPhoneNumber)
+            val sms_uri = Uri.parse("smsto:" + mPhoneNumber)
             val sms_intent = Intent(Intent.ACTION_SENDTO, sms_uri)
             startActivity(sms_intent)
+        } else if (v.id == R.id.tvTasksWeekDetailActivityWFMS) {
+            if (model.tasks.contains("0/0") || model.tasks.equals(""))
+            Utilities.showToast(this, "No Task Available ")
+            else
+                openDialogToShowTasks()
+
         }
+    }
+
+    private fun openDialogToShowTasks() {
+        dialogTasks = Dialog(this)
+        dialogTasks.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogTasks.setContentView(R.layout.dialog_show_task)
+        dialogTasks.setCancelable(false)
+        dialogTasks.show()
+        tvtitlePop = dialogTasks!!.findViewById(R.id.tv_title) as Ubuntu
+        ivBackPop = dialogTasks!!.findViewById(R.id.ivBack) as ImageView
+        ivDrawerPop = dialogTasks!!.findViewById(R.id.ivDrawer) as ImageView
+        rvTaskFragment = dialogTasks!!.findViewById(R.id.rvTaskFragment) as RecyclerView
+        rvTaskFragment!!.layoutManager = LinearLayoutManager(this)
+        ivDrawerPop!!.setVisibility(View.GONE)
+        tvtitlePop!!.text = "Task"
+        ivBackPop!!.visibility = VISIBLE
+        ivBackPop!!.setOnClickListener { dialogTasks.dismiss() }
+
+
+        if (model.empLoginCategory.equals("1")) {
+            val date = ConstantKotlin.getCurrentDate()
+            val jsonObject = JSONObject()
+
+            jsonObject.put("EmpId", model.empId)
+            jsonObject.put("TaskDate", date)
+            hitAPI(ConstantsWFMS.MARKETING_TASK_LIST_WFMS, jsonObject.toString())
+        } else {
+            val date = ConstantKotlin.getCurrentDate()
+
+            var json = JSONObject()
+            json.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
+            json.put("FromDate", date)
+            json.put("ToDate", date)
+            json.put("SiteUploadedId", "0")
+            hitAPI(ConstantsWFMS.MY_TASK_LIST_NEW_WFMS, json.toString())
+        }
+
+
     }
 
     private fun isPunchInMethod(): Boolean {
@@ -160,6 +332,11 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
         } else if (type == ConstantsWFMS.ADD_TASK_WFMS) {
             ApiData.getData(params.toString(), ConstantsWFMS.ADD_TASK_WFMS, this, this!!)
 
+        } else if (type == ConstantsWFMS.MARKETING_TASK_LIST_WFMS) {
+            ApiData.getData(params, ConstantsWFMS.MARKETING_TASK_LIST_WFMS, this, this)
+        } else if (type == ConstantsWFMS.MY_TASK_LIST_NEW_WFMS) {
+            ApiData.getData(params.toString(), ConstantsWFMS.MY_TASK_LIST_NEW_WFMS, this, this!!)
+
         }
     }
 
@@ -169,7 +346,7 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
         dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_add_task)
-        dialog.setCancelable(false)
+        dialog.setCancelable(true)
         dialog.show()
         hitAPI(ConstantsWFMS.PROJECT_LIST_WFMS, "")
         var mFromDateAddTask = ""
@@ -352,75 +529,136 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
 
     override fun sendResponse(response: Any?, TYPE: Int) {
         Utilities.dismissDialog()
-        if (TYPE == ConstantsWFMS.PROJECT_LIST_WFMS) {
-            val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
+        if ((response as Response<*>).code() == 401 || (response as Response<*>).code() == 403) {
 
-            for (i in 0 until jsonArray.length()) {
-                val item = jsonArray.getJSONObject(i)
+            if (Utilities.isShowing())
+                Utilities.dismissDialog()
+            finish()
+            ConstantKotlin.logout(this, tinyDB)
+        } else {
+            if (TYPE == MARKETING_TASK_LIST_WFMS) {
+                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObject.getString("Status").equals("Success")) {
+                    taskList = Gson().fromJson<java.util.ArrayList<TaskModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<List<TaskModel>>() {
 
-                val model = TwoParameterModel()
-                model.id = item.getString("ProjectId")
-                model.name = item.getString("ProjectName")
-                projectList.add(model)
-            }
-            projectArray = arrayOfNulls<String>(projectList.size)
-            for (i in projectList.indices) {
-                projectArray[i] = projectList.get(i).name
-            }
-
-            projectListAdapter = ArrayAdapter<String?>(this, R.layout.spinner_item, projectArray)
-            // hitAPI(ACTIVITY_LIST_WFMS, "")
-        } else if (TYPE == ConstantsWFMS.SITE_LIST_WFMS) {
+                    }.type)
 
 
-            val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
+                    adapter = MarketingTaskAdapter(this, taskList)
+                    rvTaskFragment!!.adapter = adapter
+                }
+            } else if (TYPE == ConstantsWFMS.PROJECT_LIST_WFMS) {
 
-            for (i in 0 until jsonArray.length()) {
-                val item = jsonArray.getJSONObject(i)
+                projectList.clear()
+                projectArray = emptyArray()
+                val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
 
-                val model = TwoParameterModel()
-                model.id = item.getString("SiteId")
-                model.name = item.getString("SiteName")
-                siteList.add(model)
-            }
+                for (i in 0 until jsonArray.length()) {
+                    val item = jsonArray.getJSONObject(i)
 
-            siteArray = arrayOfNulls<String>(siteList.size)
-            for (i in siteList.indices) {
-                siteArray[i] = siteList.get(i).name
-            }
+                    val model = TwoParameterModel()
+                    model.id = item.getString("ProjectId")
+                    model.name = item.getString("ProjectName")
+                    projectList.add(model)
+                }
+                projectArray = arrayOfNulls<String>(projectList.size)
+                for (i in projectList.indices) {
+                    projectArray[i] = projectList.get(i).name
+                }
 
-            siteListAdapter = ArrayAdapter<String?>(this, R.layout.spinner_item, siteArray)
+                projectListAdapter = ArrayAdapter<String?>(this, R.layout.spinner_item, projectArray)
+                // hitAPI(ACTIVITY_LIST_WFMS, "")
+            } else if (TYPE == ConstantsWFMS.SITE_LIST_WFMS) {
 
-        } else if (TYPE == ConstantsWFMS.ACTIVITY_LIST_WFMS) {
-            val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
+                siteList.clear()
+                siteArray = emptyArray()
+                val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
 
-            for (i in 0 until jsonArray.length()) {
-                val item = jsonArray.getJSONObject(i)
+                for (i in 0 until jsonArray.length()) {
+                    val item = jsonArray.getJSONObject(i)
 
-                val model = TwoParameterModel()
-                model.id = item.getString("ActivityId")
-                model.name = item.getString("ActivityName")
-                activityList.add(model)
-            }
-            activityArray = arrayOfNulls<String>(activityList.size)
-            for (i in activityList.indices) {
-                activityArray[i] = activityList.get(i).name
-            }
+                    val model = TwoParameterModel()
+                    model.id = item.getString("SiteId")
+                    model.name = item.getString("SiteName")
+                    siteList.add(model)
+                }
 
-            activityListAdapter = ArrayAdapter<String?>(this, R.layout.spinner_item, activityArray)
-        } else if (TYPE == ADD_TASK_WFMS) {
+                siteArray = arrayOfNulls<String>(siteList.size)
+                for (i in siteList.indices) {
+                    siteArray[i] = siteList.get(i).name
+                }
 
-            val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
-            if (jsonObj.getString("Status").equals("Success")) {
-                Utilities.showToast(this, jsonObj.getString("Message"))
-                dialog.dismiss()
+                siteListAdapter = ArrayAdapter<String?>(this, R.layout.spinner_item, siteArray)
 
-                startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Team"))
+            } else if (TYPE == ConstantsWFMS.ACTIVITY_LIST_WFMS) {
+                activityList.clear()
+                activityArray = emptyArray()
+                val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
 
-                finish()
+                for (i in 0 until jsonArray.length()) {
+                    val item = jsonArray.getJSONObject(i)
 
-            } else {
-                Utilities.showToast(this!!, jsonObj.getString("Message"))
+                    val model = TwoParameterModel()
+                    model.id = item.getString("ActivityId")
+                    model.name = item.getString("ActivityName")
+                    activityList.add(model)
+                }
+                activityArray = arrayOfNulls<String>(activityList.size)
+                for (i in activityList.indices) {
+                    activityArray[i] = activityList.get(i).name
+                }
+
+                activityListAdapter = ArrayAdapter<String?>(this, R.layout.spinner_item, activityArray)
+            } else if (TYPE == ADD_TASK_WFMS) {
+
+                val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObj.getString("Status").equals("Success")) {
+                    Utilities.showToast(this, jsonObj.getString("Message"))
+                    val array: Array<String> = jsonObj.getString("WeeklyTasks").split(",").toTypedArray()
+
+                    callBarChart(array[0], array[1], array[2], array[3], array[4], array[5], array[6])
+                    tvTasksWeekDetailActivityWFMS.text = jsonObj.getString("TotalTasks")
+                    dialog.dismiss()
+
+                    // startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Team"))
+
+                    //finish()
+
+                } else {
+                    Utilities.showToast(this!!, jsonObj.getString("Message"))
+                }
+            } else if (TYPE == ConstantsWFMS.MY_TASK_LIST_NEW_WFMS) {
+                val jsonObj = JSONObject((response as Response<*>).body()!!.toString())
+                if (jsonObj.getString("Status").equals("Success")) {
+                    rvTaskFragment!!.visibility = View.VISIBLE
+                   // tvNoTaskFragmentWFMS.visibility = View.GONE
+//                    taskAL.clear()
+//                    // val jsonArray=JSONArray(jsonObj.getString("Output"))
+//                    taskAL = Gson().fromJson<java.util.ArrayList<TaskListModel>>(jsonObj.getJSONArray("Output").toString(), object : TypeToken<ArrayList<TaskListModel>>() {
+//
+//                    }.type);
+
+
+                    taskAL.clear()
+                    taskNewList.clear()
+                    // val jsonArray=JSONArray(jsonObj.getString("Output"))
+                    taskAL = Gson().fromJson<java.util.ArrayList<TaskListModel>>(jsonObj.getJSONArray("Output").toString(), object : TypeToken<ArrayList<TaskListModel>>() {}.type);
+
+                    var lastId = ""
+                    for (record in 0 until taskAL.size) {
+
+                        if (lastId.equals(taskAL.get(record).taskId)) {
+                        } else {
+                            lastId = taskAL.get(record).taskId
+                            taskNewList.add(taskAL.get(record));
+
+                        }
+
+
+                    }
+
+                    rvTaskFragment!!.adapter = TaskAdapterWFMS(this, taskNewList, taskAL)
+                }
             }
         }
     }
@@ -430,7 +668,8 @@ class TasksWeekDetailActivityWFMS : Activity(), View.OnClickListener, MyInterfac
     }
 
     fun backToHome() {
-        startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Team"))
+        // startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Team"))
         finish()
     }
+
 }

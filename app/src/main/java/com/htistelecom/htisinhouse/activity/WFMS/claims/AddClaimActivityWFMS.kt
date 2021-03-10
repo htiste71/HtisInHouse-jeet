@@ -1,7 +1,6 @@
 package com.htistelecom.htisinhouse.activity.WFMS.claims
 
 import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -15,10 +14,10 @@ import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.TRANSPORT_M
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.UtilitiesWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.UtilitiesWFMS.Companion.dateToString
 import com.htistelecom.htisinhouse.activity.WFMS.activity.BaseActivityCamera
-import com.htistelecom.htisinhouse.activity.WFMS.activity.MainActivityNavigation
 import com.htistelecom.htisinhouse.activity.WFMS.models.TwoParameterModel
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.retrofit.MyInterface
+import com.htistelecom.htisinhouse.utilities.ConstantKotlin
 import com.htistelecom.htisinhouse.utilities.Utilities
 import kotlinx.android.synthetic.main.activity_add_claim_wfms.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -65,7 +64,7 @@ class AddClaimActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickList
 
     val dialog: Dialog? = null
 
-    var tinyDB: TinyDB? = null
+   lateinit var tinyDB: TinyDB
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_claim_wfms)
@@ -114,61 +113,70 @@ class AddClaimActivityWFMS : BaseActivityCamera(), MyInterface, View.OnClickList
 
     override fun sendResponse(response: Any?, TYPE: Int) {
         Utilities.dismissDialog()
-        when (TYPE) {
-            TRANSPORT_MODE_WFMS -> {
-                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
-                if (jsonObject.getString("Status").equals("Success")) {
-                    val jsonArray = jsonObject.getJSONArray("Output")
+
+        if ((response as Response<*>).code() == 401 ||  (response as Response<*>).code() == 403) {
+            if (Utilities.isShowing())
+                Utilities.dismissDialog()
+            finish()
+            ConstantKotlin.logout(this, tinyDB)
+        } else {
+
+            when (TYPE) {
+                TRANSPORT_MODE_WFMS -> {
+                    val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                    if (jsonObject.getString("Status").equals("Success")) {
+                        val jsonArray = jsonObject.getJSONArray("Output")
 
 
 
-                    for (i in 0 until jsonArray.length()) {
-                        val item = jsonArray.getJSONObject(i)
+                        for (i in 0 until jsonArray.length()) {
+                            val item = jsonArray.getJSONObject(i)
 
-                        val model = TwoParameterModel()
-                        model.id = item.getString("ModeId")
-                        model.name = item.getString("ModeName")
-                        transportModeList.add(model)
-                    }
-
-
-                    transportModeArray = arrayOfNulls<String>(transportModeList.size)
-                    for (i in transportModeList.indices) {
-                        transportModeArray[i] = transportModeList.get(i).name
-                    }
-
-
-
-
-                    transportModeAdapter = ArrayAdapter(this, R.layout.spinner_item, transportModeArray)
-
-                    transportModeSpnrAddClaimActivityWFMS.setAdapter(transportModeAdapter)
-                    transportModeSpnrAddClaimActivityWFMS.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
-                        override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                            mTransportModeId = transportModeList.get(position).id
+                            val model = TwoParameterModel()
+                            model.id = item.getString("ModeId")
+                            model.name = item.getString("ModeName")
+                            transportModeList.add(model)
                         }
 
-                        override fun onNothingSelected(parent: AdapterView<*>?) {
-                            // TODO Auto-generated method stub
-                        }
-                    })
-                } else {
-                    Utilities.showToast(this, "Please try again")
-                }
-            }
-            CLAIM_SUBMIT_WFMS -> {
-                val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
-                if (jsonObject.getString("Status").equals("Success")) {
-                    Utilities.showToast(this, jsonObject.getString("Message"))
-                    backToHome()
-                }
-            }
 
+                        transportModeArray = arrayOfNulls<String>(transportModeList.size)
+                        for (i in transportModeList.indices) {
+                            transportModeArray[i] = transportModeList.get(i).name
+                        }
+
+
+
+
+                        transportModeAdapter = ArrayAdapter(this, R.layout.spinner_item, transportModeArray)
+
+                        transportModeSpnrAddClaimActivityWFMS.setAdapter(transportModeAdapter)
+                        transportModeSpnrAddClaimActivityWFMS.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+                            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                                mTransportModeId = transportModeList.get(position).id
+                            }
+
+                            override fun onNothingSelected(parent: AdapterView<*>?) {
+                                // TODO Auto-generated method stub
+                            }
+                        })
+                    } else {
+                        Utilities.showToast(this, "Please try again")
+                    }
+                }
+                CLAIM_SUBMIT_WFMS -> {
+                    val jsonObject = JSONObject((response as Response<*>).body()!!.toString())
+                    if (jsonObject.getString("Status").equals("Success")) {
+                        Utilities.showToast(this, jsonObject.getString("Message"))
+                        backToHome()
+                    }
+                }
+
+            }
         }
     }
 
     fun backToHome() {
-        startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Claim"))
+        // startActivity(Intent(this, MainActivityNavigation::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("fragment", "Claim"))
         finish()
     }
 

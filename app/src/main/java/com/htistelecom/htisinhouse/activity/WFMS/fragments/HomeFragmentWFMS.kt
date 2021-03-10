@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListPopupWindow
 import android.widget.RelativeLayout
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -29,6 +30,7 @@ import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.*
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.UtilitiesWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.dialog.SheetDialogFragment
+import com.htistelecom.htisinhouse.activity.WFMS.marketing.MarketingFullScreenDialog
 import com.htistelecom.htisinhouse.activity.WFMS.models.TaskListModel
 import com.htistelecom.htisinhouse.activity.WFMS.models.TwoParameterModel
 import com.htistelecom.htisinhouse.activity.WFMS.service.OreoLocationService
@@ -123,10 +125,10 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
         bottomSheetFragment = SheetDialogFragment()
         if (!tinyDB.getBoolean(ConstantsWFMS.TINYDB_MEETING_STATUS)) {
             btnFreeHomeTop.text = "Meeting"
-            mIsAvailable=false
+            mIsAvailable = false
         } else {
             btnFreeHomeTop.text = "Free"
-            mIsAvailable=true
+            mIsAvailable = true
 
         }
 
@@ -224,13 +226,21 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
 
 
                 bottomSheetFragment.setArguments(bundle)
-                bottomSheetFragment.show(fragmentManager, "exampleBottomSheet")
+                bottomSheetFragment.show(fragmentManager!!, "exampleBottomSheet")
 
             }
             R.id.llAddNewTaskHome -> {
-                if (isPunchInMethod())
-                    openDialogAddNewTask()
-                else
+                if (isPunchInMethod()) {
+                    if (tinyDB.getString(ConstantsWFMS.TINYDB_USER_TYPE).equals("1")) {
+                        val ft: FragmentTransaction = fragmentManager!!.beginTransaction()
+                        val newFragment: MarketingFullScreenDialog? = MarketingFullScreenDialog.newInstance(tinyDB.getString(TINYDB_EMP_ID),true)
+                        newFragment!!.show(ft, "dialog")
+
+                    } else {
+                        openDialogAddNewTask()
+
+                    }
+                } else
                     UtilitiesWFMS.showToast(activity!!, resources.getString(R.string.errPunchIn))
             }
             R.id.llTapLocationTaskHome -> {
@@ -668,7 +678,7 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
         if (TYPE == PROJECT_LIST_WFMS) {
 
             projectList.clear()
-            projectArray= emptyArray()
+            projectArray = emptyArray()
             val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
 
             for (i in 0 until jsonArray.length()) {
@@ -690,8 +700,8 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
 
 
             val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
-                siteList.clear()
-            siteArray= emptyArray()
+            siteList.clear()
+            siteArray = emptyArray()
             for (i in 0 until jsonArray.length()) {
                 val item = jsonArray.getJSONObject(i)
 
@@ -709,7 +719,7 @@ class HomeFragmentWFMS : BaseFragment(), OnMapReadyCallback, View.OnClickListene
             siteListAdapter = ArrayAdapter<String?>(activity!!, R.layout.spinner_item, siteArray)
 
         } else if (TYPE == ACTIVITY_LIST_WFMS) {
-            activityArray= emptyArray()
+            activityArray = emptyArray()
             activityList.clear()
             val jsonArray = JSONArray((response as Response<*>).body()!!.toString())
 

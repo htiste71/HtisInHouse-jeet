@@ -49,71 +49,86 @@
                 android:id="@+id/llEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:orientation="horizontal"
+                android:background="@drawable/rect_edittext"
+
                 android:visibility="visible">
 
                 <com.htistelecom.htisinhouse.font.UbuntuEditText
                     android:id="@+id/etCustomUrl"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/rect_edittext"
+                    android:layout_weight="60"
                     android:hint="@string/strCustomUrl"
                     android:inputType="textEmailAddress"
                     android:padding="10dp"
+                    android:layout_marginRight="10dp"
                     android:paddingTop="15dp"
+                    android:textSize="16sp"
+                    android:background="@null"
                     android:paddingBottom="@dimen/_8sdp"
                     android:textColor="@color/grey_text2" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <com.htistelecom.htisinhouse.font.Ubuntu
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="40"
+                    android:textSize="16sp"
+                    android:background="@drawable/rect_light_color_back"
+                    android:gravity="center"
+                    android:text=".htistelecom.in" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <com.htistelecom.htisinhouse.font.UbuntuButton
+                    android:id="@+id/btnContinueCustomUrl"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
+                    android:layout_marginTop="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rect_background_border_orange_radius_13"
+                    android:gravity="center"
+                    android:padding="@dimen/_8sdp"
+                    android:text="@string/strContinue"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_16sdp" />
 
-                    <com.htistelecom.htisinhouse.font.UbuntuButton
-                        android:id="@+id/btnContinueCustomUrl"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/rect_background_border_orange_radius_13"
-                        android:gravity="center"
-                        android:padding="@dimen/_8sdp"
-                        android:text="@string/strContinue"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/_16sdp" />
+                <com.htistelecom.htisinhouse.font.UbuntuButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rect_edittext"
+                    android:gravity="center"
+                    android:padding="@dimen/_8sdp"
+                    android:text="@string/strBack"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_16sdp"
+                    android:visibility="gone" />
 
-                    <com.htistelecom.htisinhouse.font.UbuntuButton
-                        android:id="@+id/btnBack"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="30dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/rect_edittext"
-                        android:gravity="center"
-                        android:padding="@dimen/_8sdp"
-                        android:text="@string/strBack"
-                        android:textAllCaps="false"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_16sdp"
-                        android:visibility="gone" />
-
-
-                </LinearLayout>
 
             </LinearLayout>
+
         </LinearLayout>
+
+
         <com.htistelecom.htisinhouse.font.Ubuntu
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
             android:text="@string/strCopyRight"
             android:textColor="#90000000"
-            android:gravity="center"
-            android:layout_marginBottom="10dp"
             android:textSize="14sp" />
     </RelativeLayout>
 </RelativeLayout>

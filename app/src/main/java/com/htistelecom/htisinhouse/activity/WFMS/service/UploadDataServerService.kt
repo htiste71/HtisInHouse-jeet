@@ -42,7 +42,7 @@ lateinit var db:TinyDB
 
     fun hitAPI() {
         val dateObj = Date()
-        val dFormat = SimpleDateFormat("dd-MMM-yyyy")
+        val dFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
         val cDate = dFormat.parse(dFormat.format(dateObj))
         var alFile = Gson().fromJson<ArrayList<FileModel>>(db.getString(ConstantsWFMS.TINYDB_MYFILE), object : TypeToken<ArrayList<FileModel>>() {}.type)
       // db.putString(ConstantsWFMS.TINYDB_MYFILE,"")
@@ -65,7 +65,7 @@ lateinit var db:TinyDB
 
 
                         val data = RequestBody.create("text/plain".toMediaTypeOrNull(), json.toString())
-                        val apiService = ApiClient.getClient().create(ApiInterface::class.java)
+                        val apiService = ApiClient.getClient(db).create(ApiInterface::class.java)
                         val call = apiService.methodUploadLogFileWFMS(fileToUpload, data)
 
                         call.enqueue(object : Callback<Any> {

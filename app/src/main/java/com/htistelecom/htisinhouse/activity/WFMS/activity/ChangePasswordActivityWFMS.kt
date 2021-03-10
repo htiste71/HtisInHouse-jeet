@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.View
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.ApiData
-import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantKotlin
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS.TINYDB_EMAIL
 import com.htistelecom.htisinhouse.config.TinyDB
@@ -22,14 +21,24 @@ import retrofit2.Response
 class ChangePasswordActivityWFMS : Activity(), View.OnClickListener, MyInterface {
     override fun sendResponse(response: Any?, TYPE: Int) {
         Utilities.dismissDialog()
-        var jsonObj = JSONObject((response as Response<*>).body()!!.toString())
-        if (jsonObj.getString("Status").equals("Success")) {
-            Utilities.showToast(this, jsonObj.getString("Message"))
-            tinyDB.putString(ConstantsWFMS.TINYDB_PASSWORD, mNewPassword)
-            backToHome()
-        } else {
-            Utilities.showToast(this, jsonObj.getString("Message"))
 
+        if ((response as Response<*>).code() == 401 ||  (response as Response<*>).code() == 403) {
+            if (Utilities.isShowing())
+                Utilities.dismissDialog()
+
+            finish()
+            com.htistelecom.htisinhouse.utilities.ConstantKotlin.logout(this,tinyDB)
+        } else {
+
+            var jsonObj = JSONObject((response as Response<*>).body()!!.toString())
+            if (jsonObj.getString("Status").equals("Success")) {
+                Utilities.showToast(this, jsonObj.getString("Message"))
+                tinyDB.putString(ConstantsWFMS.TINYDB_PASSWORD, mNewPassword)
+                backToHome()
+            } else {
+                Utilities.showToast(this, jsonObj.getString("Message"))
+
+            }
         }
     }
 

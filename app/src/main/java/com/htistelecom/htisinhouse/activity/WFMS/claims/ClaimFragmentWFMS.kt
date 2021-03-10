@@ -24,6 +24,7 @@ import com.htistelecom.htisinhouse.activity.WFMS.models.MyAttendanceModel
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.fragment.BaseFragment
 import com.htistelecom.htisinhouse.retrofit.MyInterface
+import com.htistelecom.htisinhouse.utilities.ConstantKotlin
 import com.htistelecom.htisinhouse.utilities.Utilities
 import com.roomorama.caldroid.CaldroidFragment
 import com.roomorama.caldroid.CaldroidListener
@@ -48,7 +49,7 @@ class ClaimFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
     var disable = ArrayList<String>()
     var claimDates = ArrayList<String>()
     var claimSummaryList = ArrayList<com.htistelecom.htisinhouse.activity.WFMS.claims.models.ClaimSummaryModel>()
-    var tinyDB: TinyDB? = null
+  lateinit  var tinyDB: TinyDB
     var args: Bundle? = null
     lateinit var calc: Calendar
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -73,7 +74,7 @@ class ClaimFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
         calc = Calendar.getInstance()
         month = Calendar.getInstance()[Calendar.MONTH] + 1
         year = Calendar.getInstance()[Calendar.YEAR]
-        formatter = SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault())
+        formatter = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
         calc.set(year, month - 1, 1)
         endDate = calc.getActualMaximum(Calendar.DAY_OF_MONTH).toString() + "-" + Utilities.getMonthFormat(month) + "-" + year
         startDate = "01-" + Utilities.getMonthFormat(month) + "-" + year
@@ -149,6 +150,8 @@ class ClaimFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
                 jsonObject.put("EmpId", tinyDB!!.getString(ConstantsWFMS.TINYDB_EMP_ID))
                 jsonObject.put("FromDate", startDate)
                 jsonObject.put("ToDate", endDate)
+                jsonObject.put("Type", "c")
+
                 ApiData.getData(jsonObject.toString(), ConstantsWFMS.ATTENDANCE_LIST_WFMS, this, activity)
             } catch (e: Exception) {
                 Log.e("Error", e.message)
@@ -267,42 +270,50 @@ class ClaimFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
     }
 
     override fun sendResponse(response: Any, TYPE: Int) {
-        if(TYPE!= ATTENDANCE_LIST_WFMS)
-        Utilities.dismissDialog()
-        if (TYPE == ATTENDANCE_LIST_WFMS) {
-            try {
-                val jsonObject = JSONObject((response as Response<*>).body().toString())
-                if (jsonObject.getString("Status").equals("Success")) {
-                    val attendanceListData = Gson().fromJson<java.util.ArrayList<MyAttendanceModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<ArrayList<MyAttendanceModel?>?>() {}.type)
-                    attendanceList(attendanceListData)
-                    // calledMethod(Constants.FOR_CLAIMS_SUMMARY)
-                } else {
-                    UtilitiesWFMS.showToast(activity!!, jsonObject.getString("Message"))
-                }
-            } catch (e: Exception) {
-                Log.e("Error", e.message)
-            }
-            calledMethod(CLAIM_SUMMARY_WFMS)
-        } else if (TYPE == ConstantsWFMS.CLAIM_SUMMARY_WFMS) {
-            try {
-                val jsonObject = JSONObject((response as Response<*>).body().toString())
-                if (jsonObject.getString("Status").equals("Success")) {
-                    claimSummaryList = Gson().fromJson<ArrayList<com.htistelecom.htisinhouse.activity.WFMS.claims.models.ClaimSummaryModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<ArrayList<ClaimSummaryModel?>?>() {}.type)
-                    setTheClaimSummary(claimSummaryList.get(0))
-                } else {
-                    tvTotalClaimFragmentWFMS.setText(": 0.00")
-                    tvApprovedClaimFragmentWFMS.setText(": 0.00")
-                    tvAdvanceClaimFragmentWFMS.setText(":  0.00")
-                    tvPendingClaimFragmentWFMS.setText(": 0.00")
-                    var model = com.htistelecom.htisinhouse.activity.WFMS.claims.models.ClaimSummaryModel()
-                    model.advancePaid = "0.00"
-                    model.approvedAmount = "0.00"
-                    model.claimedAmount = "0.00"
+        if ((response as Response<*>).code() == 401 ||  (response as Response<*>).code() == 403) {
+            if (Utilities.isShowing())
+                Utilities.dismissDialog()
+            ConstantKotlin.logout(activity!!, tinyDB)
+        } else {
 
-                    claimSummaryList.add(0, model)
+
+            if (TYPE != ATTENDANCE_LIST_WFMS)
+                Utilities.dismissDialog()
+            if (TYPE == ATTENDANCE_LIST_WFMS) {
+                try {
+                    val jsonObject = JSONObject((response as Response<*>).body().toString())
+                    if (jsonObject.getString("Status").equals("Success")) {
+                        val attendanceListData = Gson().fromJson<java.util.ArrayList<MyAttendanceModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<ArrayList<MyAttendanceModel?>?>() {}.type)
+                        attendanceList(attendanceListData)
+                        // calledMethod(Constants.FOR_CLAIMS_SUMMARY)
+                    } else {
+                        UtilitiesWFMS.showToast(activity!!, jsonObject.getString("Message"))
+                    }
+                } catch (e: Exception) {
+                    Log.e("Error", e.message)
                 }
-            } catch (e: Exception) {
-                Log.e("Error", e.message)
+                calledMethod(CLAIM_SUMMARY_WFMS)
+            } else if (TYPE == ConstantsWFMS.CLAIM_SUMMARY_WFMS) {
+                try {
+                    val jsonObject = JSONObject((response as Response<*>).body().toString())
+                    if (jsonObject.getString("Status").equals("Success")) {
+                        claimSummaryList = Gson().fromJson<ArrayList<com.htistelecom.htisinhouse.activity.WFMS.claims.models.ClaimSummaryModel>>(jsonObject.getJSONArray("Output").toString(), object : TypeToken<ArrayList<ClaimSummaryModel?>?>() {}.type)
+                        setTheClaimSummary(claimSummaryList.get(0))
+                    } else {
+                        tvTotalClaimFragmentWFMS.setText(": 0.00")
+                        tvApprovedClaimFragmentWFMS.setText(": 0.00")
+                        tvAdvanceClaimFragmentWFMS.setText(":  0.00")
+                        tvPendingClaimFragmentWFMS.setText(": 0.00")
+                        var model = com.htistelecom.htisinhouse.activity.WFMS.claims.models.ClaimSummaryModel()
+                        model.advancePaid = "0.00"
+                        model.approvedAmount = "0.00"
+                        model.claimedAmount = "0.00"
+
+                        claimSummaryList.add(0, model)
+                    }
+                } catch (e: Exception) {
+                    Log.e("Error", e.message)
+                }
             }
         }
     }

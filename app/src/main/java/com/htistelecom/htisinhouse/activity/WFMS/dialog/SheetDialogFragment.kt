@@ -31,9 +31,10 @@ class SheetDialogFragment : BottomSheetDialogFragment() {
         return v
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
     }
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -56,15 +57,15 @@ class SheetDialogFragment : BottomSheetDialogFragment() {
     }
 
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
             mContext=context
         } catch (e: ClassCastException) {
             throw ClassCastException(context!!.toString() + " must implement BottomSheetListener")
         }
-
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

@@ -31,8 +31,8 @@ class VerifyEmailActivity : Activity(), MyInterface {
         }
         btnSubmitVerifyEmail.setOnClickListener { view ->
             var email = etEmailVerifyEmail.text.toString()
-          //  email="shobinkumar25@gmail.com"
-          //  email="shobinjindal91@gmail.com"
+         //  email="shobinjindal91@gmail.com"
+          //  email="kuldeep.singh@horizontelecom.in"
 
             if (TextUtils.isEmpty(email)) run {
                 Utilities.showToast(this, "Please enter email address")
@@ -47,7 +47,7 @@ class VerifyEmailActivity : Activity(), MyInterface {
                 json.put("EmpEmail", email)
                 json.put("DeviceIMEI", tinyDB.getString(ConstantsWFMS.TINYDB_IMEI_NUMBER))
 
-                ApiData.getData(json.toString(), ConstantsWFMS.EMAIL_VERIFICATION_WFMS, this, this)
+                ApiData.getDataNoAuth(json.toString(), ConstantsWFMS.EMAIL_VERIFICATION_WFMS, this, this)
 
 
             }

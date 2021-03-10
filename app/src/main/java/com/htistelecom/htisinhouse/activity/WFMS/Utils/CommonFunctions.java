@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class CommonFunctions {
@@ -432,7 +433,7 @@ public class CommonFunctions {
 
 
     public static boolean getTime() {
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
         Date date = new Date();
         Date mDate = null, morningTime = null, eveningTime = null;
         String mCurrentDate = formatter.format(date);

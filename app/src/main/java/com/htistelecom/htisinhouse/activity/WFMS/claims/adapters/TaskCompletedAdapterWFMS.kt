@@ -46,7 +46,7 @@ class TaskCompletedAdapterWFMS(private val mContext: Context, val taskList: Arra
                 itemView.tvRejectedAmountRowTaskCompletedAdapterWFMS.text = model.rejectedAmount
                 itemView.ivAddClaimRowTaskCompletedAdapterWFMS.setOnClickListener { view ->
                     mContext.startActivity(Intent(mContext, AddClaimActivityWFMS::class.java).putExtra("TaskId", model.siteUploadedId))
-                    (mContext as Activity).finish()
+                   // (mContext as Activity).finish()
 
                 }
                 itemView.ivDetailClaimRowTaskCompletedAdapterWFMS.setOnClickListener { view ->

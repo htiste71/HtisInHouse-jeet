@@ -12,12 +12,13 @@ import com.htistelecom.htisinhouse.activity.WFMS.service.JobServiceToUplodData
 import com.htistelecom.htisinhouse.activity.WFMS.service.UploadDataServerService
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.retrofit.MyInterface
+import java.util.*
 
 
 class AlarmReceiverForPunchOut : BroadcastReceiver(), MyInterface {
 
     lateinit var notifManager: NotificationManager
-    val format = java.text.SimpleDateFormat("hh:mm aa dd MMM yyyy ")
+    val format = java.text.SimpleDateFormat("hh:mm aa dd MMM yyyy ", Locale.ENGLISH)
 
     override fun onReceive(ctx: Context, intent: Intent) {
 

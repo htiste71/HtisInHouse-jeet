@@ -34,12 +34,12 @@ class TestActivity : AppCompatActivity() {
 //        newFragment!!.show(ft, "dialog")
 
     }
-    class TabsAdapter(fm: FragmentManager?, var mNumOfTabs: Int) : FragmentStatePagerAdapter(fm) {
+    class TabsAdapter(fm: FragmentManager?, var mNumOfTabs: Int) : FragmentStatePagerAdapter(fm!!) {
         override fun getCount(): Int {
             return mNumOfTabs
         }
 
-        override fun getItem(position: Int): Fragment? {
+        override fun getItem(position: Int): Fragment {
 
             return when (position) {
                 0 -> {
@@ -51,7 +51,7 @@ class TestActivity : AppCompatActivity() {
                 2 -> {
                     TaskFragment("12")
                 }
-                else -> null
+                else -> TravelFragment()
             }
         }
     }

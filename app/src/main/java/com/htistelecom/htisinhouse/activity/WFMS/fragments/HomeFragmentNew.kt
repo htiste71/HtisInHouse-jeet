@@ -141,10 +141,10 @@ class HomeFragmentNew : BaseFragment(), OnMapReadyCallback, View.OnClickListener
         mCurrentDate = Utilities.getCurrentDateInMonth()
         bottomSheetFragment = SheetDialogFragmentNew()
         if (!tinyDB.getBoolean(ConstantsWFMS.TINYDB_MEETING_STATUS)) {
-            btnFreeHomeTop.text = "Meeting"
+            btnFreeHomeTop.text = resources.getString(R.string.strMeeting)
             mIsAvailable = false
         } else {
-            btnFreeHomeTop.text = "Free"
+            btnFreeHomeTop.text =  resources.getString(R.string.strFree)
             mIsAvailable = true
 
         }

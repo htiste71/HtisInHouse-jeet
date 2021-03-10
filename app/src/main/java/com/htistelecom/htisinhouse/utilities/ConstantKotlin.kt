@@ -1,5 +1,6 @@
 package com.htistelecom.htisinhouse.utilities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -14,9 +15,10 @@ class ConstantKotlin {
         val FOO = "foo"
 
 
+        @SuppressLint("SimpleDateFormat")
         fun getCurrentDateTime(): Pair<String, String> {
-            val sdfDate = SimpleDateFormat("dd MMM yyyy")
-            val sdfTime = SimpleDateFormat("hh:mm aa")
+            val sdfDate = SimpleDateFormat("dd MMM yyyy",Locale.ENGLISH)
+            val sdfTime = SimpleDateFormat("hh:mm aa",Locale.ENGLISH)
 
             val currentDate = sdfDate.format(Date())
             val currentTime = sdfTime.format(Date())
@@ -24,13 +26,14 @@ class ConstantKotlin {
             return Pair(currentTime, currentDate)
         }
 
-        fun getDateTimeServer(date:String,time:String):Pair<String, String>
+        @SuppressLint("SimpleDateFormat")
+        fun getDateTimeServer(date:String, time:String):Pair<String, String>
         {
 
-            val sdfDateSource = SimpleDateFormat("dd-MMM-yyyy")
-            val sdfTimeSource = SimpleDateFormat("hh:mm:ss")
-            val sdfDateTarget = SimpleDateFormat("dd MMM yyyy")
-            val sdfTimeTarget = SimpleDateFormat("hh:mm aa")
+            val sdfDateSource = SimpleDateFormat("dd-MMM-yyyy",Locale.ENGLISH)
+            val sdfTimeSource = SimpleDateFormat("hh:mm:ss",Locale.ENGLISH)
+            val sdfDateTarget = SimpleDateFormat("dd MMM yyyy",Locale.ENGLISH)
+            val sdfTimeTarget = SimpleDateFormat("hh:mm aa",Locale.ENGLISH)
 
             val mDateOldFormat=sdfDateSource.parse(date)
             val mDateTargetFormat=sdfDateTarget.format(mDateOldFormat)
@@ -43,8 +46,9 @@ class ConstantKotlin {
 
 
 
+        @SuppressLint("SimpleDateFormat")
         fun getCurrentTime24Hrs(): String {
-            val sdfTime = SimpleDateFormat("HH:mm")
+            val sdfTime = SimpleDateFormat("HH:mm",Locale.ENGLISH)
 
             val currentTime = sdfTime.format(Date())
 
@@ -52,8 +56,9 @@ class ConstantKotlin {
         }
 
 
+        @SuppressLint("SimpleDateFormat")
         fun getCurrentDate(): String {
-            val sdfDate = SimpleDateFormat("dd-MMM-yyyy")
+            val sdfDate = SimpleDateFormat("dd-MMM-yyyy",Locale.ENGLISH)
 
             val currentDate = sdfDate.format(Date())
 

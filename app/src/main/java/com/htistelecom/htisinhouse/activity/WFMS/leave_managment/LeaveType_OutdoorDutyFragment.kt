@@ -777,7 +777,7 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
                 Utilities.showToast(activity, resources.getString(R.string.errFromdate))
             } else {
                 leaveFrom = TO_DATE
-                val simpleDateFormat = SimpleDateFormat("dd-MMM-yyyy")
+                val simpleDateFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
                 try {
 
                     val date = simpleDateFormat.parse(mFromDateOD)
@@ -913,7 +913,7 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
     private fun calculateTime(mFromTimeOD: String, mToTimeOD: String): String {
 
 
-        val simpleDateFormat = SimpleDateFormat("HH:mm")
+        val simpleDateFormat = SimpleDateFormat("HH:mm", Locale.ENGLISH)
 
         val date1 = simpleDateFormat.parse(mFromTimeOD)
         val date2 = simpleDateFormat.parse(mToTimeOD)
@@ -986,7 +986,7 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
 
             } else {
                 leaveFrom = TO_DATE
-                val simpleDateFormat = SimpleDateFormat("dd-MMM-yyyy")
+                val simpleDateFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
                 try {
 
                     val date = simpleDateFormat.parse(mFromDate)
@@ -1125,7 +1125,7 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
     }
 
     fun getCountOfDays(createdDateString: String?, expireDateString: String?): String? {
-        val dateFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
         var createdConvertedDate: Date? = null
         var expireCovertedDate: Date? = null
         var todayWithZeroTime: Date? = null
@@ -1205,7 +1205,7 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
         rlCompOffDateDialogCompOff.setOnClickListener(
                 { v ->
                     leaveFrom = COMP_OFF_APPLY_DATE
-                    val simpleDateFormat = SimpleDateFormat("dd-MMM-yyyy")
+                    val simpleDateFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
 
 
                     leaveFrom = COMP_OFF_DATE
@@ -1221,7 +1221,7 @@ class LeaveType_OutdoorDutyFragment : BaseFragment(), MyInterface, View.OnClickL
 
 
         //  leaveFrom = COMP_OFF_APPLY_DATE
-        val simpleDateFormat = SimpleDateFormat("dd-MMM-yyyy")
+        val simpleDateFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
 
 
         val calendar = Calendar.getInstance()

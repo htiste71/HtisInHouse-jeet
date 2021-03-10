@@ -74,7 +74,7 @@ class ClaimFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener {
         calc = Calendar.getInstance()
         month = Calendar.getInstance()[Calendar.MONTH] + 1
         year = Calendar.getInstance()[Calendar.YEAR]
-        formatter = SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault())
+        formatter = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
         calc.set(year, month - 1, 1)
         endDate = calc.getActualMaximum(Calendar.DAY_OF_MONTH).toString() + "-" + Utilities.getMonthFormat(month) + "-" + year
         startDate = "01-" + Utilities.getMonthFormat(month) + "-" + year

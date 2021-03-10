@@ -8,8 +8,8 @@ import com.htistelecom.htisinhouse.activity.WFMS.marketing.fragments.OfficeFragm
 import com.htistelecom.htisinhouse.activity.WFMS.marketing.fragments.TravelFragment
 import com.htistelecom.htisinhouse.activity.WFMS.marketing.fragments.TaskFragment
 
-class MarketingTabAdapter(var context: Context, fm: FragmentManager?, var totalTabs: Int) : FragmentPagerAdapter(fm) {
-    override fun getItem(position: Int): Fragment? {
+class MarketingTabAdapter(var context: Context, fm: FragmentManager?, var totalTabs: Int) : FragmentPagerAdapter(fm!!) {
+    override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> {
                 OfficeFragment()
@@ -20,7 +20,7 @@ class MarketingTabAdapter(var context: Context, fm: FragmentManager?, var totalT
             2 -> {
                 TaskFragment("12")
             }
-            else -> null
+            else -> TravelFragment()
         }
     }
 

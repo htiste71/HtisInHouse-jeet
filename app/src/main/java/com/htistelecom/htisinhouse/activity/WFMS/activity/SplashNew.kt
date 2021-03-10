@@ -20,13 +20,14 @@ import androidx.core.content.ContextCompat
 import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.activity.WFMS.MyApplication
 import com.htistelecom.htisinhouse.activity.WFMS.Utils.ConstantsWFMS
-import com.htistelecom.htisinhouse.activity.WFMS.Utils.show
 import com.htistelecom.htisinhouse.activity.WFMS.service.GPSTrackerWFMS
 import com.htistelecom.htisinhouse.activity.WFMS.service.OreoLocationService
 import com.htistelecom.htisinhouse.activity.WFMS.service.PreOreoLocationService
 import com.htistelecom.htisinhouse.config.TinyDB
 import com.htistelecom.htisinhouse.services.LocationServiceHtis
 import com.htistelecom.htisinhouse.services.LocationServiceHtis.MyBinder
+import com.htistelecom.htisinhouse.utilities.LocaleHelper
+import com.htistelecom.htisinhouse.utilities.LocaleHelper.PUNJABI
 import com.htistelecom.htisinhouse.utilities.Utilities
 
 class SplashNew : AppCompatActivity() {
@@ -62,8 +63,10 @@ class SplashNew : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
         MyApplication.context = this
         tinyDB = TinyDB(this)
-       // SingletonClass.connect()
-
+//        LocaleHelper.setNewLocale(this, PUNJABI)
+//        val intent: Intent = getIntent()
+//        startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
+//
 
 
         initOtherViews()

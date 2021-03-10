@@ -33,7 +33,7 @@ class JobServiceToUplodData : JobService() {
          db = TinyDB(this)
 
         val dateObj = Date()
-        val dFormat = SimpleDateFormat("dd-MMM-yyyy")
+        val dFormat = SimpleDateFormat("dd-MMM-yyyy",Locale.ENGLISH)
         val cDate = dFormat.parse(dFormat.format(dateObj))
         var alFile = Gson().fromJson<ArrayList<FileModel>>(db.getString(ConstantsWFMS.TINYDB_MYFILE), object : TypeToken<ArrayList<FileModel>>() {}.type)
         // db.putString(ConstantsWFMS.TINYDB_MYFILE,"")
@@ -42,7 +42,7 @@ class JobServiceToUplodData : JobService() {
                 for ((index, value) in alFile.withIndex()) {
 
                     val model = value
-                    val fDate = dFormat.parse(model.fileDate)
+                       val fDate = dFormat.parse(model.fileDate)
                     if (!cDate.equals(fDate)) {
 
 

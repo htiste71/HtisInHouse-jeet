@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateUtils {
-    static SimpleDateFormat myFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-    static SimpleDateFormat monthFormatDate = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+    static SimpleDateFormat myFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+    static SimpleDateFormat monthFormatDate = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
 
     public static float daysBetweenTwoDates(String fromDate, String toDate) {
         float daysBetween = 0;
@@ -77,16 +77,16 @@ public class DateUtils {
 
     public static String currentDate() {
         Date date = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
         String currentDate = df.format(date);
         return currentDate;
     }
 
 
     public static Date getCurrentTime() {
-        String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+        String currentTime = new SimpleDateFormat("HH:mm", Locale.ENGLISH).format(new Date());
         try {
-            return new SimpleDateFormat("HH:mm").parse(currentTime);
+            return new SimpleDateFormat("HH:mm", Locale.ENGLISH).parse(currentTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }

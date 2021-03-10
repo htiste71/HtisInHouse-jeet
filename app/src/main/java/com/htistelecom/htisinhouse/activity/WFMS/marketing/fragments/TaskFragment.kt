@@ -91,7 +91,7 @@ class TaskFragment(var empId: String) : Fragment(), MyInterface {
     private var mPositionName: String = ""
 
 
-    val cal = SimpleDateFormat("HH:mm")
+    val cal = SimpleDateFormat("HH:mm", Locale.ENGLISH)
     var mStartTime: Date? = null
     var mEndtTime: Date? = null
 

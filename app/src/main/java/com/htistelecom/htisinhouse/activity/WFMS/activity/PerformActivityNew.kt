@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Address
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.text.TextUtils
@@ -16,6 +17,7 @@ import android.view.View.GONE
 import android.view.Window
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
@@ -637,7 +639,43 @@ class PerformActivityNew : AppCompatActivity(), MyInterface, View.OnClickListene
         CropImage.startPickImageActivity(this)
     }
 
-    @SuppressLint("NewApi")
+
+
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (mCropImageUri != null && grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // required permissions granted, start crop image activity
+            startCropImageActivity(mCropImageUri)
+        } else {
+            Toast.makeText(this, "Cancelling, required permissions are not granted", Toast.LENGTH_LONG).show()
+        }
+    }
+
+
+    /**
+     * Start crop image activity for the given image.
+     */
+    private fun startCropImageActivity(imageUri: Uri) {
+        CropImage.activity(imageUri)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setMultiTouchEnabled(true)
+                .start(this)
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    @SuppressLint("MissingSuperCall")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
         // handle result of pick image chooser
@@ -662,7 +700,7 @@ class PerformActivityNew : AppCompatActivity(), MyInterface, View.OnClickListene
 
                 var s = result.getUri()
                 //  (findViewById<View>(R.id.quick_start_cropped_image) as ImageButton).setImageURI(File())
-               // Toast.makeText(this, "Cropping successful, Sample: " + result.getSampleSize(), Toast.LENGTH_LONG).show()
+                // Toast.makeText(this, "Cropping successful, Sample: " + result.getSampleSize(), Toast.LENGTH_LONG).show()
                 taskListSelected.get(position).activityImage = File(result.uri.path).absolutePath
                 taskListSelected.get(position).activityImagePath = ""
                 adapter.notifyDataSetChanged()
@@ -670,27 +708,6 @@ class PerformActivityNew : AppCompatActivity(), MyInterface, View.OnClickListene
                 Toast.makeText(this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show()
             }
         }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (mCropImageUri != null && grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            // required permissions granted, start crop image activity
-            startCropImageActivity(mCropImageUri)
-        } else {
-            Toast.makeText(this, "Cancelling, required permissions are not granted", Toast.LENGTH_LONG).show()
-        }
-    }
-
-
-    /**
-     * Start crop image activity for the given image.
-     */
-    private fun startCropImageActivity(imageUri: Uri) {
-        CropImage.activity(imageUri)
-                .setGuidelines(CropImageView.Guidelines.ON)
-                .setMultiTouchEnabled(true)
-                .start(this)
     }
 
 }

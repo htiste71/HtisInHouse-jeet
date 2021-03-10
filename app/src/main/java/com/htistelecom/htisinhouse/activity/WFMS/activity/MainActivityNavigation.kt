@@ -15,6 +15,7 @@ import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.StrictMode
 import android.provider.Settings
 import android.text.TextUtils
@@ -27,7 +28,6 @@ import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -68,7 +68,7 @@ import retrofit2.Response
 import java.util.*
 
 
-class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInterface {
+class MainActivityNavigation : BaseActivity(), View.OnClickListener, MyInterface {
 
     lateinit var receiver: BroadcastReceiver
     private lateinit var remoteConfig: FirebaseRemoteConfig
@@ -103,6 +103,10 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_drawer)
+
+
+
+
         initViews()
 
         listeneres()
@@ -111,6 +115,8 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
         checkForUpdate()
         punchReminderIn()
         punchReminderOut()
+
+        setLanguage("pa")
 
         val json = JSONObject()
         json.put("EmpId", tinyDB.getString(ConstantsWFMS.TINYDB_EMP_ID))
@@ -238,7 +244,7 @@ class MainActivityNavigation : AppCompatActivity(), View.OnClickListener, MyInte
             try {
 
                 if (mAddress.get(0) == null) {
-                    Utilities.showToast(this, resources.getString(R.string.errLocationNotFetched))
+                    Utilities.showToast(this,resources.getString(R.string.errLocationNotFetched))
                 } else {
 
                     tinyDB.putDouble(ConstantsWFMS.CURRENT_SAVED_LATITUDE, OreoLocationService.LATITUDE.toDouble())

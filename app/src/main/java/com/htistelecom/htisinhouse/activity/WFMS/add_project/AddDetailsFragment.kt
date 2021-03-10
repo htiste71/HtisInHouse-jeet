@@ -10,7 +10,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.htistelecom.htisinhouse.R
-import kotlinx.android.synthetic.main.dialog_marketing.*
 import kotlinx.android.synthetic.main.fragment_add_detail.*
 import kotlinx.android.synthetic.main.fragment_add_detail.tabLayout
 
@@ -54,12 +53,12 @@ class AddDetailsFragment : Fragment() {
     }
 
 
-    class TabsAdapter(fm: FragmentManager?, var mNumOfTabs: Int) : FragmentStatePagerAdapter(fm) {
+    class TabsAdapter(fm: FragmentManager?, var mNumOfTabs: Int) : FragmentStatePagerAdapter(fm!!) {
         override fun getCount(): Int {
             return mNumOfTabs
         }
 
-        override fun getItem(position: Int): Fragment? {
+        override fun getItem(position: Int): Fragment {
 
             return when (position) {
                 0 -> {
@@ -71,7 +70,7 @@ class AddDetailsFragment : Fragment() {
                 2 -> {
                     AddActivityFragment()
                 }
-                else -> null
+                else -> AddActivityFragment()
             }
         }
     }

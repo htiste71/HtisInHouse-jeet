@@ -42,7 +42,7 @@ lateinit var db:TinyDB
 
     fun hitAPI() {
         val dateObj = Date()
-        val dFormat = SimpleDateFormat("dd-MMM-yyyy")
+        val dFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
         val cDate = dFormat.parse(dFormat.format(dateObj))
         var alFile = Gson().fromJson<ArrayList<FileModel>>(db.getString(ConstantsWFMS.TINYDB_MYFILE), object : TypeToken<ArrayList<FileModel>>() {}.type)
       // db.putString(ConstantsWFMS.TINYDB_MYFILE,"")

@@ -80,7 +80,7 @@ class MarketingActivity : AppCompatActivity(), View.OnClickListener, MyInterface
 
     private var mWidthTurnover: Int = 0
     private var mWidthPosition: Int = 0
-    val cal = SimpleDateFormat("HH:mm")
+    val cal = SimpleDateFormat("HH:mm", Locale.ENGLISH)
     var mStartTime: Date? = null
     var mEndtTime: Date? = null
 

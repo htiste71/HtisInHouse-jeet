@@ -71,8 +71,8 @@ class SalaryFragmentWFMS : BaseFragment(), View.OnClickListener, MyInterface {
     override fun onResume() {
         super.onResume()
 
-        val month = SimpleDateFormat("MM", Locale.getDefault()).format(calc!!.time)
-        val year = SimpleDateFormat("yyyy", Locale.getDefault()).format(calc!!.time).toInt()
+        val month = SimpleDateFormat("MM", Locale.ENGLISH).format(calc!!.time)
+        val year = SimpleDateFormat("yyyy", Locale.ENGLISH).format(calc!!.time).toInt()
         monthYear = month.toString() + year.toString()
         getMonth(monthYear)
 
@@ -83,10 +83,10 @@ class SalaryFragmentWFMS : BaseFragment(), View.OnClickListener, MyInterface {
         val calc = Calendar.getInstance()
         curmonth -= 1
         calc.add(Calendar.MONTH, curmonth)
-        val previousMonthYear = SimpleDateFormat("MM yyyy", Locale.getDefault()).format(calc.time)
+        val previousMonthYear = SimpleDateFormat("MM yyyy", Locale.ENGLISH).format(calc.time)
         //display the leave data
-        val month = SimpleDateFormat("MM", Locale.getDefault()).format(calc.time)
-        val year = SimpleDateFormat("yyyy", Locale.getDefault()).format(calc.time).toInt()
+        val month = SimpleDateFormat("MM", Locale.ENGLISH).format(calc.time)
+        val year = SimpleDateFormat("yyyy", Locale.ENGLISH).format(calc.time).toInt()
         monthYear = month.toString() + year.toString()
         getMonth(monthYear)
         //getSalaryDetails(MonthYear);
@@ -97,11 +97,11 @@ class SalaryFragmentWFMS : BaseFragment(), View.OnClickListener, MyInterface {
         val calc = Calendar.getInstance()
         curmonth += 1
         calc.add(Calendar.MONTH, curmonth)
-        val nextMonthYear = SimpleDateFormat("MM yyyy", Locale.getDefault()).format(calc.time)
+        val nextMonthYear = SimpleDateFormat("MM yyyy", Locale.ENGLISH).format(calc.time)
         tvCurrentMonthSalaryFragmenmtWFMS.setText(nextMonthYear)
         //display the leave data
-        val month = SimpleDateFormat("MM", Locale.getDefault()).format(calc.time)
-        val year = SimpleDateFormat("yyyy", Locale.getDefault()).format(calc.time).toInt()
+        val month = SimpleDateFormat("MM", Locale.ENGLISH).format(calc.time)
+        val year = SimpleDateFormat("yyyy", Locale.ENGLISH).format(calc.time).toInt()
         monthYear = month.toString() + year.toString()
         getMonth(monthYear)
 
@@ -295,8 +295,8 @@ class SalaryFragmentWFMS : BaseFragment(), View.OnClickListener, MyInterface {
     }
 
     fun getMonth(date: String) {
-        val dateFormat = SimpleDateFormat("MMM yyyy")
-        val oldDateFormat = SimpleDateFormat("MMyyyy")
+        val dateFormat = SimpleDateFormat("MMM yyyy", Locale.ENGLISH)
+        val oldDateFormat = SimpleDateFormat("MMyyyy", Locale.ENGLISH)
         val dOldFormat = oldDateFormat.parse(date)
         val sDate = dateFormat.format(dOldFormat)
         tvCurrentMonthSalaryFragmenmtWFMS.setText(sDate)

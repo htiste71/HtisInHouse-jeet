@@ -19,7 +19,7 @@ class PunchStatusCheckout:BroadcastReceiver(){
         val currentTime = DateUtils.getCurrentTime()
 
 
-        val currentTimeTarget= SimpleDateFormat("HH:mm").parse(SimpleDateFormat("HH:mm").format(currentTime.time))
+        val currentTimeTarget= SimpleDateFormat("HH:mm", Locale.ENGLISH).parse(SimpleDateFormat("HH:mm", Locale.ENGLISH).format(currentTime.time))
 
 
 
@@ -28,7 +28,7 @@ class PunchStatusCheckout:BroadcastReceiver(){
         val calendarEvening = Calendar.getInstance()
         calendarEvening[Calendar.HOUR_OF_DAY] = 19
         calendarEvening[Calendar.MINUTE] = 0
-        val eveningTimeTarget= SimpleDateFormat("HH:mm").parse(SimpleDateFormat("HH:mm").format(calendarEvening.time))
+        val eveningTimeTarget= SimpleDateFormat("HH:mm", Locale.ENGLISH).parse(SimpleDateFormat("HH:mm", Locale.ENGLISH).format(calendarEvening.time))
 
 
 

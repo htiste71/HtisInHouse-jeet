@@ -58,7 +58,7 @@ class SettingsFragmentWFMS : Fragment(), View.OnClickListener {
             val intent = Intent(activity!!, ChangePasswordActivityWFMS::class.java)
             startActivity(intent)
         } else if (v.id == R.id.btnSendLogReportSettingsWFMS) {
-            val format = java.text.SimpleDateFormat("hh:mm aa dd MMM yyyy ")
+            val format = java.text.SimpleDateFormat("hh:mm aa dd MMM yyyy ", Locale.ENGLISH)
 
             activity!!.startService(Intent(activity, UploadDataServerService::class.java))
             UtilitiesWFMS.showToast(activity!!, "Syncing data")

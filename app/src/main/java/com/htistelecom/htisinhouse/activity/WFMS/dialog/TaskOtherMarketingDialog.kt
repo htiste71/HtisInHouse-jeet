@@ -93,7 +93,7 @@ class TaskOtherMarketingdialogOpen : DialogFragment(),MyInterface {
     lateinit var listPopupWindow: ListPopupWindow
         lateinit var dialogOpen:Dialog
 
-    val cal = SimpleDateFormat("HH:mm")
+    val cal = SimpleDateFormat("HH:mm", Locale.ENGLISH)
     var mStartTime: Date? = null
     var mEndtTime: Date? = null
 
@@ -126,7 +126,7 @@ class TaskOtherMarketingdialogOpen : DialogFragment(),MyInterface {
         super.onViewCreated(view, savedInstanceState)
         ivDrawer.visibility = View.GONE
         tv_title.text = "Add Task Details"
-        ivBack.setOnClickListener { dialog.dismiss()
+        ivBack.setOnClickListener { dialog!!.dismiss()
         }
         rvTaskFragment.layoutManager = LinearLayoutManager(activity)
         ivAddTaskFragment.setOnClickListener { openDialog() }

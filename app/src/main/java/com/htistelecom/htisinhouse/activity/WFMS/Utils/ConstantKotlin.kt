@@ -13,8 +13,8 @@ class ConstantKotlin {
 
 
         fun getCurrentDateTime(): Pair<String, String> {
-            val sdfDate = SimpleDateFormat("dd MMM yyyy")
-            val sdfTime = SimpleDateFormat("hh:mm aa")
+            val sdfDate = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
+            val sdfTime = SimpleDateFormat("hh:mm aa", Locale.ENGLISH)
 
             val currentDate = sdfDate.format(Date())
             val currentTime = sdfTime.format(Date())
@@ -23,7 +23,7 @@ class ConstantKotlin {
         }
 
         fun getCurrentTime24Hrs(): String {
-            val sdfTime = SimpleDateFormat("HH:mm")
+            val sdfTime = SimpleDateFormat("HH:mm", Locale.ENGLISH)
 
             val currentTime = sdfTime.format(Date())
 

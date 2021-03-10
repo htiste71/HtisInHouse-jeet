@@ -83,12 +83,12 @@ var empId:String=""
 
     }
 
-    class TabsAdapter(fm: FragmentManager?, var mNumOfTabs: Int,var empId: String) : FragmentStatePagerAdapter(fm) {
+    class TabsAdapter(fm: FragmentManager?, var mNumOfTabs: Int,var empId: String) : FragmentStatePagerAdapter(fm!!) {
         override fun getCount(): Int {
             return mNumOfTabs
         }
 
-        override fun getItem(position: Int): Fragment? {
+        override fun getItem(position: Int): Fragment {
 
             return when (position) {
                 0 -> {
@@ -100,7 +100,7 @@ var empId:String=""
                 2 -> {
                     TaskFragment(empId)
                 }
-                else -> null
+                else -> TravelFragment()
             }
         }
     }

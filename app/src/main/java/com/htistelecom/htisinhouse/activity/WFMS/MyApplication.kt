@@ -3,6 +3,7 @@ package com.htistelecom.htisinhouse.activity.WFMS
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
+import android.content.res.Configuration
 import android.util.Log
 import com.google.firebase.FirebaseApp
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -11,11 +12,17 @@ import com.htistelecom.htisinhouse.R
 import com.htistelecom.htisinhouse.utilities.Utilities
 import io.socket.client.IO
 import java.net.URISyntaxException
+import java.util.*
 
 
 class MyApplication : Application() {
+
+
+
+
     override fun onCreate() {
         super.onCreate()
+
 
 
         if (Utilities.isNetConnected(this))
@@ -27,6 +34,13 @@ class MyApplication : Application() {
 //        }
     }
 
+//    override fun attachBaseContext(base: Context?) {
+//        super.attachBaseContext(LocaleHelper.setLocale(base))
+//    }
+//    override fun onConfigurationChanged(newConfig: Configuration?) {
+//        super.onConfigurationChanged(newConfig)
+//        LocaleHelper.setLocale(this)
+//    }
     companion object socketObj {
         private val instance: MyApplication? = null
         var context: Activity? = null

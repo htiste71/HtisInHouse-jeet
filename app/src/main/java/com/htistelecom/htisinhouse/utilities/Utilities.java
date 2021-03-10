@@ -79,7 +79,7 @@ public class Utilities {
 
     public static String getCurrentDate() {
         if (simpleDateFormat == null) {
-            simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+            simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
         }
 
         Date date = new Date();
@@ -91,7 +91,7 @@ public class Utilities {
 
     public static String getCurrentDateInMonth() {
         if (simpleDateFormat == null) {
-            simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+            simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
         }
 
         Date date = new Date();

@@ -8,7 +8,7 @@
     <string name="my_salary">My salary</string>
     <string name="please_select_activities">Please Select Activities</string>
     <string name="submit">SUBMIT</string>
-    <string name="cancel">CANCEL</string>
+    <string name="cancel" translatable="false">CANCEL</string>
     <string name="select_a_project">Select a Project</string>
     <string name="activity_message">Enter activity message</string>
     <string name="enter_a_message">Enter a message</string>
@@ -395,4 +395,6 @@
     <string name="strTime">Time</string>
     <string name="strFromLocation">From Location</string>
     <string name="strToLocation">To Location</string>
+    <string name="strMeeting">Meeting</string>
+    <string name="strFree">Free</string>
 </resources>

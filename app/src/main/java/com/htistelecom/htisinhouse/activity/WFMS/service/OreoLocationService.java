@@ -40,6 +40,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class OreoLocationService extends JobIntentService {
 
@@ -417,8 +418,8 @@ Log.e("","");
 
     private void currentDateTime() {
         Date date = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-        SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
+        SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss",Locale.ENGLISH);
         mDateTime = simpleDateTimeFormat.format(date);
         mDate = simpleDateFormat.format(date);
     }

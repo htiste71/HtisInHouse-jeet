@@ -19,15 +19,15 @@ class CheckPunchStatusReceiver : BroadcastReceiver() {
         calendarMorning[Calendar.HOUR_OF_DAY] = 10
         calendarMorning[Calendar.MINUTE] = 0
 
-        val morningTimeTarget=SimpleDateFormat("HH:mm").parse(SimpleDateFormat("HH:mm").format(calendarMorning.time))
-        val currentTimeTarget=SimpleDateFormat("HH:mm").parse(SimpleDateFormat("HH:mm").format(currentTime.time))
+        val morningTimeTarget=SimpleDateFormat("HH:mm", Locale.ENGLISH).parse(SimpleDateFormat("HH:mm", Locale.ENGLISH).format(calendarMorning.time))
+        val currentTimeTarget=SimpleDateFormat("HH:mm", Locale.ENGLISH).parse(SimpleDateFormat("HH:mm", Locale.ENGLISH).format(currentTime.time))
 
 
 
         val calendarMorningBefore11 = Calendar.getInstance()
         calendarMorningBefore11[Calendar.HOUR_OF_DAY] = 11
         calendarMorningBefore11[Calendar.MINUTE] = 0
-        val morningTimeTargetBefore11=SimpleDateFormat("HH:mm").parse(SimpleDateFormat("HH:mm").format(calendarMorningBefore11.time))
+        val morningTimeTargetBefore11=SimpleDateFormat("HH:mm", Locale.ENGLISH).parse(SimpleDateFormat("HH:mm", Locale.ENGLISH).format(calendarMorningBefore11.time))
 
 
 

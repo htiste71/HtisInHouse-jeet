@@ -80,7 +80,7 @@ class AttendanceFragmentWFMS : BaseFragment(), MyInterface, View.OnClickListener
         calc.set(year, month - 1, 1)
         endDate = calc.getActualMaximum(Calendar.DAY_OF_MONTH).toString() + "-" + Utilities.getMonthFormat(month) + "-" + year
         startDate = "01-" + Utilities.getMonthFormat(month) + "-" + year
-        formatter = SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault())
+        formatter = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
         caldroidFragment = CaldroidFragment()
     }
 
